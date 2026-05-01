@@ -1,0 +1,1554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+  // Apply the saved theme before first paint to avoid a flash.
+  (function () {
+    try {
+      var t = localStorage.getItem('suzuki-theme');
+      if (t === 'light') document.documentElement.setAttribute('data-theme', 'light');
+    } catch (_) { /* localStorage blocked — default dark */ }
+  })();
+</script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#0A0A0A" />
+
+<!-- ===== SEO ===== -->
+<title>Suzuki Bangladesh — Built for the riders who never settle.</title>
+<meta name="description" content="Suzuki Bangladesh — premium motorcycles engineered in Japan, tested on Bangladesh roads. MotoGP DNA. Hotline 16638. Operated by Rancon Motor Bikes Ltd." />
+<meta name="keywords" content="Suzuki Bangladesh, suzuki bd, motorcycle, gixxer, gsx-r150, gixxer sf 250, motogp, rancon motor bikes" />
+
+<!-- ===== Open Graph / Twitter ===== -->
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Suzuki Bangladesh — Built for the riders who never settle." />
+<meta property="og:description" content="From the streets of Dhaka to the curves of MotoGP — every Suzuki carries the same heartbeat." />
+<meta property="og:image" content="assets/images/og-cover.jpg" />
+<meta property="og:locale" content="en_BD" />
+<meta name="twitter:card" content="summary_large_image" />
+
+<!-- ===== Favicon (placeholder) ===== -->
+<link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg" />
+
+<!-- ===== Font preconnect ===== -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet" />
+
+<!-- ===== Tailwind CDN (Play CDN — dev only) ===== -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- ===== Stylesheets (token order matters: tokens → base → components → sections) ===== -->
+<link rel="stylesheet" href="css/tokens.css" />
+<link rel="stylesheet" href="css/base.css" />
+<link rel="stylesheet" href="css/components.css" />
+<!-- Section CSS files (load per-phase) -->
+<link rel="stylesheet" href="css/sections/navbar.css" />
+<link rel="stylesheet" href="css/sections/hero.css" />
+<link rel="stylesheet" href="css/sections/why-suzuki.css" />
+<link rel="stylesheet" href="css/sections/find-bike.css" />
+<link rel="stylesheet" href="css/sections/engine-showcase.css" />
+<link rel="stylesheet" href="css/sections/best-deals.css" />
+<link rel="stylesheet" href="css/sections/motogp.css" />
+<link rel="stylesheet" href="css/sections/safety.css" />
+<link rel="stylesheet" href="css/sections/rider-stories.css" />
+<link rel="stylesheet" href="css/sections/service.css" />
+<link rel="stylesheet" href="css/sections/news.css" />
+<link rel="stylesheet" href="css/sections/final-cta.css" />
+<link rel="stylesheet" href="css/sections/footer.css" />
+<link rel="stylesheet" href="css/widgets.css" />
+<link rel="stylesheet" href="css/theme-light.css" />
+
+<!-- ===== Animation libs (CDN, deferred) ===== -->
+<!-- GSAP 3 + ScrollTrigger -->
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<!-- Lenis smooth scroll -->
+<script defer src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+<!-- Three.js — used in Section 4 + 5 (Phase 6 + 7). Loaded but not yet referenced. -->
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.1/three.min.js"></script>
+<!-- Lucide icons -->
+<script defer src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+<!-- ===== App scripts (in order) ===== -->
+<script defer src="js/lenis-init.js"></script>
+<script defer src="js/nav.js"></script>
+<script defer src="js/main.js"></script>
+<!-- Section scripts (per-phase) -->
+<script defer src="js/sections/hero.js"></script>
+<!-- Anchor-picker debug mode (no-op without ?anchors in URL) -->
+<script defer src="js/sections/hero-anchor-debug.js"></script>
+<script defer src="js/sections/why-suzuki.js"></script>
+<script defer src="js/sections/find-bike.js"></script>
+<script defer src="js/sections/engine-showcase.js"></script>
+<script defer src="js/sections/best-deals.js"></script>
+<script defer src="js/sections/final-cta.js"></script>
+<!-- Site-wide widgets (chat + cookies/lead) -->
+<script defer src="js/widgets/chat.js"></script>
+<script defer src="js/widgets/cookies.js"></script>
+<script defer src="js/widgets/scroll-top.js"></script>
+<script defer src="js/widgets/theme-toggle.js"></script>
+
+</head>
+<body data-page="home" id="top">
+
+<!-- ===== Skip link (a11y) ===== -->
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<!-- ============================================================
+     NAVBAR — Phase 2 FULL IMPLEMENTATION
+     Desktop: scroll-driven background, mega menu on Bikes hover/focus,
+     keyboard accessible (Tab/Esc/focus trap).
+     Mobile: hamburger triggers full-screen overlay with stagger reveal.
+     ============================================================ -->
+<header class="nav" data-testid="navbar" role="banner">
+  <div class="container nav__inner">
+    <!-- Brand lockup — moved from hero into the persistent navbar.
+         IDs preserved (#hero-brandLockup, #hero-blMark) so hero.js prepareLogo
+         still targets the .bl-mark for runtime white-grid knockout. -->
+    <a href="#hero" class="nav__brand" data-testid="nav-brand" aria-label="Suzuki Bangladesh — home">
+      <div class="brand-lockup" id="hero-brandLockup" aria-hidden="true">
+        <span class="bl-mark" id="hero-blMark"></span>
+        <div class="bl-text">
+          <span class="bl-suzuki">SUZUKI</span>
+          <span class="bl-tag">Bangladesh</span>
+          <span class="bl-meta">EST. 1909 · MOTOGP HERITAGE</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- Desktop links -->
+    <nav class="nav__links" aria-label="Primary navigation">
+      <a
+        href="bikes.html"
+        class="nav__link"
+        data-testid="nav-bikes"
+        data-nav-trigger="mega"
+        aria-haspopup="true"
+        aria-expanded="false"
+        aria-controls="nav-mega-bikes"
+      >
+        Bikes
+        <i data-lucide="chevron-down" class="nav__chevron" aria-hidden="true"></i>
+      </a>
+      <a href="technology.html" class="nav__link" data-testid="nav-technology">Technology</a>
+      <a href="service.html" class="nav__link" data-testid="nav-service">Service</a>
+      <a href="shop.html" class="nav__link" data-testid="nav-shop">Shop</a>
+      <a href="dealers.html" class="nav__link" data-testid="nav-dealers">Dealers</a>
+      <a href="offers.html" class="nav__link" data-testid="nav-offers">Offers</a>
+    </nav>
+
+    <!-- Right actions -->
+    <div class="nav__actions">
+      <a href="tel:16638" class="nav__hotline" data-testid="nav-hotline" aria-label="Call hotline 16638">
+        <i data-lucide="phone" class="icon" aria-hidden="true"></i>
+        <span class="nav__hotline-num">16638</span>
+      </a>
+      <a href="test-ride.html" class="btn btn-primary btn-sm nav__cta-desktop" data-testid="nav-cta">Book Test Ride</a>
+      <button
+        type="button"
+        class="nav__mobile-toggle"
+        data-testid="nav-mobile-toggle"
+        data-nav-trigger="mobile"
+        aria-label="Open menu"
+        aria-expanded="false"
+        aria-controls="nav-mobile-overlay"
+      >
+        <i data-lucide="menu" class="icon" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- ===== Mega menu (Bikes) ===== -->
+  <div
+    class="nav__mega"
+    id="nav-mega-bikes"
+    data-testid="nav-mega-bikes"
+    role="region"
+    aria-label="Bike lineup"
+  >
+    <div class="container">
+      <p class="nav__mega-eyebrow">› EXPLORE THE LINEUP · 10 MODELS</p>
+
+      <!-- Filter pills — 5 official Suzuki BD categories -->
+      <div class="nav__mega-filters" role="tablist" aria-label="Filter bikes by category">
+        <button type="button" class="nav__mega-filter" data-testid="filter-all" data-filter="all" aria-pressed="true">All</button>
+        <button type="button" class="nav__mega-filter" data-testid="filter-scooter" data-filter="scooter" aria-pressed="false">Scooter</button>
+        <button type="button" class="nav__mega-filter" data-testid="filter-commuter" data-filter="commuter" aria-pressed="false">Commuter</button>
+        <button type="button" class="nav__mega-filter" data-testid="filter-sports" data-filter="sports" aria-pressed="false">Sports</button>
+        <button type="button" class="nav__mega-filter" data-testid="filter-super-sports" data-filter="super-sports" aria-pressed="false">Super Sports</button>
+        <button type="button" class="nav__mega-filter" data-testid="filter-performance-sports" data-filter="performance-sports" aria-pressed="false">Performance Sports</button>
+      </div>
+
+      <!-- Bike grid (10 models, ordered by hero priority).
+           Categories follow the official Suzuki Bangladesh taxonomy
+           from suzuki.com.bd/bikes — kept in sync with bikes.html. -->
+      <div class="nav__mega-grid" data-testid="mega-bike-grid">
+        <a href="bikes/gixxer-sf-250.html" class="nav__mega-card" data-testid="mega-bike-gixxer-sf-250" data-category="super-sports">
+          <div class="nav__mega-card-image" aria-hidden="true">
+            <img src="assets/images/bikes/gixxer-sf-250.webp" alt="Suzuki Gixxer SF 250" loading="lazy" decoding="async" />
+          </div>
+          <span class="nav__mega-card-cat">Super Sports · Hero</span>
+          <div class="nav__mega-card-name">Gixxer SF 250</div>
+          <div class="nav__mega-card-price">From BDT 429,950</div>
+        </a>
+        <a href="bikes/gsx-r150.html" class="nav__mega-card" data-testid="mega-bike-gsx-r150" data-category="performance-sports">
+          <div class="nav__mega-card-image" aria-hidden="true"><img src="assets/images/bikes/gsx-r150.webp" alt="Suzuki GSX-R150" loading="lazy" decoding="async" /></div>
+          <span class="nav__mega-card-cat">Performance Sports</span>
+          <div class="nav__mega-card-name">GSX-R150</div>
+          <div class="nav__mega-card-price">From BDT 524,950</div>
+        </a>
+        <a href="bikes/gixxer-250.html" class="nav__mega-card" data-testid="mega-bike-gixxer-250" data-category="sports">
+          <div class="nav__mega-card-image" aria-hidden="true"><img src="assets/images/bikes/gixxer-250.webp" alt="Suzuki Gixxer 250" loading="lazy" decoding="async" /></div>
+          <span class="nav__mega-card-cat">Sports</span>
+          <div class="nav__mega-card-name">Gixxer 250</div>
+          <div class="nav__mega-card-price">From BDT 379,950</div>
+        </a>
+        <a href="bikes/gixxer-sf.html" class="nav__mega-card" data-testid="mega-bike-gixxer-sf" data-category="sports">
+          <div class="nav__mega-card-image" aria-hidden="true"><img src="assets/images/bikes/gixxer-sf.webp" alt="Suzuki Gixxer SF" loading="lazy" decoding="async" /></div>
+          <span class="nav__mega-card-cat">Sports</span>
+          <div class="nav__mega-card-name">Gixxer SF</div>
+          <div class="nav__mega-card-price">From BDT 329,950</div>
+        </a>
+        <a href="bikes/gixxer.html" class="nav__mega-card" data-testid="mega-bike-gixxer" data-category="commuter">
+          <div class="nav__mega-card-image" aria-hidden="true"><img src="assets/images/bikes/gixxer.webp" alt="Suzuki Gixxer" loading="lazy" decoding="async" /></div>
+          <span class="nav__mega-card-cat">Commuter</span>
+          <div class="nav__mega-card-name">Gixxer</div>
+          <div class="nav__mega-card-price">From BDT 229,950</div>
+        </a>
+        <a href="bikes/gixxer-classic-matt.html" class="nav__mega-card" data-testid="mega-bike-gixxer-classic-matt" data-category="commuter">
+          <div class="nav__mega-card-image" aria-hidden="true"><img src="assets/images/bikes/gixxer-classic-matt.webp" alt="Suzuki Gixxer Classic Matt" loading="lazy" decoding="async" /></div>
+          <span class="nav__mega-card-cat">Commuter</span>
+          <div class="nav__mega-card-name">Gixxer Classic Matt</div>
+          <div class="nav__mega-card-price">From BDT 202,950</div>
+        </a>
+        <a href="bikes/gixxer-monotone.html" class="nav__mega-card" data-testid="mega-bike-gixxer-monotone" data-category="commuter">
+          <div class="nav__mega-card-image" aria-hidden="true"><img src="assets/images/bikes/gixxer-monotone.webp" alt="Suzuki Gixxer Monotone" loading="lazy" decoding="async" /></div>
+          <span class="nav__mega-card-cat">Commuter</span>
+          <div class="nav__mega-card-name">Gixxer Monotone</div>
+          <div class="nav__mega-card-price">From BDT 199,950</div>
+        </a>
+        <a href="bikes/access-125.html" class="nav__mega-card" data-testid="mega-bike-access-125" data-category="scooter">
+          <div class="nav__mega-card-image" aria-hidden="true"><img src="assets/images/bikes/access-125.webp" alt="Suzuki Access 125" loading="lazy" decoding="async" /></div>
+          <span class="nav__mega-card-cat">Scooter</span>
+          <div class="nav__mega-card-name">Access 125</div>
+          <div class="nav__mega-card-price">From BDT 215,000</div>
+        </a>
+        <a href="bikes/gsx-125.html" class="nav__mega-card" data-testid="mega-bike-gsx-125" data-category="commuter">
+          <div class="nav__mega-card-image" aria-hidden="true"><img src="assets/images/bikes/gsx-125.webp" alt="Suzuki GSX 125" loading="lazy" decoding="async" /></div>
+          <span class="nav__mega-card-cat">Commuter</span>
+          <div class="nav__mega-card-name">GSX 125</div>
+          <div class="nav__mega-card-price">From BDT 141,950</div>
+        </a>
+        <a href="bikes/hayate-ep.html" class="nav__mega-card" data-testid="mega-bike-hayate-ep" data-category="commuter">
+          <div class="nav__mega-card-image" aria-hidden="true"><img src="assets/images/bikes/hayate-ep.webp" alt="Suzuki Hayate EP" loading="lazy" decoding="async" /></div>
+          <span class="nav__mega-card-cat">Commuter</span>
+          <div class="nav__mega-card-name">Hayate EP</div>
+          <div class="nav__mega-card-price">From BDT 118,000</div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Mobile overlay menu ===== -->
+  <div
+    class="nav__mobile-overlay"
+    id="nav-mobile-overlay"
+    data-testid="nav-mobile-overlay"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="nav-mobile-title"
+    hidden
+  >
+    <div class="nav__mobile-header">
+      <a href="#hero" class="nav__brand" id="nav-mobile-title" data-testid="nav-mobile-brand" aria-label="Suzuki Bangladesh — home">
+        <div class="brand-lockup" aria-hidden="true">
+          <span class="bl-mark"></span>
+          <div class="bl-text">
+            <span class="bl-suzuki">SUZUKI</span>
+            <span class="bl-tag">Bangladesh</span>
+          </div>
+        </div>
+      </a>
+      <button
+        type="button"
+        class="nav__mobile-close"
+        data-testid="nav-mobile-close"
+        data-nav-trigger="mobile-close"
+        aria-label="Close menu"
+      >
+        <i data-lucide="x" class="icon" aria-hidden="true"></i>
+      </button>
+    </div>
+    <div class="nav__mobile-body">
+      <a href="bikes.html" class="nav__mobile-link" data-testid="mobile-link-bikes">Bikes</a>
+      <a href="technology.html" class="nav__mobile-link" data-testid="mobile-link-technology">Technology</a>
+      <a href="service.html" class="nav__mobile-link" data-testid="mobile-link-service">Service</a>
+      <a href="shop.html" class="nav__mobile-link" data-testid="mobile-link-shop">Shop</a>
+      <a href="dealers.html" class="nav__mobile-link" data-testid="mobile-link-dealers">Dealers</a>
+      <a href="offers.html" class="nav__mobile-link" data-testid="mobile-link-offers">Offers</a>
+    </div>
+    <div class="nav__mobile-footer">
+      <a href="test-ride.html" class="btn btn-primary btn-lg" data-testid="mobile-cta-test-ride">Book Test Ride</a>
+      <a href="tel:16638" class="btn btn-secondary btn-lg" data-testid="mobile-cta-hotline">
+        <i data-lucide="phone" class="icon" aria-hidden="true"></i>
+        Call Hotline 16638
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- ============================================================
+     MAIN — All 11 sections as empty landmarks.
+     Each section gets HTML + CSS + JS in its own phase.
+     ============================================================ -->
+<main id="main" role="main">
+
+  <!-- PHASE 3 — Section 1: Hero (Hero v5 — locked red palette, scoped to .hero) -->
+  <section id="hero" class="hero" aria-label="Hero" data-testid="section-hero">
+
+    <!-- Watermark + fallback -->
+    <div class="watermark" id="hero-watermark" aria-hidden="true"></div>
+    <div class="watermark-fallback" aria-hidden="true">S</div>
+
+    <!-- HERO HEADLINE — cinematic poster -->
+    <div class="hero-headline" id="hero-headline" data-testid="hero-headline">
+      <span class="hl-mega" id="hero-hlMega">SUZUKI</span>
+      <div class="hl-editorial" id="hero-hlEditorial">
+        <span class="hl-line">This isn't just <span class="accent">a bike.</span></span>
+        <span class="hl-rule"></span>
+        <span class="hl-line">This is <span class="accent">who you are.</span></span>
+        <span class="hl-line muted">Suzuki Bangladesh — Since 1909</span>
+      </div>
+    </div>
+
+    <!-- (Brand lockup moved into the navbar — see header above) -->
+
+    <!-- Red halo -->
+    <div class="red-halo red-halo-pulse" id="hero-redHalo" aria-hidden="true"></div>
+
+    <!-- Diagonal slashes -->
+    <div class="slashes" aria-hidden="true">
+      <div class="slash slash-1"></div>
+      <div class="slash slash-2"></div>
+      <div class="slash slash-3"></div>
+      <div class="slash slash-4"></div>
+    </div>
+
+    <!-- Speed-line particles -->
+    <div class="particles" id="hero-particles" aria-hidden="true"></div>
+
+    <!-- Top bar — eyebrow tag (right side, since our nav lives in <header>) -->
+    <div class="topbar">
+      <span class="eyebrow-tag" id="hero-eyebrow" data-testid="hero-eyebrow">
+        <span>Racing in your blood — Since 1909</span>
+      </span>
+    </div>
+
+    <!-- BIKE STAGE -->
+    <div class="stage">
+      <div class="bike-frame">
+        <div class="beam" id="hero-beam"></div>
+        <div class="bike-img-wrap" id="hero-bikeWrap">
+          <img class="bike-img bike-bob" id="hero-bikeImg"
+               src="assets/images/bikes/gixxer-sf-250.webp"
+               alt="Suzuki Gixxer SF 250"
+               fetchpriority="high"
+               data-testid="hero-bike-image" />
+        </div>
+        <div class="bike-shadow" id="hero-bikeShadow"></div>
+      </div>
+
+      <!-- Leader-line SVG layer -->
+      <svg class="leaders-svg" id="hero-leaders" aria-hidden="true">
+        <polyline class="leader-path" id="hero-leader-engine"  points="0,0 0,0" />
+        <circle    class="leader-end"  id="hero-leader-engine-dot"  r="3" />
+        <polyline class="leader-path" id="hero-leader-power"   points="0,0 0,0" />
+        <circle    class="leader-end"  id="hero-leader-power-dot"   r="3" />
+        <polyline class="leader-path" id="hero-leader-mileage" points="0,0 0,0" />
+        <circle    class="leader-end"  id="hero-leader-mileage-dot" r="3" />
+      </svg>
+
+      <!-- Floating spec cards -->
+      <div class="specs-layer">
+        <div class="specs-grid">
+          <div class="spec-card spec-engine" id="hero-spec-engine" data-anchor="0.516,0.587" data-testid="hero-spec-engine">
+            <span class="label">Engine</span>
+            <span class="value"><span class="num" data-target="249" data-suffix="">0</span><span class="unit">cc</span></span>
+          </div>
+          <div class="spec-card spec-power" id="hero-spec-power" data-anchor="0.527,0.483" data-testid="hero-spec-power">
+            <span class="label">Max Power</span>
+            <span class="value"><span class="num" data-target="26.5" data-decimals="1">0</span><span class="unit">PS</span></span>
+          </div>
+          <div class="spec-card spec-mileage" id="hero-spec-mileage" data-anchor="0.542,0.333" data-testid="hero-spec-mileage">
+            <span class="label">Mileage</span>
+            <span class="value"><span class="num" data-target="40">0</span><span class="unit">km/l</span></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom row: bike id + thumbs -->
+      <div class="bottom-row">
+        <div>
+          <div class="bike-id" id="hero-bikeId" data-testid="hero-bike-id">
+            <span class="pre" id="hero-bikePre">Featured · 250cc Sport</span>
+            <span class="name" id="hero-bikeName">Gixxer<span class="accent"> SF </span>250</span>
+            <span class="price" id="hero-bikePrice"><span class="currency">BDT</span> 4,29,950</span>
+          </div>
+          <div class="ctas" id="hero-ctas">
+            <a href="bikes.html" class="btn-hero btn-hero-primary" id="hero-btn-primary" data-testid="hero-cta-primary">
+              <span>Explore the Lineup</span>
+              <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/></svg>
+            </a>
+            <a href="test-ride.html" class="btn-hero btn-hero-secondary" id="hero-btn-secondary" data-testid="hero-cta-secondary">
+              <span>Book a Test Ride</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="thumb-strip-wrap" id="hero-thumbWrap">
+          <div class="progress-track" aria-hidden="true">
+            <div class="progress-bar" id="hero-progressBar"></div>
+          </div>
+          <div class="thumb-strip" role="tablist" aria-label="Featured Suzuki bikes" id="hero-thumbStrip" data-testid="hero-thumb-strip"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scroll cue -->
+    <div class="scroll-cue" id="hero-scrollCue">
+      <span class="scroll-cue-label">Scroll to ignite</span>
+      <svg class="scroll-cue-chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+  </section>
+
+  <!-- PHASE 4 (Section 2 — Why Suzuki Is Different) — v2 Bajaj-style -->
+  <section id="section-2-why-suzuki" class="ws-section" aria-label="Why Suzuki is Different" data-testid="section-why-suzuki">
+
+    <div class="ws-container">
+
+      <!-- Meta band: eyebrow (left) · 104 YEARS pill (right) -->
+      <div class="ws-meta-band">
+        <p class="ws-eyebrow" data-testid="ws-eyebrow">EST. 1920 — HAMAMATSU, JAPAN</p>
+        <span class="ws-years-pill" data-testid="ws-years-pill" aria-label="One hundred and four years">
+          <span class="dot" aria-hidden="true"></span>
+          <strong>104</strong> YEARS · BANGLADESH
+        </span>
+      </div>
+
+      <!-- Photo-clipped SUZUKI wordmark.
+           Each photo-letter loads a real Suzuki Bangladesh moment via
+           background-image. The "Z" is the red-disc accent letter
+           (no photo). hero.js's letter-fallback strips broken bg URLs
+           so missing files render as solid white instead of invisible.
+
+           Photo paths follow the pattern:
+             assets/images/section-2/0N-{slug}.{ext}
+           Drop your event photos at these paths to upgrade the visual.
+           Until then, the section uses fallback bike + lifestyle shots
+           that already exist in the project. -->
+      <h2 class="ws-wordmark" data-testid="ws-wordmark" aria-label="SUZUKI">
+        <span class="ws-letter" data-letter="S" data-photo-slot="01-launch"
+              style="background-image: url('assets/images/section-2/05-showroom-launch.png');">S</span>
+        <span class="ws-letter" data-letter="U-1" data-photo-slot="02-award"
+              style="background-image: url('assets/images/bikes/gsx-rider.jpg');">U</span>
+        <span class="ws-letter ws-letter--accent" data-letter="Z">
+          <span class="ws-letter-disc" aria-hidden="true"></span>Z
+        </span>
+        <span class="ws-letter" data-letter="U-2" data-photo-slot="03-studio"
+              style="background-image: url('assets/images/bikes/rider-atmosphere.webp');">U</span>
+        <span class="ws-letter" data-letter="K" data-photo-slot="04-team"
+              style="background-image: url('assets/images/bikes/gsx-r150.webp');">K</span>
+        <span class="ws-letter" data-letter="I" data-photo-slot="05-showroom"
+              style="background-image: url('assets/images/bikes/gixxer-sf-250.webp');">I</span>
+      </h2>
+
+      <!-- White card overlay — heading + paragraph -->
+      <article class="ws-card" data-testid="ws-card">
+        <h3 class="ws-card-title">Not Every Bike Has 104 Years Behind It.</h3>
+        <p class="ws-card-body">On 15th March 1920, Michio Suzuki founded a company in Hamamatsu, Japan. One hundred and four years later, that same obsession with precision powers every Suzuki on Bangladesh's roads.</p>
+      </article>
+
+    </div>
+    <!-- /ws-container -->
+
+
+  </section>
+
+  <!-- PHASE 4b (Section 2b — Suzuki Differentiators · racing-line flow).
+       Split out from the parent ws-section so the path-draw animation
+       triggers on its own scroll-into-view rather than piggy-backing on
+       the wordmark + 104-years intro. Same .ws-flow markup, observed
+       independently by why-suzuki.js. -->
+  <section id="section-2b-suzuki-flow" class="ws-flow-section" aria-label="Suzuki differentiators" data-testid="section-suzuki-flow">
+    <div class="ws-container">
+
+      <!-- 4 differentiator points — racing-line flow layout
+           A custom SVG road traces L→R behind the cards with two
+           gentle chicanes. The path draws itself when the section
+           enters the viewport, then a continuous red pulse loops
+           along it. Cards stagger-reveal as the path "reaches"
+           each one. JS in why-suzuki.js wires this up. -->
+      <div class="ws-flow" data-testid="ws-flow" data-ws-flow>
+
+        <!-- Decorative SVG road behind the cards -->
+        <div class="ws-flow-road" aria-hidden="true">
+          <svg viewBox="0 0 1200 240" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+            <!-- Reference path geometry — chicanes pass through the
+                 4 checkpoint x-positions (150, 450, 750, 1050). -->
+            <defs>
+              <path id="ws-flow-path" d="
+                M 0 120
+                C 60 120, 100 60, 150 60
+                C 220 60, 250 180, 300 180
+                C 380 180, 420 60, 450 60
+                C 530 60, 580 180, 600 180
+                C 670 180, 710 60, 750 60
+                C 820 60, 860 180, 900 180
+                C 980 180, 1020 60, 1050 60
+                C 1100 60, 1140 120, 1200 120
+              " />
+            </defs>
+
+            <!-- Base hairline (always visible) -->
+            <use class="ws-flow-path-base"  href="#ws-flow-path" />
+            <!-- Drawn red path (animates on view) -->
+            <use class="ws-flow-path-drawn" href="#ws-flow-path" data-ws-flow-path />
+            <!-- Continuous travelling pulse -->
+            <use class="ws-flow-pulse"      href="#ws-flow-path" />
+
+            <!-- Checkpoint nodes at each card's x-position -->
+            <circle class="ws-flow-node ws-flow-node--1" cx="150"  cy="60"  r="6" />
+            <circle class="ws-flow-node ws-flow-node--2" cx="450"  cy="60"  r="6" />
+            <circle class="ws-flow-node ws-flow-node--3" cx="750"  cy="60"  r="6" />
+            <circle class="ws-flow-node ws-flow-node--4" cx="1050" cy="60"  r="6" />
+          </svg>
+        </div>
+
+        <!-- 4 checkpoint cards — same content as before, alternating
+             top/bottom on desktop so they straddle the road -->
+        <div class="ws-flow-points" role="list">
+
+          <article class="ws-flow-point ws-flow-point--1" data-testid="ws-point-01" role="listitem">
+            <span class="ws-point-num">01</span>
+            <span class="ws-point-rule" aria-hidden="true"></span>
+            <h3 class="ws-point-headline">MotoGP Racing DNA</h3>
+            <p class="ws-point-tagline">Proven at 300km/h. Engineered for your roads.</p>
+          </article>
+
+          <article class="ws-flow-point ws-flow-point--2" data-testid="ws-point-02" role="listitem">
+            <span class="ws-point-num">02</span>
+            <span class="ws-point-rule" aria-hidden="true"></span>
+            <h3 class="ws-point-headline">Japanese Precision Engineering</h3>
+            <p class="ws-point-tagline">Hamamatsu-born. Bangladesh-proven.</p>
+          </article>
+
+          <article class="ws-flow-point ws-flow-point--3" data-testid="ws-point-03" role="listitem">
+            <span class="ws-point-num">03</span>
+            <span class="ws-point-rule" aria-hidden="true"></span>
+            <h3 class="ws-point-headline">Technology That Sets the Standard</h3>
+            <p class="ws-point-tagline">Dual-Channel ABS. FI. SOCS. Standard.</p>
+          </article>
+
+          <article class="ws-flow-point ws-flow-point--4" data-testid="ws-point-04" role="listitem">
+            <span class="ws-point-num">04</span>
+            <span class="ws-point-rule" aria-hidden="true"></span>
+            <h3 class="ws-point-headline">Rancon Motor Bikes — Bangladesh's Partner</h3>
+            <p class="ws-point-tagline">Local manufacturing. Nationwide service. Genuine parts.</p>
+          </article>
+
+        </div>
+      </div>
+
+    </div>
+    <!-- /ws-container -->
+
+
+  </section>
+
+  <!-- PHASE 5 (Section 3 — Find Your Perfect Suzuki) — v2 continuous marquee -->
+  <section id="bikes" class="fb-section" aria-label="Find Your Perfect Suzuki" data-testid="section-find-bike">
+
+    <div class="fb-container">
+      <header class="fb-heading">
+        <p class="fb-eyebrow">EVERY ROAD HAS A SUZUKI</p>
+        <h2 class="fb-title">Find Your <em>Perfect</em> Suzuki.</h2>
+        <p class="fb-sub">Whether your road is the morning commute, the highway weekend, or the racetrack — there's a Suzuki engineered for it. Pick a category. Every bike inside it carries the same 104 years of Japanese precision.</p>
+      </header>
+    </div>
+
+    <!-- Continuous marquee — 5 categories slide left forever, hover/focus pauses.
+         Track holds 2 copies of the 5-card list. translateX(-50%) lands at the
+         start of the second copy → seamless loop. Duplicate cards are aria-hidden
+         and tabindex=-1 so screen-readers + keyboard skip them. -->
+    <div class="fb-marquee" data-testid="fb-marquee">
+      <div class="fb-track" data-testid="fb-track">
+
+        <!-- ===================== SET 1 (visible to AT) ===================== -->
+
+        <!-- 1 · COMMUTER -->
+        <a href="bikes.html" class="fb-card" data-category="commuter" data-testid="fb-card-commuter" aria-label="Browse Commuter category">
+          <div class="fb-card-img" style="background-image: url('assets/images/bikes/gixxer.webp');" aria-hidden="true"></div>
+          <div class="fb-card-content">
+            <div class="fb-card-top">
+              <span class="fb-card-tag">Category 01</span>
+            </div>
+            <div class="fb-card-bottom">
+              <p class="fb-card-tagline">› The daily ride.</p>
+              <h3 class="fb-card-name">Commuter</h3>
+              <span class="fb-card-cta">
+                Explore
+                <span class="fb-card-arrow" aria-hidden="true">→</span>
+              </span>
+            </div>
+          </div>
+        </a>
+
+        <!-- 2 · SPORTS -->
+        <a href="bikes.html" class="fb-card" data-category="sports" data-testid="fb-card-sports" aria-label="Browse Sports category">
+          <div class="fb-card-img" style="background-image: url('assets/images/bikes/gixxer-250.webp');" aria-hidden="true"></div>
+          <div class="fb-card-content">
+            <div class="fb-card-top">
+              <span class="fb-card-tag">Category 02</span>
+            </div>
+            <div class="fb-card-bottom">
+              <p class="fb-card-tagline">› The streetfighter.</p>
+              <h3 class="fb-card-name">Sports</h3>
+              <span class="fb-card-cta">
+                Explore
+                <span class="fb-card-arrow" aria-hidden="true">→</span>
+              </span>
+            </div>
+          </div>
+        </a>
+
+        <!-- 3 · PERFORMANCE SPORTS -->
+        <a href="bikes.html" class="fb-card" data-category="performance" data-testid="fb-card-performance" aria-label="Browse Performance Sports category">
+          <div class="fb-card-img" style="background-image: url('assets/images/bikes/gsx-r150.webp');" aria-hidden="true"></div>
+          <div class="fb-card-content">
+            <div class="fb-card-top">
+              <span class="fb-card-tag">Category 03</span>
+            </div>
+            <div class="fb-card-bottom">
+              <p class="fb-card-tagline">› The statement.</p>
+              <h3 class="fb-card-name">Performance<br/>Sports</h3>
+              <span class="fb-card-cta">
+                Explore
+                <span class="fb-card-arrow" aria-hidden="true">→</span>
+              </span>
+            </div>
+          </div>
+        </a>
+
+        <!-- 4 · SUPER SPORTS -->
+        <a href="bikes.html" class="fb-card" data-category="super-sports" data-testid="fb-card-super-sports" aria-label="Browse Super Sports category">
+          <div class="fb-card-img" style="background-image: url('assets/images/bikes/gixxer-sf-250.webp');" aria-hidden="true"></div>
+          <div class="fb-card-content">
+            <div class="fb-card-top">
+              <span class="fb-card-tag">Category 04</span>
+            </div>
+            <div class="fb-card-bottom">
+              <p class="fb-card-tagline">› The track.</p>
+              <h3 class="fb-card-name">Super Sports</h3>
+              <span class="fb-card-cta">
+                Explore
+                <span class="fb-card-arrow" aria-hidden="true">→</span>
+              </span>
+            </div>
+          </div>
+        </a>
+
+        <!-- 5 · SCOOTER -->
+        <a href="bikes.html" class="fb-card" data-category="scooter" data-testid="fb-card-scooter" aria-label="Browse Scooter category">
+          <div class="fb-card-img" style="background-image: url('assets/images/bikes/access-125.webp');" aria-hidden="true"></div>
+          <div class="fb-card-content">
+            <div class="fb-card-top">
+              <span class="fb-card-tag">Category 05</span>
+            </div>
+            <div class="fb-card-bottom">
+              <p class="fb-card-tagline">› The everyday.</p>
+              <h3 class="fb-card-name">Scooter</h3>
+              <span class="fb-card-cta">
+                Explore
+                <span class="fb-card-arrow" aria-hidden="true">→</span>
+              </span>
+            </div>
+          </div>
+        </a>
+
+        <!-- ============== SET 2 (duplicates for seamless loop) ============== -->
+        <!-- aria-hidden + tabindex=-1 so AT and keyboard skip these copies -->
+
+        <a href="bikes.html" class="fb-card" data-category="commuter" aria-hidden="true" tabindex="-1">
+          <div class="fb-card-img" style="background-image: url('assets/images/bikes/gixxer.webp');" aria-hidden="true"></div>
+          <div class="fb-card-content">
+            <div class="fb-card-top"><span class="fb-card-tag">Category 01</span></div>
+            <div class="fb-card-bottom">
+              <p class="fb-card-tagline">› The daily ride.</p>
+              <h3 class="fb-card-name">Commuter</h3>
+              <span class="fb-card-cta">Explore<span class="fb-card-arrow" aria-hidden="true">→</span></span>
+            </div>
+          </div>
+        </a>
+        <a href="bikes.html" class="fb-card" data-category="sports" aria-hidden="true" tabindex="-1">
+          <div class="fb-card-img" style="background-image: url('assets/images/bikes/gixxer-250.webp');" aria-hidden="true"></div>
+          <div class="fb-card-content">
+            <div class="fb-card-top"><span class="fb-card-tag">Category 02</span></div>
+            <div class="fb-card-bottom">
+              <p class="fb-card-tagline">› The streetfighter.</p>
+              <h3 class="fb-card-name">Sports</h3>
+              <span class="fb-card-cta">Explore<span class="fb-card-arrow" aria-hidden="true">→</span></span>
+            </div>
+          </div>
+        </a>
+        <a href="bikes.html" class="fb-card" data-category="performance" aria-hidden="true" tabindex="-1">
+          <div class="fb-card-img" style="background-image: url('assets/images/bikes/gsx-r150.webp');" aria-hidden="true"></div>
+          <div class="fb-card-content">
+            <div class="fb-card-top"><span class="fb-card-tag">Category 03</span></div>
+            <div class="fb-card-bottom">
+              <p class="fb-card-tagline">› The statement.</p>
+              <h3 class="fb-card-name">Performance<br/>Sports</h3>
+              <span class="fb-card-cta">Explore<span class="fb-card-arrow" aria-hidden="true">→</span></span>
+            </div>
+          </div>
+        </a>
+        <a href="bikes.html" class="fb-card" data-category="super-sports" aria-hidden="true" tabindex="-1">
+          <div class="fb-card-img" style="background-image: url('assets/images/bikes/gixxer-sf-250.webp');" aria-hidden="true"></div>
+          <div class="fb-card-content">
+            <div class="fb-card-top"><span class="fb-card-tag">Category 04</span></div>
+            <div class="fb-card-bottom">
+              <p class="fb-card-tagline">› The track.</p>
+              <h3 class="fb-card-name">Super Sports</h3>
+              <span class="fb-card-cta">Explore<span class="fb-card-arrow" aria-hidden="true">→</span></span>
+            </div>
+          </div>
+        </a>
+        <a href="bikes.html" class="fb-card" data-category="scooter" aria-hidden="true" tabindex="-1">
+          <div class="fb-card-img" style="background-image: url('assets/images/bikes/access-125.webp');" aria-hidden="true"></div>
+          <div class="fb-card-content">
+            <div class="fb-card-top"><span class="fb-card-tag">Category 05</span></div>
+            <div class="fb-card-bottom">
+              <p class="fb-card-tagline">› The everyday.</p>
+              <h3 class="fb-card-name">Scooter</h3>
+              <span class="fb-card-cta">Explore<span class="fb-card-arrow" aria-hidden="true">→</span></span>
+            </div>
+          </div>
+        </a>
+
+      </div>
+    </div>
+
+    <div class="fb-container">
+      <div class="fb-footer">
+        <a href="bikes.html" class="fb-all-cta" data-testid="fb-all-cta">
+          <span>View All Bikes</span>
+        </a>
+      </div>
+    </div>
+
+  </section>
+
+
+  <!-- PHASE 6 (Section 4 — Engine Showcase: 250cc oil-cooled SOCS).
+       Real engine photo · feature callouts radiate around the cutaway. -->
+  <section id="engine" class="es-section" aria-label="Engine Showcase" data-testid="section-engine">
+    <div class="es-container">
+
+      <header class="es-heading">
+        <p class="es-eyebrow">SUZUKI · 250CC OIL-COOLED ENGINE</p>
+        <h2 class="es-title">26 horses.<br/><em>One heartbeat.</em></h2>
+        <p class="es-sub">No other bike brand in Bangladesh opens its engine up and shows you what's inside. Suzuki does. The heart of the Gixxer SF 250 — engineered in Japan, tuned for Bangladesh.</p>
+      </header>
+
+      <div class="es-stage2">
+
+        <!-- Engine + radial callouts.  Image sits on a soft white podium
+             so the cutaway pops; mix-blend-mode multiply hides the white
+             background of the source image while keeping the metal tones. -->
+        <div class="es-engine-stage">
+
+          <div class="es-engine-podium" aria-hidden="true"></div>
+
+          <img class="es-engine-img"
+               src="assets/images/section-engine/engine-cutaway.webp"
+               alt="Suzuki 250cc oil-cooled SOCS engine cutaway"
+               loading="lazy" decoding="async" />
+
+          <article class="es-callout es-callout--01" data-testid="es-callout-1">
+            <span class="es-callout-num">01</span>
+            <h3 class="es-callout-title">SOCS Cooling</h3>
+            <p class="es-callout-spec">Always runs cool</p>
+          </article>
+
+          <article class="es-callout es-callout--02" data-testid="es-callout-2">
+            <span class="es-callout-num">02</span>
+            <h3 class="es-callout-title">4-Valve Head</h3>
+            <p class="es-callout-spec">Breathes deeper</p>
+          </article>
+
+          <article class="es-callout es-callout--03" data-testid="es-callout-3">
+            <span class="es-callout-num">03</span>
+            <h3 class="es-callout-title">Forged Piston</h3>
+            <p class="es-callout-spec">Lighter, faster</p>
+          </article>
+
+          <article class="es-callout es-callout--04" data-testid="es-callout-4">
+            <span class="es-callout-num">04</span>
+            <h3 class="es-callout-title">Fuel Injection</h3>
+            <p class="es-callout-spec">Precision spray</p>
+          </article>
+
+          <article class="es-callout es-callout--05" data-testid="es-callout-5">
+            <span class="es-callout-num">05</span>
+            <h3 class="es-callout-title">Balanced Crank</h3>
+            <p class="es-callout-spec">Zero vibration</p>
+          </article>
+
+          <article class="es-callout es-callout--06" data-testid="es-callout-6">
+            <span class="es-callout-num">06</span>
+            <h3 class="es-callout-title">6-Speed Gearbox</h3>
+            <p class="es-callout-spec">Every gear ready</p>
+          </article>
+
+        </div>
+
+        <a href="test-ride.html" class="es-stage2-cta" data-testid="es-cta-test-ride">
+          <span>Experience It · Book a Test Ride</span>
+          <span class="es-stage2-cta-arrow" aria-hidden="true">→</span>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- PHASE 7 (Section 5 — Best Deals · slideshow) -->
+  <section id="offers" class="bd-section" aria-label="Best Deals" data-testid="section-deals" tabindex="0">
+    <div class="bd-container">
+
+      <header class="bd-header">
+        <div class="bd-heading-text">
+          <p class="bd-eyebrow">LIMITED TIME OFFERS</p>
+          <h2 class="bd-title">The Ride You <em>Want</em>.</h2>
+          <p class="bd-sub">At a price that respects you.</p>
+        </div>
+      </header>
+
+      <div class="bd-viewport">
+        <div class="bd-track" data-testid="bd-track">
+
+          <!-- Deal 1 — Gixxer (the hero deal from screenshot) -->
+          <a href="bikes.html" class="bd-card" data-testid="bd-deal-gixxer">
+            <div class="bd-card-image">
+              <span class="bd-card-tag">SAVE BDT 8,000</span>
+              <img src="assets/images/bikes/gixxer.webp" alt="Suzuki Gixxer — special price BDT 229,950" loading="lazy" decoding="async" />
+            </div>
+            <div class="bd-card-body">
+              <h3 class="bd-card-name">Gixxer</h3>
+              <p class="bd-card-special"><span class="label">Special Price</span><br/>BDT 2,29,950</p>
+              <p class="bd-card-mrp">MRP BDT 2,37,950</p>
+              <p class="bd-card-colors"><span class="dot"></span>3 Colors Available</p>
+              <span class="bd-card-cta">Explore</span>
+            </div>
+          </a>
+
+          <!-- Deal 2 — Gixxer Monotone (from screenshot) -->
+          <a href="bikes.html" class="bd-card" data-testid="bd-deal-gixxer-monotone">
+            <div class="bd-card-image">
+              <span class="bd-card-tag">SAVE BDT 6,000</span>
+              <img src="assets/images/bikes/gixxer-monotone.webp" alt="Suzuki Gixxer Monotone — special price BDT 199,950" loading="lazy" decoding="async" />
+            </div>
+            <div class="bd-card-body">
+              <h3 class="bd-card-name">Gixxer Monotone</h3>
+              <p class="bd-card-special"><span class="label">Special Price</span><br/>BDT 1,99,950</p>
+              <p class="bd-card-mrp">MRP BDT 2,05,950</p>
+              <p class="bd-card-colors"><span class="dot"></span>7 Colors Available</p>
+              <span class="bd-card-cta">Explore</span>
+            </div>
+          </a>
+
+          <!-- Deal 3 — Gixxer Classic Matt (from screenshot) -->
+          <a href="bikes.html" class="bd-card" data-testid="bd-deal-gixxer-classic-matt">
+            <div class="bd-card-image">
+              <span class="bd-card-tag">SAVE BDT 6,000</span>
+              <img src="assets/images/bikes/gixxer-classic-matt.webp" alt="Suzuki Gixxer Classic Matt — special price BDT 202,950" loading="lazy" decoding="async" />
+            </div>
+            <div class="bd-card-body">
+              <h3 class="bd-card-name">Gixxer Classic Matt</h3>
+              <p class="bd-card-special"><span class="label">Special Price</span><br/>BDT 2,02,950</p>
+              <p class="bd-card-mrp">MRP BDT 2,08,950</p>
+              <p class="bd-card-colors"><span class="dot"></span>2 Colors Available</p>
+              <span class="bd-card-cta">Explore</span>
+            </div>
+          </a>
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- PHASE 8 (Section 6 — MotoGP Heritage). Reference: Bajaj-style
+       full-bleed photo + lowercase title with red dot + white cards
+       with red right-edge strip. Hero photo: Suzuki Bangladesh's
+       December 2024 Gixxer 250 / SF 250 launch. -->
+  <section id="motogp" class="mg-section" aria-label="MotoGP Heritage" data-testid="section-motogp">
+
+    <!-- Full-bleed background photo + cinematic gradient tint -->
+    <div class="mg-bg" aria-hidden="true">
+      <img src="assets/images/section-7/motogp-hero.jpg"
+           alt=""
+           loading="lazy"
+           decoding="async" />
+    </div>
+
+    <div class="mg-container">
+      <div class="mg-grid">
+
+        <!-- LEFT — title + red dot accent -->
+        <div class="mg-headline">
+          <p class="mg-eyebrow">MOTOGP HERITAGE · SINCE 1962</p>
+          <h2 class="mg-title">born on<br/>the <em>racetrack.</em></h2>
+          <span class="mg-dot" aria-hidden="true"></span>
+        </div>
+
+        <!-- RIGHT — 3 stacked cards with red right-edge strip -->
+        <div class="mg-cards">
+
+          <article class="mg-card" data-testid="mg-card-1">
+            <span class="mg-card-num">01 · GRAND PRIX HERITAGE</span>
+            <h3 class="mg-card-title">60 years on grid.</h3>
+            <p class="mg-card-body">Suzuki entered Grand Prix racing in 1962. Joan Mir delivered the 2020 MotoGP World Championship on the GSX-RR. Six decades of obsession — distilled into every Gixxer.</p>
+            <a href="bikes.html" class="mg-card-more" data-testid="mg-card-1-more">
+              <span>See the bikes</span>
+              <span class="mg-card-more-icon" aria-hidden="true">→</span>
+            </a>
+          </article>
+
+          <article class="mg-card" data-testid="mg-card-2">
+            <span class="mg-card-num">02 · MOTOGP EDITION</span>
+            <h3 class="mg-card-title">Bangladesh's fastest 250cc.</h3>
+            <p class="mg-card-body">Launched December 2024. Suzuki Ecstar livery on the Gixxer SF 250 MotoGP Edition — SOCS oil cooling, 6-speed gearbox, dual-channel ABS. The closest you'll get to the GSX-RR on a public road.</p>
+            <a href="#bikes/gixxer-sf-250" class="mg-card-more" data-testid="mg-card-2-more">
+              <span>Explore Gixxer SF 250</span>
+              <span class="mg-card-more-icon" aria-hidden="true">→</span>
+            </a>
+          </article>
+
+          <article class="mg-card" data-testid="mg-card-3">
+            <span class="mg-card-num">03 · RACE-BRED ENGINEERING</span>
+            <h3 class="mg-card-title">Earned on the track. Tuned for your road.</h3>
+            <p class="mg-card-body">Electronic FI. Dual-channel ABS. Full-LED. Every spec was first refined under Grand Prix conditions, then calibrated for Dhaka traffic and the Dhaka–Chittagong highway.</p>
+            <a href="https://suzuki.com.bd/news/suzuki-bangladesh-unveils-motogp-inspired-fastest-250cc-bikes-the-suzuki-gixxer-250-and-gixxer-sf-250-qx80cbtw"
+               class="mg-card-more"
+               target="_blank"
+               rel="noopener"
+               data-testid="mg-card-3-more">
+              <span>Read the launch story</span>
+              <span class="mg-card-more-icon" aria-hidden="true">→</span>
+            </a>
+          </article>
+
+        </div>
+
+      </div>
+    </div>
+
+  </section>
+
+  <!-- PHASE 9 (Section 8 — Why Suzuki Is Safe).
+       Reference: Stryda "WHAT'S INSIDE MATTERS" — centred title +
+       hero image floating in middle + 4 numbered points pinned at
+       the four corners. Adapted to dark + red. -->
+  <section id="safety" class="sf-section" aria-label="Why Suzuki is Safe" data-testid="section-safety">
+    <div class="sf-container">
+
+      <header class="sf-heading">
+        <p class="sf-eyebrow">OUR MISSION</p>
+        <h2 class="sf-title">Fast Enough to Thrill.<br/><em>Safe Enough to Trust.</em></h2>
+        <p class="sf-sub">At Suzuki, safety isn't an afterthought. Every feature is engineered — because the most exciting rides are the ones you come home from.</p>
+      </header>
+
+      <div class="sf-grid">
+
+        <!-- ===== POINT 01 · ABS (top-left) ===== -->
+        <article class="sf-point sf-point--1" data-testid="sf-point-01">
+          <span class="sf-point-num">01</span>
+          <span class="sf-point-rule" aria-hidden="true"></span>
+          <h3 class="sf-point-title">ABS</h3>
+          <p class="sf-point-sub">Dual-Channel ABS — Standard</p>
+        </article>
+
+        <!-- ===== POINT 02 · LED (bottom-left) ===== -->
+        <article class="sf-point sf-point--2" data-testid="sf-point-02">
+          <span class="sf-point-num">02</span>
+          <span class="sf-point-rule" aria-hidden="true"></span>
+          <h3 class="sf-point-title">LED</h3>
+          <p class="sf-point-sub">Full LED Lighting System</p>
+        </article>
+
+        <!-- ===== CENTRE IMAGE — bike front view (transparent PNG) ===== -->
+        <div class="sf-image" aria-hidden="true">
+          <img src="assets/images/bikes/bike-front.png"
+               alt=""
+               loading="lazy"
+               decoding="async" />
+        </div>
+
+        <!-- ===== POINT 03 · FI (top-right) — richer card with body + arrow ===== -->
+        <article class="sf-point sf-point--3" data-testid="sf-point-03">
+          <span class="sf-point-num">03</span>
+          <span class="sf-point-rule" aria-hidden="true"></span>
+          <h3 class="sf-point-title">FI</h3>
+          <p class="sf-point-sub">FI-Certified Service Centers</p>
+          <p class="sf-point-body">Every Rancon authorized service center is equipped with FI cleaners and trained technicians. A well-maintained Suzuki is a safe Suzuki.</p>
+          <a href="service.html" class="sf-point-arrow" aria-label="Find a service center" data-testid="sf-point-03-arrow">→</a>
+        </article>
+
+        <!-- ===== POINT 04 · ERG (bottom-right) ===== -->
+        <article class="sf-point sf-point--4" data-testid="sf-point-04">
+          <span class="sf-point-num">04</span>
+          <span class="sf-point-rule" aria-hidden="true"></span>
+          <h3 class="sf-point-title">ERG</h3>
+          <p class="sf-point-sub">Ergonomic Design</p>
+        </article>
+
+      </div>
+
+      <p class="sf-tagline" data-testid="sf-tagline">
+        <strong>Wear your helmet.</strong> Wear your gear. <strong>Ride a Suzuki.</strong>
+      </p>
+
+    </div>
+  </section>
+
+  <!-- PHASE 10 (Section 9 — Rider Stories).
+       Layout: staggered "REAL RIDERS / REAL ROADS / REAL STORIES"
+       title with stat block right; below, a 3-column card grid:
+       white photo card · red quote card + dark rating card · white photo card. -->
+  <section id="stories" class="rs-section" aria-label="Rider Stories" data-testid="section-stories">
+    <div class="rs-container">
+
+      <header class="rs-header">
+        <h2 class="rs-title">
+          <span class="rs-title-line rs-title-line--1">Real Riders.</span>
+          <span class="rs-title-line rs-title-line--2">Real <span class="rs-title-highlight">Roads.</span></span>
+          <span class="rs-title-line rs-title-line--3">Real Stories.</span>
+        </h2>
+
+        <div class="rs-stat" data-testid="rs-stat">
+          <p class="rs-stat-num">1,000,000+</p>
+          <p class="rs-stat-label">Suzuki <strong>Riders</strong> in Bangladesh</p>
+          <a href="#" class="rs-stat-cta" data-testid="rs-stat-cta">Join the Community</a>
+        </div>
+      </header>
+
+      <div class="rs-cards">
+
+        <!-- ===== Card 1 — Photo + long quote (left, spans 2 rows) ===== -->
+        <article class="rs-card rs-card--white rs-card-1" data-testid="rs-card-1">
+          <div class="rs-card-image">
+            <img src="assets/images/section-8/safety-rider.jpg"
+                 alt="Suzuki Gixxer SF 250 — taken in Sylhet"
+                 loading="lazy"
+                 decoding="async" />
+            <span class="rs-card-caption">Gixxer SF 250 · Sylhet</span>
+          </div>
+          <div class="rs-card-body">
+            <span class="rs-quote-mark" aria-hidden="true">&ldquo;</span>
+            <p class="rs-card-quote">I've owned three bikes before my Gixxer SF 250. Nothing has come close to the confidence it gives on both highways and city streets. The stability at high speeds is unmatched.</p>
+            <p class="rs-card-meta">— <strong>Rakib H.</strong> · Rider since 2019</p>
+          </div>
+        </article>
+
+        <!-- ===== Card 2 — Red quote card (middle-top) ===== -->
+        <article class="rs-card rs-card--red rs-card-2" data-testid="rs-card-2">
+          <p class="rs-quote-text">&ldquo;The torque hits different. Nothing else in this price feels this fast.&rdquo;</p>
+          <p class="rs-quote-attrib">— Sakib R.</p>
+          <div class="rs-quote-stars" aria-label="5 out of 5 stars">★ ★ ★ ★ ★</div>
+        </article>
+
+        <!-- ===== Card 3 — Dark rating card (middle-bottom) ===== -->
+        <article class="rs-card rs-card--rating rs-card-3" data-testid="rs-card-3">
+          <p class="rs-rating-num"><em>4.8</em>/5</p>
+          <p class="rs-rating-label">Avg. Rider Rating</p>
+          <div class="rs-rating-stars" aria-label="Average rating 4.8 out of 5">★ ★ ★ ★ ★</div>
+          <p class="rs-rating-label" style="font-size: 0.6rem; opacity: 0.7;">Across 5,000+ reviews</p>
+        </article>
+
+        <!-- ===== Card 4 — Photo + headline + body (right, spans 2 rows) ===== -->
+        <article class="rs-card rs-card--white rs-card-4" data-testid="rs-card-4">
+          <div class="rs-card-image">
+            <img src="assets/images/categories/commuter.jpg"
+                 alt="1,200 km solo trip on Suzuki Access 125"
+                 loading="lazy"
+                 decoding="async" />
+            <span class="rs-card-caption">Access 125 · Cox's Bazar</span>
+          </div>
+          <div class="rs-card-body">
+            <h3 class="rs-card-headline">1,200 km Solo Trip to Cox's Bazar — On My Access 125</h3>
+            <p class="rs-card-quote">&ldquo;My scooter took me farther than I ever expected. Comfort is key, and the mileage held up across the entire ride.&rdquo;</p>
+            <p class="rs-card-meta">— <strong>Imran S.</strong> · Sylhet</p>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- PHASE 11 (Section 10 — Suzuki Service).
+       Reference: 4 service cards in a row, each connected via thin
+       red curve to a central glowing Suzuki logo orb below. -->
+  <section id="service" class="sv-section" aria-label="Suzuki Service" data-testid="section-service">
+    <div class="sv-container">
+
+      <header class="sv-heading">
+        <span class="sv-pill">SUZUKI SERVICE</span>
+        <h2 class="sv-title">Your Bike Deserves <em>the Best Care.</em></h2>
+        <p class="sv-sub">500+ authorized service centers. Factory-trained technicians. Genuine parts. Zero compromise.</p>
+      </header>
+
+      <div class="sv-stage">
+
+        <!-- ===== 4 service cards ===== -->
+        <div class="sv-cards" data-testid="sv-cards">
+
+          <article class="sv-card" data-testid="sv-card-regular">
+            <span class="sv-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="3" x2="8" y2="7"/><line x1="16" y1="3" x2="16" y2="7"/></svg>
+            </span>
+            <h3 class="sv-card-title">Regular <em>Service</em></h3>
+            <p class="sv-card-body">Book your next service online in under 2 minutes. Pick your slot, drop your bike, ride home before evening.</p>
+            <a href="#service/book" class="sv-card-cta" data-testid="sv-card-regular-cta">Book Now</a>
+          </article>
+
+          <article class="sv-card" data-testid="sv-card-warranty">
+            <span class="sv-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M12 2 L4 6 V12 C4 17 8 21 12 22 C16 21 20 17 20 12 V6 Z"/><polyline points="9 12 11 14 15 10"/></svg>
+            </span>
+            <h3 class="sv-card-title">Warranty <em>Care</em></h3>
+            <p class="sv-card-body">Full coverage, hassle-free claims, nationwide. Every Suzuki bike is backed by RMBL's 2-year warranty.</p>
+            <a href="#service/warranty" class="sv-card-cta" data-testid="sv-card-warranty-cta">Learn More</a>
+          </article>
+
+          <article class="sv-card" data-testid="sv-card-parts">
+            <span class="sv-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1A1.7 1.7 0 0 0 9 19.4a1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1A1.7 1.7 0 0 0 4.6 9a1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+            </span>
+            <h3 class="sv-card-title">Genuine <em>Parts</em></h3>
+            <p class="sv-card-body">Only OEM parts. Your bike runs like day one. Stocked at every authorized service center across Bangladesh.</p>
+            <a href="#shop?cat=parts" class="sv-card-cta" data-testid="sv-card-parts-cta">Order Parts</a>
+          </article>
+
+          <article class="sv-card" data-testid="sv-card-locator">
+            <span class="sv-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            </span>
+            <h3 class="sv-card-title">Service <em>Locator</em></h3>
+            <p class="sv-card-body">Find your nearest authorized center in seconds. GPS-powered list, sorted by distance + travel time.</p>
+            <a href="#dealers?filter=service" class="sv-card-cta" data-testid="sv-card-locator-cta">Find Center</a>
+          </article>
+
+        </div>
+
+        <!-- ===== Connector lines (4 → orb) ===== -->
+        <div class="sv-connectors" aria-hidden="true">
+          <svg viewBox="0 0 1200 200" preserveAspectRatio="none">
+            <!-- Card 1 (centre x=150) curves to orb (centre x=600) -->
+            <path d="M 150 0 C 150 100, 400 140, 600 200" />
+            <!-- Card 2 (centre x=450) -->
+            <path d="M 450 0 C 450 80, 540 130, 600 200" />
+            <!-- Card 3 (centre x=750) -->
+            <path d="M 750 0 C 750 80, 660 130, 600 200" />
+            <!-- Card 4 (centre x=1050) -->
+            <path d="M 1050 0 C 1050 100, 800 140, 600 200" />
+            <!-- Convergence dot at the bottom -->
+            <circle cx="600" cy="200" r="4" />
+          </svg>
+        </div>
+
+        <!-- ===== Logo orb — convergence point. Uses standalone S-mark
+                       PNG; bypasses the navbar lockup knockout pipeline so
+                       the orb shows the bold Suzuki S exactly where the
+                       service connector lines meet. ===== -->
+        <div class="sv-orb-wrap">
+          <div class="sv-orb" data-testid="sv-orb">
+            <span class="sv-orb-mark" aria-hidden="true"></span>
+          </div>
+        </div>
+
+        <!-- ===== Locator CTA below the orb ===== -->
+        <div class="sv-locator">
+          <a href="service.html" class="sv-locator-cta" data-testid="sv-locator-main-cta">
+            Service Locator
+          </a>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================
+       PHASE 12 (Section 11 — Top News).
+       Layout:
+         1. Full-bleed marquee headline (always-moving) with text
+            segments separated by small circular thumbnails + red
+            dashes — sets the "stories that move" tone
+         2. Centred eyebrow + section title
+         3. 3-card news grid (image / date+tag / title / excerpt /
+            "READ MORE →")
+         4. "View All News" outline CTA
+       ============================================================ -->
+  <section id="news" class="nw-section" aria-label="Top News" data-testid="section-news">
+
+    <!-- Full-bleed marquee (sits OUTSIDE .nw-container so the track
+         runs edge-to-edge). Track holds 2 identical halves; CSS
+         translateX(-50%) at 100% loops seamlessly. aria-hidden because
+         it is decorative — the actual headline lives below. -->
+    <div class="nw-marquee" data-testid="news-marquee" aria-hidden="true">
+      <div class="nw-marquee-track">
+
+        <!-- ===== Set A ===== -->
+        <span class="nw-marquee-text">Stories that <em>move.</em></span>
+        <span class="nw-marquee-dash" aria-hidden="true"></span>
+        <span class="nw-marquee-thumb">
+          <img src="assets/images/section-7/motogp-hero.jpg" alt="" loading="lazy" />
+        </span>
+        <span class="nw-marquee-text nw-marquee-text--outline">Latest News</span>
+        <span class="nw-marquee-dash" aria-hidden="true"></span>
+        <span class="nw-marquee-thumb">
+          <img src="assets/images/bikes/gixxer-sf-250.webp" alt="" loading="lazy" />
+        </span>
+        <span class="nw-marquee-text">From the <em>Saddle.</em></span>
+        <span class="nw-marquee-dash" aria-hidden="true"></span>
+        <span class="nw-marquee-thumb">
+          <img src="assets/images/bikes/rider-atmosphere.webp" alt="" loading="lazy" />
+        </span>
+
+        <!-- ===== Set B (duplicate of A — required for seamless -50% loop) ===== -->
+        <span class="nw-marquee-text">Stories that <em>move.</em></span>
+        <span class="nw-marquee-dash" aria-hidden="true"></span>
+        <span class="nw-marquee-thumb">
+          <img src="assets/images/section-7/motogp-hero.jpg" alt="" loading="lazy" />
+        </span>
+        <span class="nw-marquee-text nw-marquee-text--outline">Latest News</span>
+        <span class="nw-marquee-dash" aria-hidden="true"></span>
+        <span class="nw-marquee-thumb">
+          <img src="assets/images/bikes/gixxer-sf-250.webp" alt="" loading="lazy" />
+        </span>
+        <span class="nw-marquee-text">From the <em>Saddle.</em></span>
+        <span class="nw-marquee-dash" aria-hidden="true"></span>
+        <span class="nw-marquee-thumb">
+          <img src="assets/images/bikes/rider-atmosphere.webp" alt="" loading="lazy" />
+        </span>
+      </div>
+    </div>
+
+    <div class="nw-container">
+
+      <!-- Section heading -->
+      <header class="nw-heading">
+        <p class="nw-eyebrow" data-testid="news-eyebrow">Top News</p>
+        <h2 class="nw-title" data-testid="news-title">
+          What's <em>new</em> at Suzuki.
+        </h2>
+      </header>
+
+      <!-- 3-card news grid -->
+      <div class="nw-cards" data-testid="news-cards">
+
+        <!-- Card 1 — Gixxer 250 MotoGP-inspired launch -->
+        <a class="nw-card" href="news/gixxer-250-motogp-edition.html" data-testid="news-card-1">
+          <div class="nw-card-image">
+            <img
+              src="assets/images/section-7/motogp-hero.jpg"
+              alt="Suzuki Bangladesh unveils the MotoGP-inspired Gixxer 250 Series at the launch event in Dhaka"
+              loading="lazy"
+            />
+          </div>
+          <div class="nw-card-meta">
+            <span class="nw-card-date">December 02, 2024</span>
+            <span class="nw-card-tag">General</span>
+          </div>
+          <div class="nw-card-body">
+            <h3 class="nw-card-title">
+              Suzuki Bangladesh unveils MotoGP-inspired Gixxer 250 series
+            </h3>
+            <p class="nw-card-excerpt">
+              Suzuki Bangladesh has officially launched the highly anticipated Suzuki Gixxer 250 series — bringing MotoGP-inspired design, race-bred performance and a new era of Suzuki ownership to the Bangladeshi rider.
+            </p>
+            <span class="nw-card-cta" aria-hidden="true">Read More</span>
+          </div>
+        </a>
+
+        <!-- Card 2 — Gixxer Fi Disc launch -->
+        <a class="nw-card" href="news/gixxer-fi-disc-launch.html" data-testid="news-card-2">
+          <div class="nw-card-image">
+            <img
+              src="assets/images/section-2/05-showroom-launch.png"
+              alt="Suzuki Bangladesh launches the new Gixxer Fi Disc at a stage event"
+              loading="lazy"
+            />
+          </div>
+          <div class="nw-card-meta">
+            <span class="nw-card-date">March 30, 2024</span>
+            <span class="nw-card-tag">General</span>
+          </div>
+          <div class="nw-card-body">
+            <h3 class="nw-card-title">
+              Suzuki Bangladesh launches the new Gixxer Fi Disc
+            </h3>
+            <p class="nw-card-excerpt">
+              Suzuki Bangladesh is thrilled to announce the much-awaited release of the all-new Suzuki Gixxer Fi Disc — bringing fuel-injection precision and disc-brake confidence to one of Bangladesh's most-loved motorbikes.
+            </p>
+            <span class="nw-card-cta" aria-hidden="true">Read More</span>
+          </div>
+        </a>
+
+        <!-- Card 3 — Siam Ahmed Face of Suzuki -->
+        <a class="nw-card" href="news/siam-ahmed-face-of-suzuki.html" data-testid="news-card-3">
+          <div class="nw-card-image">
+            <img
+              src="assets/images/news/siam-ahmed.webp"
+              alt="Bangladeshi film actor Siam Ahmed signed as the face of Suzuki Bangladesh"
+              loading="lazy"
+            />
+          </div>
+          <div class="nw-card-meta">
+            <span class="nw-card-date">March 01, 2024</span>
+            <span class="nw-card-tag">General</span>
+          </div>
+          <div class="nw-card-body">
+            <h3 class="nw-card-title">
+              Introducing the new face of Suzuki
+            </h3>
+            <p class="nw-card-excerpt">
+              Bangladeshi popular film actor and youth icon Siam Ahmed has been signed as the regional brand ambassador of Suzuki — a partnership that brings Suzuki's spirit of performance and individuality to a new generation.
+            </p>
+            <span class="nw-card-cta" aria-hidden="true">Read More</span>
+          </div>
+        </a>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================
+       PHASE 13 (Section 12 — Final CTA / Newsletter).
+       Layout:
+         - Full-bleed dark bike photo backdrop with heavy wash
+         - Tiny red rider mark (icon)
+         - Oversized "Stay in the loop." headline
+         - One-line benefits sub
+         - Inline email + red SUBSCRIBE button
+         - "No spam. Unsubscribe anytime." fine print
+       ============================================================ -->
+  <section id="test-ride" class="fc-section" aria-label="Stay in the loop" data-testid="section-final-cta">
+
+    <!-- Full-bleed photo backdrop. Reuses an existing dark bike asset
+         so no new image is required. Decorative — alt left empty. -->
+    <div class="fc-bg" aria-hidden="true">
+      <img src="assets/images/bikes/gixxer-sf-250.webp" alt="" loading="lazy" />
+    </div>
+
+    <div class="fc-container">
+
+      <!-- Small red rider mark above the headline -->
+      <div class="fc-icon" aria-hidden="true">
+        <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+          <!-- Stylised rider on a bike — simple line mark like the reference -->
+          <circle cx="14" cy="44" r="9" />
+          <circle cx="50" cy="44" r="9" />
+          <path d="M14 44 L26 28 L40 28 L50 44" />
+          <path d="M26 28 L34 18 L42 18" />
+          <circle cx="42" cy="14" r="4" />
+        </svg>
+      </div>
+
+      <h2 class="fc-title" data-testid="final-cta-title">
+        Stay in the <em>loop.</em>
+      </h2>
+
+      <p class="fc-sub" data-testid="final-cta-sub">
+        New launches. Exclusive deals. Riding tips. All in your inbox.
+      </p>
+
+      <!-- Newsletter form. Mock-handled in JS — POSTs to /api/newsletter
+           on the live site. -->
+      <form class="fc-form" data-testid="final-cta-form" novalidate>
+        <label class="visually-hidden" for="fc-email">Your email address</label>
+        <input
+          id="fc-email"
+          class="fc-input"
+          type="email"
+          name="email"
+          placeholder="Enter your email address"
+          autocomplete="email"
+          required
+          data-testid="final-cta-email"
+        />
+        <button type="submit" class="fc-submit" data-testid="final-cta-submit">
+          Subscribe
+        </button>
+      </form>
+
+      <!-- Inline feedback line (success / error). JS toggles content + state. -->
+      <p class="fc-feedback" data-testid="final-cta-feedback" role="status" aria-live="polite"></p>
+
+      <p class="fc-fineprint" data-testid="final-cta-fineprint">
+        No spam. Unsubscribe anytime.
+      </p>
+
+    </div>
+  </section>
+
+</main>
+
+<!-- ============================================================
+     PHASE 14 — Site Footer
+     Brand + tagline + socials, then 4-col link grid (Bikes /
+     Service & Support / Company / Get in Touch), then bottom
+     bar (copyright + legal + back-to-top).
+     ============================================================ -->
+<footer class="ft-section" role="contentinfo" data-testid="footer">
+  <div class="ft-container">
+
+    <!-- ===== TOP ROW — brand on the left, operator + socials on the right ===== -->
+    <div class="ft-top">
+      <div class="ft-brand">
+        <a class="brand-lockup" href="index.html" aria-label="Suzuki Bangladesh — home" data-testid="footer-brand">
+          <span class="bl-mark" aria-hidden="true"></span>
+          <span class="bl-text">
+            <span class="bl-name">SUZUKI</span>
+            <span class="bl-sub">Bangladesh</span>
+          </span>
+        </a>
+        <p class="ft-blurb">
+          Suzuki Bangladesh, operated by Rancon Motor Bikes Ltd, brings MotoGP-bred engineering and Japanese craftsmanship to riders across the country — built for the road you ride every day.
+        </p>
+      </div>
+
+      <div class="ft-aside">
+        <p class="ft-operator">
+          Operated by <strong>Rancon Motor Bikes Ltd</strong>
+        </p>
+        <ul class="ft-socials" aria-label="Follow Suzuki Bangladesh">
+          <li>
+            <a class="ft-social" href="https://www.facebook.com/SuzukiBangladeshOfficial" aria-label="Facebook" data-testid="footer-social-fb">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.7-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.7l-.4 2.9h-2.3v7A10 10 0 0 0 22 12z"/></svg>
+            </a>
+          </li>
+          <li>
+            <a class="ft-social" href="https://www.instagram.com/suzukibangladeshofficial" aria-label="Instagram" data-testid="footer-social-ig">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.2c3.2 0 3.6 0 4.8.1 1.2 0 1.8.3 2.2.4.6.2 1 .5 1.4.9.4.4.7.8.9 1.4.2.4.4 1 .4 2.2 0 1.2.1 1.6.1 4.8s0 3.6-.1 4.8c0 1.2-.3 1.8-.4 2.2-.2.6-.5 1-.9 1.4-.4.4-.8.7-1.4.9-.4.2-1 .4-2.2.4-1.2 0-1.6.1-4.8.1s-3.6 0-4.8-.1c-1.2 0-1.8-.3-2.2-.4-.6-.2-1-.5-1.4-.9-.4-.4-.7-.8-.9-1.4-.2-.4-.4-1-.4-2.2 0-1.2-.1-1.6-.1-4.8s0-3.6.1-4.8c0-1.2.3-1.8.4-2.2.2-.6.5-1 .9-1.4.4-.4.8-.7 1.4-.9.4-.2 1-.4 2.2-.4C8.4 2.2 8.8 2.2 12 2.2zm0 1.8c-3.2 0-3.5 0-4.7.1-.9 0-1.4.2-1.7.3-.4.2-.7.4-1 .7-.3.3-.5.6-.7 1-.1.3-.3.8-.3 1.7C3.5 8.5 3.5 8.8 3.5 12s0 3.5.1 4.7c0 .9.2 1.4.3 1.7.2.4.4.7.7 1 .3.3.6.5 1 .7.3.1.8.3 1.7.3 1.2 0 1.5.1 4.7.1s3.5 0 4.7-.1c.9 0 1.4-.2 1.7-.3.4-.2.7-.4 1-.7.3-.3.5-.6.7-1 .1-.3.3-.8.3-1.7 0-1.2.1-1.5.1-4.7s0-3.5-.1-4.7c0-.9-.2-1.4-.3-1.7-.2-.4-.4-.7-.7-1-.3-.3-.6-.5-1-.7-.3-.1-.8-.3-1.7-.3-1.2-.1-1.5-.1-4.7-.1zm0 3.2a4.8 4.8 0 1 1 0 9.6 4.8 4.8 0 0 1 0-9.6zm0 1.8a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm5-2.1a1.1 1.1 0 1 1 0 2.2 1.1 1.1 0 0 1 0-2.2z"/></svg>
+            </a>
+          </li>
+          <li>
+            <a class="ft-social" href="https://www.youtube.com/@suzukimotorcyclebangladesh" aria-label="YouTube" data-testid="footer-social-yt">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.6 3.6 12 3.6 12 3.6s-7.6 0-9.4.5A3 3 0 0 0 .5 6.2C0 8 0 12 0 12s0 4 .5 5.8a3 3 0 0 0 2.1 2.1c1.8.5 9.4.5 9.4.5s7.6 0 9.4-.5a3 3 0 0 0 2.1-2.1C24 16 24 12 24 12s0-4-.5-5.8zM9.6 15.6V8.4l6.3 3.6-6.3 3.6z"/></svg>
+            </a>
+          </li>
+          <li>
+            <a class="ft-social" href="https://www.linkedin.com/company/rancon-motor-bikes-ltd" aria-label="LinkedIn" data-testid="footer-social-li">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 2h-17A1.5 1.5 0 0 0 2 3.5v17A1.5 1.5 0 0 0 3.5 22h17a1.5 1.5 0 0 0 1.5-1.5v-17A1.5 1.5 0 0 0 20.5 2zM8 19H5V9h3v10zM6.5 7.7a1.7 1.7 0 1 1 0-3.4 1.7 1.7 0 0 1 0 3.4zM19 19h-3v-5.5c0-1.3 0-3-1.8-3s-2.2 1.4-2.2 2.9V19h-3V9h2.9v1.4h.04c.4-.7 1.4-1.6 2.9-1.6 3.1 0 3.6 2 3.6 4.7V19z"/></svg>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ===== LINK GRID ===== -->
+    <div class="ft-grid">
+
+      <!-- Column 1 — Bikes -->
+      <div>
+        <h3 class="ft-col-title">Bikes</h3>
+        <ul class="ft-list">
+          <li><a href="bikes.html#commuter">Commuter</a></li>
+          <li><a href="bikes.html#sports">Sports</a></li>
+          <li><a href="bikes.html#performance">Performance Sports</a></li>
+          <li><a href="bikes.html#super-sports">Super Sports</a></li>
+          <li><a href="bikes.html#scooter">Scooters</a></li>
+          <li><a href="bikes.html">View All Bikes</a></li>
+        </ul>
+      </div>
+
+      <!-- Column 2 — Service & Support -->
+      <div>
+        <h3 class="ft-col-title">Service &amp; Support</h3>
+        <ul class="ft-list">
+          <li><a href="service.html#regular">Regular Service</a></li>
+          <li><a href="service.html#warranty">Warranty Care</a></li>
+          <li><a href="service.html#parts">Genuine Parts</a></li>
+          <li><a href="service.html#locator">Service Locator</a></li>
+          <li><a href="service.html#manuals">Owner&apos;s Manuals</a></li>
+          <li><a href="service.html#book">Book a Service</a></li>
+        </ul>
+      </div>
+
+      <!-- Column 3 — Company -->
+      <div>
+        <h3 class="ft-col-title">Company</h3>
+        <ul class="ft-list">
+          <li><a href="about.html">About Suzuki BD</a></li>
+          <li><a href="about.html#heritage">MotoGP Heritage</a></li>
+          <li><a href="news.html">News &amp; Stories</a></li>
+          <li><a href="dealers.html">Find a Dealer</a></li>
+          <li><a href="careers.html">Careers</a></li>
+          <li><a href="press.html">Press &amp; Media</a></li>
+        </ul>
+      </div>
+
+      <!-- Column 4 — Get in Touch -->
+      <div>
+        <h3 class="ft-col-title">Get in Touch</h3>
+        <ul class="ft-contact">
+          <li class="ft-contact-row">
+            <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            <div>
+              <strong>24/7 Hotline</strong>
+              <a class="ft-hotline" href="tel:16638" data-testid="footer-hotline">16638 <span>Toll-Free</span></a>
+            </div>
+          </li>
+          <li class="ft-contact-row">
+            <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>
+            <div>
+              <strong>Customer Care</strong>
+              <a href="mailto:info@suzuki.com.bd" data-testid="footer-email">info@suzuki.com.bd</a>
+            </div>
+          </li>
+          <li class="ft-contact-row">
+            <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <div>
+              <strong>Head Office</strong>
+              Rangs Babylonia, Plot 246, Bir Uttam Mir Showkat Sarak,<br />
+              Tejgaon I/A, Dhaka 1208, Bangladesh
+            </div>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- ===== BOTTOM BAR ===== -->
+    <div class="ft-bottom">
+      <p data-testid="footer-copyright">
+        &copy; 2009&ndash;2026 Rancon Motor Bikes Ltd. All rights reserved.
+      </p>
+      <ul class="ft-legal" aria-label="Legal">
+        <li><a href="legal/privacy.html">Privacy Policy</a></li>
+        <li><a href="legal/terms.html">Terms of Use</a></li>
+        <li><a href="legal/cookies.html">Cookies</a></li>
+        <li><a href="sitemap.html">Sitemap</a></li>
+      </ul>
+      <a href="#top" class="ft-totop" data-testid="footer-totop" aria-label="Back to top">Back to Top</a>
+    </div>
+
+  </div>
+</footer>
+
+<!-- Phase status banner removed at Phase 14 — homepage complete. -->
+
+</body>
+</html>

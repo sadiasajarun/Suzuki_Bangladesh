@@ -1,0 +1,959 @@
+/* ============================================================
+   bikes/<slug>.html — individual bike detail page
+   ============================================================
+   Section prefixes:
+     .bd-breadcrumb  — Bikes › Category › Model
+     .bd-hero        — full-bleed dramatic hero (Apple-style)
+     .bd-marquee     — decorative running model-name strip
+     .bd-stats       — 4 oversized highlight stats
+     .bd-overview    — long-form bike description
+     .bd-features    — 8 feature spotlights (alternating layout)
+     .bd-specs       — accordion-style full spec table
+     .bd-colors      — colour showcase strip
+     .bd-cta         — final test-ride CTA banner
+     .bd-related     — related bikes carousel
+
+   Detail pages live at /bikes/<slug>.html so all asset paths
+   need a `../` prefix. Tokens, base, components are reused via
+   that prefix; everything inside this file is path-agnostic.
+   ============================================================ */
+
+/* ============================================================
+   BREADCRUMB
+   ============================================================ */
+.bd-breadcrumb {
+  background: var(--color-bg-primary);
+  padding-block: clamp(6rem, 10vw, 8rem) clamp(1rem, 2vw, 1.5rem);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+.bd-breadcrumb-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-width: var(--content-max-width);
+  margin-inline: auto;
+  padding-inline: var(--section-padding-x);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+.bd-breadcrumb-list li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.bd-breadcrumb-list li:not(:last-child)::after {
+  content: '/';
+  color: rgba(255, 255, 255, 0.2);
+  margin-left: 0.4rem;
+}
+.bd-breadcrumb-list a {
+  color: inherit;
+  text-decoration: none;
+  transition: color var(--duration-fast) var(--ease-out-cinematic);
+}
+.bd-breadcrumb-list a:hover { color: var(--color-suzuki-red); }
+.bd-breadcrumb-list li[aria-current="page"] {
+  color: var(--color-text-primary);
+}
+
+/* ============================================================
+   HERO — full-bleed cinematic stage
+   ============================================================
+   2-column layout:
+     LEFT  — text block (italic mega name, tagline, 3 inline stats,
+             colour picker, price, CTA pair)
+     RIGHT — bike photo with red ambient halo + subtle bob
+
+   On mobile this stacks. The hero is the page's most important
+   moment so it gets ~90vh on desktop and a heavy red atmosphere.
+   ============================================================ */
+.bd-hero {
+  position: relative;
+  min-height: clamp(640px, 88vh, 900px);
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  isolation: isolate;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  padding-block: clamp(2rem, 4vw, 3rem);
+}
+/* Soft red wash filling the right half — drama + depth */
+.bd-hero::before {
+  content: '';
+  position: absolute;
+  top: 50%; left: 65%;
+  width: 80%;
+  aspect-ratio: 1 / 1;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle,
+    rgba(228, 5, 33, 0.32) 0%,
+    rgba(228, 5, 33, 0.10) 40%,
+    transparent 75%);
+  filter: blur(40px);
+  z-index: -1;
+  pointer-events: none;
+}
+/* Diagonal slash detail at top-left, like the homepage hero */
+.bd-hero::after {
+  content: '';
+  position: absolute;
+  top: 12%; left: -2%;
+  width: 35%;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    var(--color-suzuki-red) 40%,
+    transparent 100%);
+  transform: rotate(-12deg);
+  opacity: 0.6;
+  z-index: -1;
+}
+
+.bd-hero-container {
+  position: relative;
+  width: 100%;
+  max-width: var(--content-max-width);
+  margin-inline: auto;
+  padding-inline: var(--section-padding-x);
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: clamp(2rem, 4vw, 4rem);
+  align-items: center;
+}
+@media (max-width: 1024px) {
+  .bd-hero-container { grid-template-columns: 1fr; gap: clamp(2rem, 5vw, 3rem); }
+}
+
+/* ===== Left text column ===== */
+.bd-hero-text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+.bd-hero-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--color-suzuki-red);
+  margin: 0;
+}
+.bd-hero-eyebrow strong { color: var(--color-text-primary); font-weight: 700; }
+.bd-hero-name {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-style: italic;
+  font-size: clamp(2.3rem, 4.5vw, 3.8rem);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+  text-transform: uppercase;
+  color: var(--color-text-primary);
+  margin: 0;
+  text-shadow: 0 6px 40px rgba(0, 0, 0, 0.5);
+}
+.bd-hero-tagline {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1.2rem, 2.2vw, 1.65rem);
+  line-height: 1.15;
+  letter-spacing: -0.005em;
+  text-transform: uppercase;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+.bd-hero-tagline em {
+  font-style: italic;
+  color: var(--color-suzuki-red);
+}
+.bd-hero-desc {
+  font-size: clamp(0.95rem, 1.1vw, 1.05rem);
+  line-height: 1.65;
+  color: var(--color-text-secondary);
+  margin: 0;
+  max-width: 50ch;
+}
+
+/* Inline highlight strip — 3 bullets (Engine / Power / Mileage) */
+.bd-hero-highlights {
+  list-style: none;
+  margin: 0;
+  padding: var(--space-md) 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+@media (max-width: 540px) {
+  .bd-hero-highlights { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.5rem; }
+}
+.bd-hero-highlights li {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+.bd-hero-highlights .h-num {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(1.4rem, 2.5vw, 2rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--color-text-primary);
+  font-variant-numeric: tabular-nums;
+}
+.bd-hero-highlights .h-num em {
+  font-style: normal;
+  color: var(--color-suzuki-red);
+  font-size: 0.85em;
+}
+.bd-hero-highlights .h-label {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+/* Color picker */
+.bd-hero-colors {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.bd-hero-colors-label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+.bd-hero-colors-label small {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+.bd-hero-colors-label strong {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+  color: var(--color-text-primary);
+}
+.bd-hero-swatches {
+  display: flex;
+  gap: 0.6rem;
+}
+.bd-swatch {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.18);
+  cursor: pointer;
+  padding: 0;
+  outline-offset: 3px;
+  position: relative;
+  transition: transform var(--duration-fast) var(--ease-out-cinematic),
+              border-color var(--duration-fast) var(--ease-out-cinematic),
+              box-shadow var(--duration-fast) var(--ease-out-cinematic);
+}
+.bd-swatch:hover {
+  transform: scale(1.1);
+  border-color: rgba(255, 255, 255, 0.6);
+}
+.bd-swatch.is-active {
+  border-color: var(--color-suzuki-red);
+  box-shadow: 0 0 0 2px rgba(228, 5, 33, 0.4);
+  transform: scale(1.1);
+}
+.bd-swatch.is-active::after {
+  content: '';
+  position: absolute;
+  inset: 5px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.85);
+}
+
+/* Price + CTA row */
+.bd-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 1.5rem;
+}
+.bd-hero-price {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+.bd-hero-price small {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+.bd-hero-price-value {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(1.6rem, 2.5vw, 2.2rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--color-suzuki-red);
+}
+.bd-hero-cta-row {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+.bd-hero-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 1rem 1.6rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: var(--radius-pill);
+  transition: all var(--duration-base) var(--ease-out-cinematic);
+}
+.bd-hero-cta--primary {
+  background: var(--color-suzuki-red);
+  color: var(--color-text-primary);
+  border: 1.5px solid var(--color-suzuki-red);
+}
+.bd-hero-cta--primary:hover {
+  background: var(--color-suzuki-red-glow);
+  border-color: var(--color-suzuki-red-glow);
+  box-shadow: 0 0 32px rgba(228, 5, 33, 0.5);
+}
+.bd-hero-cta--secondary {
+  background: transparent;
+  color: var(--color-text-primary);
+  border: 1.5px solid rgba(255, 255, 255, 0.4);
+}
+.bd-hero-cta--secondary:hover {
+  background: var(--color-text-primary);
+  color: var(--color-bg-primary);
+}
+.bd-hero-cta::after { content: '→'; transition: transform var(--duration-fast); }
+.bd-hero-cta:hover::after { transform: translateX(4px); }
+
+/* ===== Right photo column ===== */
+.bd-hero-photo {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: clamp(20rem, 50vh, 32rem);
+}
+/* Rotating outer ring — pure decoration, slow */
+.bd-hero-photo::before {
+  content: '';
+  position: absolute;
+  inset: 5%;
+  border-radius: 50%;
+  border: 1px dashed rgba(228, 5, 33, 0.2);
+  animation: bd-ring-rotate 60s linear infinite;
+  pointer-events: none;
+}
+@keyframes bd-ring-rotate {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+.bd-hero-photo img {
+  width: 100%;
+  height: 100%;
+  max-height: clamp(20rem, 60vh, 36rem);
+  object-fit: contain;
+  object-position: center;
+  filter:
+    drop-shadow(0 30px 60px rgba(0, 0, 0, 0.6))
+    drop-shadow(0 0 50px rgba(228, 5, 33, 0.25));
+  /* Bob vertically so the photo feels alive */
+  animation: bd-photo-bob 8s ease-in-out infinite;
+  transition: opacity var(--duration-base) var(--ease-out-cinematic),
+              transform var(--duration-base) var(--ease-out-cinematic);
+}
+@keyframes bd-photo-bob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
+}
+.bd-hero-photo img.is-swapping { opacity: 0.4; }
+
+/* ============================================================
+   MARQUEE — running model-name strip between hero + stats
+   ============================================================ */
+.bd-marquee {
+  position: relative;
+  background: var(--color-bg-primary);
+  overflow: hidden;
+  padding-block: clamp(1.5rem, 3vw, 2.5rem);
+  border-block: 1px solid rgba(255, 255, 255, 0.05);
+  -webkit-mask-image: linear-gradient(90deg,
+    transparent 0%, black 5%, black 95%, transparent 100%);
+          mask-image: linear-gradient(90deg,
+    transparent 0%, black 5%, black 95%, transparent 100%);
+}
+.bd-marquee-track {
+  display: flex;
+  gap: clamp(2rem, 4vw, 4rem);
+  width: max-content;
+  animation: bd-marquee 32s linear infinite;
+  white-space: nowrap;
+}
+@keyframes bd-marquee {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-50%, 0, 0); }
+}
+.bd-marquee-text {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(1.5rem, 2.8vw, 2.3rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: transparent;
+  -webkit-text-stroke: 1.2px var(--color-text-muted);
+}
+.bd-marquee-text em {
+  font-style: italic;
+  color: var(--color-suzuki-red);
+  -webkit-text-stroke: 0;
+}
+.bd-marquee-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-suzuki-red);
+  align-self: center;
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   STATS — 4 oversized highlight numbers
+   ============================================================ */
+.bd-stats {
+  background: var(--color-bg-primary);
+  padding-block: clamp(3rem, 6vw, 5.5rem);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+.bd-stats-grid {
+  max-width: var(--content-max-width);
+  margin-inline: auto;
+  padding-inline: var(--section-padding-x);
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(1rem, 2vw, 2rem);
+}
+@media (max-width: 1024px) { .bd-stats-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 540px)  { .bd-stats-grid { grid-template-columns: 1fr; } }
+
+.bd-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: clamp(1rem, 2vw, 1.5rem) 0;
+  position: relative;
+}
+.bd-stat:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: 20%;
+  right: 0;
+  bottom: 20%;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.08);
+}
+@media (max-width: 1024px) {
+  .bd-stat:not(:last-child)::after { display: none; }
+}
+.bd-stat-num {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(1.85rem, 3.4vw, 3rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--color-text-primary);
+  font-variant-numeric: tabular-nums;
+}
+.bd-stat-num em {
+  font-style: normal;
+  color: var(--color-suzuki-red);
+  font-size: 0.6em;
+  margin-left: 0.2em;
+}
+.bd-stat-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+.bd-stat-sub {
+  font-size: 0.85rem;
+  line-height: 1.45;
+  color: var(--color-text-muted);
+  margin: 0;
+  max-width: 24ch;
+}
+
+/* ============================================================
+   OVERVIEW — long-form description
+   ============================================================ */
+.bd-overview {
+  background: var(--color-bg-primary);
+  padding-block: clamp(4rem, 7vw, 6rem);
+}
+.bd-overview-container {
+  max-width: var(--content-max-width);
+  margin-inline: auto;
+  padding-inline: var(--section-padding-x);
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: start;
+}
+@media (max-width: 1024px) { .bd-overview-container { grid-template-columns: 1fr; gap: 1.5rem; } }
+.bd-overview-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--color-suzuki-red);
+  margin: 0 0 var(--space-md);
+}
+.bd-overview-title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(1.6rem, 3.2vw, 2.6rem);
+  line-height: 1;
+  letter-spacing: -0.025em;
+  text-transform: uppercase;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+.bd-overview-title em { font-style: italic; color: var(--color-suzuki-red); }
+.bd-overview-body p {
+  font-size: clamp(1rem, 1.15vw, 1.1rem);
+  line-height: 1.7;
+  color: var(--color-text-secondary);
+  margin: 0 0 var(--space-md);
+}
+.bd-overview-body p:last-child { margin-bottom: 0; }
+
+/* ============================================================
+   FEATURES — 8 alternating photo+text rows
+   ============================================================ */
+.bd-features {
+  background: var(--color-bg-primary);
+  padding-block: clamp(4rem, 8vw, 7rem);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+.bd-features-container {
+  max-width: var(--content-max-width);
+  margin-inline: auto;
+  padding-inline: var(--section-padding-x);
+}
+.bd-features-heading {
+  text-align: center;
+  margin-bottom: clamp(2.5rem, 5vw, 4rem);
+}
+
+/* Grid of 8 cards — 4 columns on desktop, 2 on tablet, 1 on phone */
+.bd-features-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(1rem, 2vw, 1.75rem);
+}
+@media (max-width: 1024px) { .bd-features-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 540px)  { .bd-features-grid { grid-template-columns: 1fr; } }
+
+.bd-feature {
+  display: flex;
+  flex-direction: column;
+  background: var(--color-bg-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  position: relative;
+  isolation: isolate;
+  /* Hidden until IntersectionObserver flips .is-revealed */
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 600ms var(--ease-out-cinematic),
+              transform 600ms var(--ease-out-cinematic),
+              border-color var(--duration-base) var(--ease-out-cinematic),
+              box-shadow var(--duration-base) var(--ease-out-cinematic);
+}
+.bd-feature.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+@media (prefers-reduced-motion: reduce) {
+  .bd-feature { opacity: 1 !important; transform: none !important; }
+}
+.bd-feature:hover {
+  transform: translateY(-4px);
+  border-color: rgba(228, 5, 33, 0.4);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5);
+}
+.bd-feature::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--color-suzuki-red);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--duration-base) var(--ease-out-cinematic);
+  z-index: 5;
+}
+.bd-feature:hover::before { transform: scaleX(1); }
+.bd-feature-image {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  background: var(--color-bg-tertiary);
+  overflow: hidden;
+}
+.bd-feature-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--duration-base) var(--ease-out-cinematic);
+}
+.bd-feature:hover .bd-feature-image img { transform: scale(1.06); }
+.bd-feature-num {
+  position: absolute;
+  top: 10px;
+  left: 12px;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-suzuki-red);
+  background: rgba(10, 10, 10, 0.8);
+  backdrop-filter: blur(6px);
+  padding: 0.3rem 0.6rem;
+  border-radius: var(--radius-pill);
+  z-index: 2;
+}
+.bd-feature-body {
+  padding: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
+}
+.bd-feature-title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 1rem;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+.bd-feature-desc {
+  font-size: 0.85rem;
+  line-height: 1.55;
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+/* ============================================================
+   SPECS — accordion-style table grouped by section
+   ============================================================ */
+.bd-specs {
+  background: var(--color-bg-primary);
+  padding-block: clamp(4rem, 8vw, 7rem);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+.bd-specs-container {
+  max-width: 960px;
+  margin-inline: auto;
+  padding-inline: var(--section-padding-x);
+}
+.bd-specs-heading {
+  text-align: center;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.bd-specs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.bd-spec-group {
+  background: var(--color-bg-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+.bd-spec-summary {
+  padding: clamp(0.9rem, 1.5vw, 1.1rem) clamp(1rem, 2vw, 1.5rem);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.95rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+  transition: background var(--duration-fast) var(--ease-out-cinematic);
+}
+.bd-spec-summary::-webkit-details-marker { display: none; }
+.bd-spec-summary:hover { background: rgba(255, 255, 255, 0.03); }
+.bd-spec-summary::after {
+  content: '+';
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--color-suzuki-red);
+  transition: transform var(--duration-base) var(--ease-out-cinematic);
+}
+.bd-spec-group[open] > .bd-spec-summary::after {
+  content: '−';
+}
+
+.bd-spec-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--color-bg-primary);
+}
+.bd-spec-table tr {
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+.bd-spec-table th,
+.bd-spec-table td {
+  padding: clamp(0.65rem, 1vw, 0.85rem) clamp(1rem, 2vw, 1.5rem);
+  text-align: left;
+  vertical-align: top;
+}
+.bd-spec-table th {
+  width: 40%;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+.bd-spec-table td {
+  font-family: var(--font-display);
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+/* ============================================================
+   COLORS — colour showcase strip
+   ============================================================ */
+.bd-colors {
+  background: var(--color-bg-primary);
+  padding-block: clamp(4rem, 7vw, 6rem);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+.bd-colors-container {
+  max-width: var(--content-max-width);
+  margin-inline: auto;
+  padding-inline: var(--section-padding-x);
+}
+.bd-colors-heading {
+  text-align: center;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+.bd-colors-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(360px, 100%), 1fr));
+  gap: clamp(1rem, 2vw, 2rem);
+}
+.bd-color-card {
+  background: var(--color-bg-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.bd-color-photo {
+  aspect-ratio: 16 / 11;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-bg-tertiary);
+}
+.bd-color-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 1rem;
+}
+.bd-color-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: var(--space-md);
+}
+.bd-color-chip {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.18);
+  flex-shrink: 0;
+}
+.bd-color-name {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-text-primary);
+}
+
+/* ============================================================
+   FINAL CTA — bookend banner
+   ============================================================ */
+.bd-cta {
+  position: relative;
+  background: var(--color-bg-secondary);
+  color: var(--color-text-primary);
+  padding-block: clamp(4rem, 8vw, 7rem);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  overflow: hidden;
+  isolation: isolate;
+  text-align: center;
+}
+.bd-cta::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center,
+    rgba(228, 5, 33, 0.18) 0%,
+    transparent 60%);
+  z-index: -1;
+}
+.bd-cta-container {
+  max-width: var(--content-max-width);
+  margin-inline: auto;
+  padding-inline: var(--section-padding-x);
+}
+.bd-cta-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--color-suzuki-red);
+  margin: 0 0 var(--space-md);
+}
+.bd-cta-title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(1.75rem, 3.5vw, 2.8rem);
+  line-height: 1;
+  letter-spacing: -0.025em;
+  text-transform: uppercase;
+  color: var(--color-text-primary);
+  margin: 0 0 var(--space-lg);
+}
+.bd-cta-title em { font-style: italic; color: var(--color-suzuki-red); }
+.bd-cta-actions {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+/* ============================================================
+   RELATED — other bikes carousel
+   ============================================================ */
+.bd-related {
+  background: var(--color-bg-primary);
+  padding-block: clamp(4rem, 7vw, 6rem);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+.bd-related-container {
+  max-width: var(--content-max-width);
+  margin-inline: auto;
+  padding-inline: var(--section-padding-x);
+}
+.bd-related-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: clamp(2rem, 4vw, 2.5rem);
+}
+.bd-related-title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(1.5rem, 2.8vw, 2.3rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+.bd-related-title em { font-style: italic; color: var(--color-suzuki-red); }
+.bd-related-link {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-suzuki-red);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.bd-related-link:hover { color: var(--color-suzuki-red-glow); }
+.bd-related-link::after { content: '→'; }
+
+.bd-related-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+  gap: clamp(1rem, 1.5vw, 1.5rem);
+}
+/* Reuse .bg-card styles from bikes.css for consistency.
+   Also load bikes.css on detail pages so .bg-card styles apply. */
+
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .bd-hero-photo img,
+  .bd-hero-photo::before,
+  .bd-marquee-track,
+  .bd-feature,
+  .bd-feature-image img,
+  .bd-hero-cta { animation: none !important; transition: none !important; }
+}

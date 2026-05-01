@@ -1,0 +1,594 @@
+/* ============================================================
+   SECTION 2 — Why Suzuki Is Different · v2 (Bajaj-style)
+   ============================================================
+   Replaces v1 (timeline + blueprint sketches — backed up at
+   _backups/why-suzuki-2A_2026-05-01/).
+
+   New design DNA (per client direction + Bajaj Foundation
+   reference image):
+     1. Massive SUZUKI wordmark where each letter masks a real
+        Suzuki Bangladesh event photo (background-clip: text)
+     2. One letter ("Z") gets a red filled disc behind it as
+        the brand-mark anchor — Bajaj's signature treatment
+     3. A white card overlays the bottom of the wordmark with
+        the section heading + paragraph + "more" CTA
+     4. Below: 4 differentiator point blocks in a row
+   ============================================================ */
+
+.ws-section {
+  --ws-card-shift: clamp(2rem, 6vh, 5rem);   /* how far the white card pulls up over the wordmark */
+  --ws-disc-scale: 1.05;                      /* size of the red accent disc (em units, scales with letter) */
+
+  position: relative;
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  padding-block: clamp(4rem, 8vw, 8rem);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.ws-section::before {
+  /* Faint vignette so wordmark + card sit on subtle radial darkness */
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 50% 30%, rgba(228,5,33,0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 80%, rgba(0,0,0,0.6) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.ws-container {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: var(--content-max-width);
+  margin-inline: auto;
+  padding-inline: var(--section-padding-x);
+}
+
+/* ============================================================
+   META BAND — eyebrow (left) + 104 YEARS pill (right)
+   ============================================================ */
+.ws-meta-band {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+  margin-bottom: clamp(1rem, 3vw, 2rem);
+}
+.ws-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-suzuki-red);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0;
+}
+.ws-eyebrow::before {
+  content: '';
+  width: 28px;
+  height: 1px;
+  background: currentColor;
+  display: inline-block;
+}
+.ws-years-pill {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding: 0.4rem 0.9rem;
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+  background: rgba(255,255,255,0.02);
+}
+.ws-years-pill strong {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 1.1rem;
+  letter-spacing: -0.02em;
+  color: var(--color-text-primary);
+}
+.ws-years-pill .dot {
+  width: 6px; height: 6px;
+  background: var(--color-suzuki-red);
+  border-radius: 50%;
+  display: inline-block;
+  align-self: center;
+  box-shadow: 0 0 8px var(--color-suzuki-red-glow);
+  animation: ws-pill-pulse 2.4s ease-in-out infinite;
+}
+@keyframes ws-pill-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.5; transform: scale(0.8); }
+}
+
+/* ============================================================
+   PHOTO-CLIPPED WORDMARK — the centerpiece
+   ============================================================
+   Each letter is a <span> whose background-image is a real
+   Suzuki Bangladesh photo, clipped to the letter shape. The
+   "Z" is the red-disc accent letter (no photo).
+   ============================================================ */
+.ws-wordmark {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(5rem, 22vw, 22rem);
+  line-height: 0.85;
+  letter-spacing: -0.05em;
+  text-transform: uppercase;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  /* Thick white outline + extruded dark stack — gives the
+     photo-clipped letters a clearly visible silhouette plus a
+     stepped 3D shadow that recedes down/right behind them. */
+  filter:
+    drop-shadow( 0px 0px 2px rgba(255, 255, 255, 0.95))   /* sharp white outline */
+    drop-shadow( 0px 0px 3px rgba(255, 255, 255, 0.75))   /* outer halo */
+    drop-shadow( 1px 2px 0   rgba(0, 0, 0, 0.55))         /* extrude step 1 */
+    drop-shadow( 2px 3px 0   rgba(0, 0, 0, 0.45))         /* extrude step 2 */
+    drop-shadow( 3px 5px 0   rgba(0, 0, 0, 0.30))         /* extrude step 3 */
+    drop-shadow( 4px 8px 12px rgba(0, 0, 0, 0.55));       /* soft cast shadow */
+  /* Whole wordmark sits as one row; letters self-align via flex */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 0.01em;
+  user-select: none;
+}
+
+.ws-letter {
+  display: inline-block;
+  position: relative;
+  /* Default fallback colour if background-clip isn't supported */
+  color: var(--color-text-primary);
+  /* Subtle outline always present so letters read even when photos
+     don't load (graceful degradation) */
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.12);
+  /* Photo clipping */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+          text-fill-color: transparent;
+  /* Subtle filter so each photo reads more uniformly */
+  transition: filter var(--duration-base) var(--ease-out-cinematic),
+              transform var(--duration-base) var(--ease-out-cinematic);
+}
+.ws-letter:hover {
+  filter: contrast(1.05) brightness(1.1);
+  transform: translateY(-2px);
+}
+
+/* Accent letter ("Z") — red disc behind a white glyph.
+   No photo treatment; this is the brand anchor inside the wordmark. */
+.ws-letter--accent {
+  position: relative;
+  background: none;
+  -webkit-text-fill-color: var(--color-text-primary);
+          text-fill-color: var(--color-text-primary);
+  color: var(--color-text-primary);
+  -webkit-text-stroke: 0;
+  z-index: 1;
+}
+.ws-letter--accent .ws-letter-disc {
+  position: absolute;
+  left: 50%; top: 50%;
+  width: calc(var(--ws-disc-scale) * 1em);
+  height: calc(var(--ws-disc-scale) * 1em);
+  background: var(--color-suzuki-red);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow:
+    0 0 60px rgba(228, 5, 33, 0.45),
+    0 0 120px rgba(228, 5, 33, 0.20);
+  z-index: -1;
+  animation: ws-disc-pulse 4.5s ease-in-out infinite;
+}
+@keyframes ws-disc-pulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50%      { transform: translate(-50%, -50%) scale(1.04); }
+}
+
+/* When the photo URL fails (broken path), fall back to a solid white
+   letter via the outline + a soft white inner shadow */
+.ws-letter:not(.ws-letter--accent):not([style*="background-image"]) {
+  -webkit-text-fill-color: var(--color-text-primary);
+          text-fill-color: var(--color-text-primary);
+  color: var(--color-text-primary);
+}
+
+/* ============================================================
+   WHITE CARD — heading + paragraph + "more" CTA
+   ============================================================
+   Pulled UP over the wordmark base (mimics the Bajaj reference's
+   white card that bleeds out of the bottom of the hero).
+   ============================================================ */
+.ws-card {
+  position: relative;
+  z-index: 3;
+  margin-top: calc(0 * var(--ws-card-shift));
+  background: var(--color-text-primary);
+  color: var(--color-bg-primary);
+  padding: clamp(1.5rem, 4vw, 3rem) clamp(1.5rem, 4vw, 3.5rem);
+  max-width: 64ch;
+  margin-inline: auto;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
+  border-left: 4px solid var(--color-suzuki-red);
+}
+.ws-card-title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(1.4rem, 2.4vw, 2rem);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin: 0 0 var(--space-md);
+  color: var(--color-bg-primary);
+  /* Allow capitalised display-style title */
+  text-transform: none;
+}
+.ws-card-body {
+  font-size: clamp(0.95rem, 1.2vw, 1.1rem);
+  line-height: 1.65;
+  color: #2a2a2a;
+  margin: 0 0 var(--space-lg);
+  max-width: 56ch;
+}
+.ws-card-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-suzuki-red);
+  text-decoration: none;
+  transition: gap var(--duration-fast) var(--ease-out-cinematic),
+              color var(--duration-fast) var(--ease-out-cinematic);
+}
+.ws-card-cta:hover { gap: 1rem; color: var(--color-suzuki-red-glow); }
+.ws-card-cta-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--color-suzuki-red);
+  color: var(--color-text-primary);
+  font-size: 0.85rem;
+  transition: background var(--duration-fast) var(--ease-out-cinematic),
+              transform var(--duration-fast) var(--ease-out-cinematic);
+}
+.ws-card-cta:hover .ws-card-cta-icon {
+  background: var(--color-suzuki-red-glow);
+  transform: translateX(2px);
+}
+
+/* ============================================================
+   .ws-flow-section — standalone wrapper for the racing-line flow
+   ============================================================
+   Split out from .ws-section so the path-draw animation triggers
+   on its own scroll-into-view rather than the wordmark's. Shares
+   the dark background + container layout for visual continuity. */
+.ws-flow-section {
+  position: relative;
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  padding-block: clamp(2.5rem, 6vw, 5rem);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* ============================================================
+   4 DIFFERENTIATOR POINTS — row below the card
+   ============================================================ */
+/* ============================================================
+   .ws-flow — racing-line layout (replaces former 4-col .ws-points)
+   ============================================================
+   A custom SVG "road" winds across the section with two gentle
+   chicanes. Four numbered "checkpoint" cards sit along it. The
+   path draws itself L→R when the section enters view, then a red
+   pulse continuously travels along it to suggest forward motion.
+
+   Existing card content (.ws-point-num, .ws-point-headline,
+   .ws-point-tagline, .ws-point-rule) is unchanged — only the
+   container layout is new.
+   ============================================================ */
+.ws-flow {
+  position: relative;
+  margin-top: clamp(3rem, 6vw, 5rem);
+  padding-block: clamp(2rem, 4vw, 3.5rem);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  isolation: isolate;
+  overflow: hidden;
+}
+/* Inside the standalone .ws-flow-section we don't need the
+   margin-top spacer — the section's own padding handles that. */
+.ws-flow-section .ws-flow {
+  margin-top: 0;
+}
+
+/* SVG road sits behind the cards and spans the full container */
+.ws-flow-road {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+.ws-flow-road svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* Base path (translucent white, hairline) — gives the chicane its shape
+   even before any animation runs */
+.ws-flow-road .ws-flow-path-base {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.10);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-dasharray: 4 6;
+}
+
+/* Drawn path (red) — animates L→R via stroke-dashoffset on view */
+.ws-flow-road .ws-flow-path-drawn {
+  fill: none;
+  stroke: var(--color-suzuki-red);
+  stroke-width: 2;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 6px rgba(228, 5, 33, 0.45));
+  /* Path total length is set by JS via custom property when GSAP isn't
+     available; the CSS-only fallback uses a generous default. */
+  stroke-dasharray: var(--ws-path-length, 1600);
+  stroke-dashoffset: var(--ws-path-length, 1600);
+  transition: stroke-dashoffset 1400ms var(--ease-out-cinematic);
+}
+.ws-flow.is-flowing .ws-flow-road .ws-flow-path-drawn {
+  stroke-dashoffset: 0;
+}
+
+/* Continuous red pulse — short bright dash that travels the path
+   forever once .is-flowing is set */
+.ws-flow-road .ws-flow-pulse {
+  fill: none;
+  stroke: var(--color-suzuki-red-glow);
+  stroke-width: 4;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 8px rgba(228, 5, 33, 0.85));
+  stroke-dasharray: 18 var(--ws-path-length, 1600);
+  stroke-dashoffset: 0;
+  opacity: 0;
+}
+.ws-flow.is-flowing .ws-flow-road .ws-flow-pulse {
+  opacity: 1;
+  animation: ws-flow-pulse-travel 6s linear infinite;
+  /* Delay pulse start until the base path has finished drawing */
+  animation-delay: 1300ms;
+}
+@keyframes ws-flow-pulse-travel {
+  from { stroke-dashoffset: 0; }
+  to   { stroke-dashoffset: calc(-1 * var(--ws-path-length, 1600)); }
+}
+
+/* Tiny circle node sitting on the path under each checkpoint card */
+.ws-flow-road .ws-flow-node {
+  fill: var(--color-bg-primary);
+  stroke: var(--color-suzuki-red);
+  stroke-width: 2;
+  filter: drop-shadow(0 0 6px rgba(228, 5, 33, 0.5));
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: opacity 400ms var(--ease-out-cinematic),
+              transform 400ms var(--ease-out-cinematic);
+  transform: scale(0.6);
+}
+.ws-flow.is-flowing .ws-flow-road .ws-flow-node {
+  opacity: 1;
+  transform: scale(1);
+}
+.ws-flow.is-flowing .ws-flow-road .ws-flow-node--1 { transition-delay: 200ms; }
+.ws-flow.is-flowing .ws-flow-road .ws-flow-node--2 { transition-delay: 500ms; }
+.ws-flow.is-flowing .ws-flow-road .ws-flow-node--3 { transition-delay: 800ms; }
+.ws-flow.is-flowing .ws-flow-road .ws-flow-node--4 { transition-delay: 1100ms; }
+
+/* ============================================================
+   .ws-flow-points — the 4 cards laid over the road
+   ============================================================ */
+.ws-flow-points {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(1rem, 2vw, 2rem);
+}
+
+/* Cards alternate vertically (top / bottom / top / bottom) so they
+   sit on either side of the wavy road, like checkpoints on a track */
+.ws-flow-point {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  background: var(--color-bg-primary);
+  padding: clamp(1.25rem, 2.5vw, 2rem) clamp(1rem, 2vw, 1.5rem);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-md);
+  transition: background var(--duration-base) var(--ease-out-cinematic),
+              border-color var(--duration-base) var(--ease-out-cinematic),
+              transform var(--duration-base) var(--ease-out-cinematic);
+  /* Per-card stagger reveal driven by .is-flowing */
+  opacity: 0;
+  transform: translateY(20px);
+}
+.ws-flow.is-flowing .ws-flow-point {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 600ms var(--ease-out-cinematic),
+              transform 600ms var(--ease-out-cinematic),
+              background var(--duration-base) var(--ease-out-cinematic),
+              border-color var(--duration-base) var(--ease-out-cinematic);
+}
+.ws-flow.is-flowing .ws-flow-point--1 { transition-delay: 250ms; }
+.ws-flow.is-flowing .ws-flow-point--2 { transition-delay: 550ms; }
+.ws-flow.is-flowing .ws-flow-point--3 { transition-delay: 850ms; }
+.ws-flow.is-flowing .ws-flow-point--4 { transition-delay: 1150ms; }
+
+/* Vertical offsets so cards sit above / below the road */
+.ws-flow-point--1 { margin-top: 0;   }
+.ws-flow-point--2 { margin-top: 4rem; }
+.ws-flow-point--3 { margin-top: 0;   }
+.ws-flow-point--4 { margin-top: 4rem; }
+
+/* Connector — a small vertical line from each card to the road node */
+.ws-flow-point::after {
+  content: '';
+  position: absolute;
+  left: clamp(1.5rem, 3vw, 2.25rem);
+  width: 1px;
+  height: 28px;
+  background: linear-gradient(180deg,
+    rgba(228, 5, 33, 0.6) 0%,
+    rgba(228, 5, 33, 0) 100%);
+  opacity: 0;
+  transition: opacity 400ms var(--ease-out-cinematic);
+}
+.ws-flow-point--1::after, .ws-flow-point--3::after { bottom: -28px; }
+.ws-flow-point--2::after, .ws-flow-point--4::after {
+  top: -28px;
+  background: linear-gradient(0deg,
+    rgba(228, 5, 33, 0.6) 0%,
+    rgba(228, 5, 33, 0) 100%);
+}
+.ws-flow.is-flowing .ws-flow-point::after { opacity: 1; }
+
+/* Card hover — same darken treatment users approved + a faint red border */
+.ws-flow-point:hover {
+  background: var(--color-bg-secondary);
+  border-color: rgba(228, 5, 33, 0.4);
+  transform: translateY(-2px);
+}
+
+/* The number / headline / tagline / rule classes already defined
+   below remain in use — only the container changed. */
+
+.ws-point-num {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(1.4rem, 2.2vw, 1.9rem);
+  line-height: 1;
+  letter-spacing: -0.025em;
+  color: var(--color-suzuki-red);
+  font-variant-numeric: tabular-nums;
+}
+.ws-point-headline {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1.05rem, 1.4vw, 1.35rem);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+.ws-point-tagline {
+  font-size: clamp(0.85rem, 1vw, 0.95rem);
+  line-height: 1.55;
+  color: var(--color-text-secondary);
+  margin: 0;
+  margin-top: auto;
+}
+/* Red rule under the number — extends to a longer bar on hover */
+.ws-point-rule {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: var(--color-suzuki-red);
+  margin-top: -0.5rem;
+  margin-bottom: -0.5rem;
+  transition: width var(--duration-base) var(--ease-out-cinematic);
+}
+.ws-flow-point:hover .ws-point-rule {
+  width: 56px;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+/* Tablet — flow becomes 2x2 with shorter chicane.
+   Drop the up/down stagger (cards sit on a flat baseline). */
+@media (max-width: 1024px) {
+  .ws-flow-points { grid-template-columns: repeat(2, 1fr); }
+  .ws-flow-point--1, .ws-flow-point--2,
+  .ws-flow-point--3, .ws-flow-point--4 { margin-top: 0; }
+  .ws-flow-point::after { display: none; }
+}
+
+@media (max-width: 767px) {
+  .ws-section { padding-block: clamp(3rem, 12vw, 5rem); }
+  .ws-meta-band { gap: 0.75rem; }
+  .ws-years-pill { font-size: 0.65rem; }
+
+  .ws-wordmark {
+    font-size: clamp(3.5rem, 16vw, 6rem);
+    letter-spacing: -0.06em;
+    flex-wrap: wrap;
+  }
+
+  .ws-card {
+    margin-top: calc(-1 * clamp(1rem, 4vw, 2rem));
+    padding: 1.5rem 1.25rem;
+  }
+  .ws-card-title { font-size: 1.4rem; }
+
+  /* Mobile — road rotates to vertical, cards stack */
+  .ws-flow-points { grid-template-columns: 1fr; }
+  .ws-flow-point { padding: 1.5rem 1.25rem; margin-top: 0; }
+  /* Hide the SVG road on mobile — too narrow to read; keep just the
+     red pulse as a vertical accent on the left edge */
+  .ws-flow-road { display: none; }
+}
+
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .ws-letter--accent .ws-letter-disc,
+  .ws-years-pill .dot,
+  .ws-flow-road .ws-flow-pulse {
+    animation: none !important;
+  }
+  .ws-letter,
+  .ws-card-cta,
+  .ws-card-cta-icon,
+  .ws-flow-point,
+  .ws-flow-road .ws-flow-path-drawn,
+  .ws-flow-road .ws-flow-node,
+  .ws-point-rule {
+    transition: none !important;
+  }
+  /* Reduced motion: snap path to its drawn state instantly, no pulse */
+  .ws-flow.is-flowing .ws-flow-road .ws-flow-pulse { opacity: 0 !important; }
+}

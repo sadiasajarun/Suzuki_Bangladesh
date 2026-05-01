@@ -1,0 +1,695 @@
+/* ============================================================
+   service.html — page-specific styles
+   ============================================================
+   Section prefixes:
+     .sv2-pageheader  — short hero
+     .sv2-packages    — 3-tier package pricing cards
+     .sv2-checklist   — 20+ maintenance items grid
+     .sv2-why         — 4 trust points
+     .sv2-policies    — 4 policy quick-links (accordion)
+     .sv2-book        — booking CTA + inline contact form
+   Reuses tokens.css, base.css, components.css, navbar.css, footer.css.
+
+   Note: prefix is `.sv2-*` because the homepage Service section
+   already uses `.sv-*`. Keeping them separate avoids collisions.
+   ============================================================ */
+
+/* ============================================================
+   PAGE HEADER
+   ============================================================ */
+.sv2-pageheader {
+  position: relative;
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  padding-block: clamp(8rem, 14vw, 13rem) clamp(2rem, 4vw, 3rem);
+  text-align: center;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: clamp(380px, 50vh, 540px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+/* Full-bleed bike-service photo backdrop, heavily darkened */
+.sv2-pageheader-bg {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  overflow: hidden;
+}
+.sv2-pageheader-bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 60%;
+  filter: grayscale(0.25) brightness(0.5) contrast(1.05);
+  transform: scale(1.02);
+}
+/* Stacked dark + red wash so the title stays readable on top of the photo */
+.sv2-pageheader::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(ellipse 80% 70% at 50% 50%,
+      rgba(228, 5, 33, 0.18) 0%,
+      transparent 65%),
+    linear-gradient(180deg,
+      rgba(10, 10, 10, 0.7) 0%,
+      rgba(10, 10, 10, 0.55) 50%,
+      rgba(10, 10, 10, 0.85) 100%);
+}
+/* Diagonal red slash, matches the test-ride hero look */
+.sv2-pageheader::after {
+  content: '';
+  position: absolute;
+  top: 22%;
+  left: -3%;
+  width: 35%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, var(--color-suzuki-red) 50%, transparent 100%);
+  transform: rotate(-12deg);
+  opacity: 0.55;
+  z-index: -1;
+}
+.sv2-pageheader-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--color-suzuki-red);
+  margin: 0 0 var(--space-md);
+}
+.sv2-pageheader-title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(2rem, 4.5vw, 3.6rem);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+  text-transform: uppercase;
+  color: var(--color-text-primary);
+  margin: 0 0 var(--space-md);
+  max-width: 24ch;
+  margin-inline: auto;
+}
+.sv2-pageheader-title em { font-style: italic; color: var(--color-suzuki-red); }
+.sv2-pageheader-sub {
+  font-size: clamp(1rem, 1.2vw, 1.15rem);
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+  margin: 0 auto;
+  max-width: 60ch;
+}
+/* Big "save up to 20%" pill */
+.sv2-savings-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: var(--space-md);
+  padding: 0.7rem 1.4rem;
+  background: rgba(228, 5, 33, 0.12);
+  border: 1px solid rgba(228, 5, 33, 0.5);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-suzuki-red);
+}
+.sv2-savings-pill::before { content: '—'; }
+
+/* ============================================================
+   3-TIER PACKAGES — Executive / Premium / Signature
+   ============================================================ */
+.sv2-packages {
+  background: var(--color-bg-primary);
+  padding-block: clamp(3rem, 6vw, 5rem);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+.sv2-packages-container {
+  max-width: var(--content-max-width);
+  margin-inline: auto;
+  padding-inline: var(--section-padding-x);
+}
+.sv2-section-heading {
+  text-align: center;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+.sv2-section-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--color-suzuki-red);
+  margin: 0 0 var(--space-md);
+}
+.sv2-section-title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(1.6rem, 3.2vw, 2.6rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+.sv2-section-title em { font-style: italic; color: var(--color-suzuki-red); }
+
+.sv2-packages-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 2vw, 1.75rem);
+  margin-top: clamp(2rem, 4vw, 3rem);
+}
+@media (max-width: 1024px) { .sv2-packages-grid { grid-template-columns: 1fr; } }
+
+.sv2-pkg {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(1.5rem, 3vw, 2.25rem);
+  background: var(--color-bg-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-lg);
+  isolation: isolate;
+  overflow: hidden;
+  transition: transform var(--duration-base) var(--ease-out-cinematic),
+              border-color var(--duration-base) var(--ease-out-cinematic),
+              box-shadow var(--duration-base) var(--ease-out-cinematic);
+}
+.sv2-pkg:hover {
+  transform: translateY(-4px);
+  border-color: rgba(228, 5, 33, 0.4);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.5);
+}
+/* The middle "Premium" tier is highlighted (most popular) */
+.sv2-pkg--featured {
+  border-color: rgba(228, 5, 33, 0.5);
+  background: linear-gradient(180deg,
+    rgba(228, 5, 33, 0.10) 0%,
+    var(--color-bg-secondary) 60%);
+  box-shadow: 0 0 0 1px rgba(228, 5, 33, 0.3),
+              0 18px 44px rgba(228, 5, 33, 0.18);
+}
+.sv2-pkg--featured::before {
+  content: 'Most Popular';
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  padding: 0.3rem 0.65rem;
+  background: var(--color-suzuki-red);
+  color: var(--color-text-primary);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.sv2-pkg-name {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 1.35rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--color-text-primary);
+  margin: 0 0 var(--space-sm);
+}
+.sv2-pkg-tagline {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+  margin: 0 0 var(--space-md);
+}
+.sv2-pkg-price {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  margin: 0 0 var(--space-sm);
+  flex-wrap: wrap;
+}
+.sv2-pkg-price-now {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(2.2rem, 4vw, 3rem);
+  line-height: 1;
+  letter-spacing: -0.025em;
+  color: var(--color-suzuki-red);
+}
+.sv2-pkg-price-now::before {
+  content: 'BDT ';
+  font-size: 0.6em;
+  color: var(--color-text-secondary);
+  font-weight: 600;
+  margin-right: 0.2em;
+  letter-spacing: 0.12em;
+}
+.sv2-pkg-price-was {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--color-text-muted);
+  text-decoration: line-through;
+}
+.sv2-pkg-price-save {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.55rem;
+  background: rgba(74, 222, 128, 0.15);
+  border: 1px solid rgba(74, 222, 128, 0.4);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #4ade80;
+  margin-bottom: var(--space-md);
+  align-self: flex-start;
+}
+
+.sv2-pkg-list {
+  list-style: none;
+  margin: var(--space-md) 0 var(--space-lg);
+  padding: var(--space-md) 0 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
+}
+.sv2-pkg-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+  font-size: 0.85rem;
+  line-height: 1.45;
+  color: var(--color-text-secondary);
+}
+.sv2-pkg-list li::before {
+  content: '✓';
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: rgba(228, 5, 33, 0.15);
+  border: 1px solid rgba(228, 5, 33, 0.5);
+  color: var(--color-suzuki-red);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 800;
+  margin-top: 1px;
+}
+
+.sv2-pkg-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.95rem 1.4rem;
+  background: transparent;
+  color: var(--color-text-primary);
+  border: 1.5px solid rgba(255, 255, 255, 0.4);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  margin-top: auto;
+  transition: all var(--duration-base) var(--ease-out-cinematic);
+}
+.sv2-pkg-cta::after { content: '→'; transition: transform var(--duration-fast); }
+.sv2-pkg-cta:hover {
+  background: var(--color-suzuki-red);
+  border-color: var(--color-suzuki-red);
+  box-shadow: 0 0 22px rgba(228, 5, 33, 0.4);
+}
+.sv2-pkg-cta:hover::after { transform: translateX(4px); }
+.sv2-pkg--featured .sv2-pkg-cta {
+  background: var(--color-suzuki-red);
+  border-color: var(--color-suzuki-red);
+}
+
+/* ============================================================
+   CHECKLIST — 20+ items grid
+   ============================================================ */
+.sv2-checklist {
+  background: var(--color-bg-primary);
+  padding-block: clamp(4rem, 7vw, 6rem);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+.sv2-checklist-container {
+  max-width: var(--content-max-width);
+  margin-inline: auto;
+  padding-inline: var(--section-padding-x);
+}
+.sv2-checklist-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(220px, 100%), 1fr));
+  gap: 0.5rem;
+  margin-top: clamp(2rem, 4vw, 3rem);
+}
+.sv2-check-item {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.85rem 1rem;
+  background: var(--color-bg-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-left: 3px solid var(--color-suzuki-red);
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  transition: transform var(--duration-fast) var(--ease-out-cinematic),
+              border-color var(--duration-fast) var(--ease-out-cinematic);
+}
+.sv2-check-item:hover {
+  transform: translateX(2px);
+  border-left-color: var(--color-suzuki-red-glow);
+  background: rgba(228, 5, 33, 0.04);
+}
+.sv2-check-item svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  stroke: var(--color-suzuki-red);
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ============================================================
+   WHY SERVICE — 4 trust points
+   ============================================================ */
+.sv2-why {
+  background: var(--color-bg-secondary);
+  padding-block: clamp(4rem, 7vw, 6rem);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+.sv2-why-container {
+  max-width: var(--content-max-width);
+  margin-inline: auto;
+  padding-inline: var(--section-padding-x);
+}
+.sv2-why-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(1rem, 2vw, 2rem);
+  margin-top: clamp(2rem, 4vw, 3rem);
+}
+@media (max-width: 1024px) { .sv2-why-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 540px)  { .sv2-why-grid { grid-template-columns: 1fr; } }
+.sv2-why-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: var(--space-lg);
+  background: var(--color-bg-primary);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-md);
+}
+.sv2-why-num {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 2.4rem;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: var(--color-suzuki-red);
+  font-variant-numeric: tabular-nums;
+}
+.sv2-why-num em { font-style: normal; color: var(--color-suzuki-red); font-size: 0.6em; }
+.sv2-why-title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+.sv2-why-body {
+  font-size: 0.85rem;
+  line-height: 1.55;
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+/* ============================================================
+   POLICIES — 4 expandable accordion items
+   ============================================================ */
+.sv2-policies {
+  background: var(--color-bg-primary);
+  padding-block: clamp(4rem, 7vw, 6rem);
+}
+.sv2-policies-container {
+  max-width: 880px;
+  margin-inline: auto;
+  padding-inline: var(--section-padding-x);
+}
+.sv2-policy-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: clamp(2rem, 4vw, 3rem);
+}
+.sv2-policy-item {
+  background: var(--color-bg-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+.sv2-policy-summary {
+  padding: clamp(0.9rem, 1.5vw, 1.1rem) clamp(1rem, 2vw, 1.5rem);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+  transition: background var(--duration-fast) var(--ease-out-cinematic);
+}
+.sv2-policy-summary::-webkit-details-marker { display: none; }
+.sv2-policy-summary:hover { background: rgba(255, 255, 255, 0.03); }
+.sv2-policy-summary::after {
+  content: '+';
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--color-suzuki-red);
+}
+.sv2-policy-item[open] > .sv2-policy-summary::after { content: '−'; }
+.sv2-policy-body {
+  padding: 0 clamp(1rem, 2vw, 1.5rem) clamp(1rem, 1.5vw, 1.25rem);
+  font-size: 0.92rem;
+  line-height: 1.65;
+  color: var(--color-text-secondary);
+}
+.sv2-policy-body p { margin: 0 0 var(--space-sm); }
+.sv2-policy-body p:last-child { margin-bottom: 0; }
+.sv2-policy-body ul { margin: 0; padding-left: 1.2rem; display: flex; flex-direction: column; gap: 0.3rem; }
+
+/* ============================================================
+   BOOK A SERVICE — final CTA + inline form
+   ============================================================ */
+.sv2-book {
+  position: relative;
+  background: var(--color-bg-secondary);
+  padding-block: clamp(4rem, 8vw, 7rem);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  isolation: isolate;
+  overflow: hidden;
+}
+.sv2-book::before {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60%; aspect-ratio: 1/1;
+  background: radial-gradient(circle, rgba(228, 5, 33, 0.18) 0%, transparent 65%);
+  z-index: -1;
+  filter: blur(20px);
+}
+.sv2-book-container {
+  max-width: 780px;
+  margin-inline: auto;
+  padding-inline: var(--section-padding-x);
+  text-align: center;
+}
+.sv2-book-cta-row {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: clamp(1.5rem, 3vw, 2.5rem);
+}
+.sv2-book-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 1rem 1.7rem;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: all var(--duration-base) var(--ease-out-cinematic);
+}
+.sv2-book-btn--primary {
+  background: var(--color-suzuki-red);
+  color: var(--color-text-primary);
+  border: 1.5px solid var(--color-suzuki-red);
+}
+.sv2-book-btn--primary:hover {
+  background: var(--color-suzuki-red-glow);
+  border-color: var(--color-suzuki-red-glow);
+  box-shadow: 0 0 28px rgba(228, 5, 33, 0.5);
+}
+.sv2-book-btn--secondary {
+  background: transparent;
+  color: var(--color-text-primary);
+  border: 1.5px solid rgba(255, 255, 255, 0.4);
+}
+.sv2-book-btn--secondary:hover {
+  background: var(--color-text-primary);
+  color: var(--color-bg-primary);
+}
+.sv2-book-btn::after { content: '→'; transition: transform var(--duration-fast); }
+.sv2-book-btn:hover::after { transform: translateX(4px); }
+
+/* ============================================================
+   SECTION 2 — AUTHORISED SERVICE CENTRE TRUST BLOCK
+   ============================================================ */
+.sv2-trust {
+  background: var(--color-bg-primary);
+  padding-block: clamp(3.5rem, 7vw, 6rem);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+.sv2-trust-container {
+  max-width: var(--content-max-width);
+  margin-inline: auto;
+  padding-inline: var(--section-padding-x);
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: clamp(2rem, 4vw, 4rem);
+  align-items: center;
+}
+@media (max-width: 900px) {
+  .sv2-trust-container {
+    grid-template-columns: 1fr;
+    gap: clamp(2rem, 4vw, 2.5rem);
+  }
+}
+
+.sv2-trust-copy { display: flex; flex-direction: column; gap: var(--space-md); }
+
+.sv2-trust-title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(1.5rem, 3vw, 2.4rem);
+  line-height: 1.08;
+  letter-spacing: -0.025em;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+.sv2-trust-title em {
+  font-style: italic;
+  color: var(--color-suzuki-red);
+}
+.sv2-trust-sub {
+  font-size: clamp(0.95rem, 1.1vw, 1.05rem);
+  line-height: 1.65;
+  color: var(--color-text-secondary);
+  margin: 0;
+  max-width: 52ch;
+}
+
+.sv2-trust-stats {
+  list-style: none;
+  margin: var(--space-sm) 0 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-md);
+}
+.sv2-trust-stats li {
+  display: grid;
+  grid-template-columns: minmax(80px, auto) 1fr;
+  gap: 1rem;
+  align-items: baseline;
+  padding-block: 0.7rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+.sv2-trust-stats li:last-child { border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
+.sv2-trust-stat-num {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(1.4rem, 2.2vw, 1.8rem);
+  letter-spacing: -0.02em;
+  color: var(--color-suzuki-red);
+}
+.sv2-trust-stat-label {
+  font-size: 0.92rem;
+  line-height: 1.45;
+  color: var(--color-text-secondary);
+}
+
+.sv2-trust-image {
+  position: relative;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55),
+              0 0 0 1px rgba(255, 255, 255, 0.05);
+  isolation: isolate;
+}
+.sv2-trust-image::after {
+  /* subtle red accent strip on the bottom edge — design-system continuity */
+  content: '';
+  position: absolute;
+  left: 0; bottom: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg,
+    var(--color-suzuki-red) 0%,
+    rgba(228, 5, 33, 0.4) 60%,
+    transparent 100%);
+  pointer-events: none;
+  z-index: 2;
+}
+.sv2-trust-image img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  transition: transform var(--duration-base) var(--ease-out-cinematic);
+}
+.sv2-trust-image:hover img { transform: scale(1.02); }
+
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .sv2-pkg, .sv2-check-item, .sv2-pkg-cta, .sv2-book-btn { transition: none !important; }
+  .sv2-trust-image img { transition: none !important; }
+}

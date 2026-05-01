@@ -1,0 +1,329 @@
+/* ============================================================
+   SECTION 8 — Why Suzuki Is Safe
+   ============================================================
+   Reference: the "Stryda — WHAT'S INSIDE MATTERS" layout —
+   centered eyebrow + huge title + product image floating in
+   the middle, 4 numbered points pinned at the four corners
+   (each connected to the centre with a thin horizontal line).
+
+   Adapted for Suzuki: dark canvas, red palette, rider photo
+   in the centre, 4 safety points (ABS / LED / FI / ERG) in
+   the corners, brand tagline at the bottom.
+   ============================================================ */
+
+.sf-section {
+  position: relative;
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  padding-block: clamp(4rem, 8vw, 8rem);
+  overflow: hidden;
+  isolation: isolate;
+}
+.sf-section::before {
+  /* Soft red wash behind the centre — adds atmosphere */
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 70%;
+  aspect-ratio: 16 / 10;
+  background: radial-gradient(ellipse at center,
+    rgba(228, 5, 33, 0.12) 0%,
+    rgba(228, 5, 33, 0.04) 40%,
+    transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.sf-container {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: var(--content-max-width);
+  margin-inline: auto;
+  padding-inline: var(--section-padding-x);
+}
+
+/* ============================================================
+   HEADING — centred
+   ============================================================ */
+.sf-heading {
+  text-align: center;
+  margin-bottom: clamp(2.5rem, 5vw, 4.5rem);
+  max-width: 64ch;
+  margin-inline: auto;
+}
+.sf-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--color-suzuki-red);
+  margin: 0 0 var(--space-md);
+}
+.sf-title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(1.6rem, 3.2vw, 2.6rem);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+  text-transform: none;        /* sentence-case per the reference's title style */
+  color: var(--color-text-primary);
+  margin: 0 0 var(--space-lg);
+}
+.sf-title em {
+  font-style: italic;
+  color: var(--color-suzuki-red);
+}
+.sf-sub {
+  font-size: clamp(1rem, 1.2vw, 1.15rem);
+  line-height: 1.65;
+  color: var(--color-text-secondary);
+  margin: 0 auto;
+  max-width: 56ch;
+}
+
+/* ============================================================
+   GRID — 3 cols × 2 rows. Image spans the middle column,
+   4 points at the corners, each with a connector line
+   ============================================================ */
+.sf-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  grid-template-areas:
+    "p1 image p3"
+    "p2 image p4";
+  gap: clamp(1.5rem, 3vw, 3rem);
+  align-items: center;
+  margin-bottom: clamp(2.5rem, 5vw, 4rem);
+}
+.sf-image      { grid-area: image; }
+.sf-point--1   { grid-area: p1; }
+.sf-point--2   { grid-area: p2; }
+.sf-point--3   { grid-area: p3; }
+.sf-point--4   { grid-area: p4; }
+
+/* ============================================================
+   CENTRE IMAGE
+   ============================================================ */
+.sf-image {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: clamp(20rem, 50vh, 32rem);
+}
+.sf-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  filter:
+    drop-shadow(0 30px 60px rgba(0, 0, 0, 0.7))
+    drop-shadow(0 0 60px rgba(228, 5, 33, 0.18));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  /* Subtle vertical drift so the bike feels alive */
+  animation: sf-image-bob 8s ease-in-out infinite;
+}
+@keyframes sf-image-bob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
+}
+
+/* ============================================================
+   POINT CARDS — number + line + title + sub
+   ============================================================ */
+.sf-point {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  position: relative;
+  padding: var(--space-md) 0;
+}
+
+/* Big numbers — bold red, oversized, the visual anchor */
+.sf-point-num {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(2.1rem, 3.6vw, 3.2rem);
+  line-height: 1;
+  letter-spacing: -0.025em;
+  color: var(--color-suzuki-red);
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 0 30px rgba(228, 5, 33, 0.2);
+  margin: 0 0 var(--space-xs);
+}
+
+/* Thin horizontal divider under the number */
+.sf-point-rule {
+  display: block;
+  height: 1px;
+  background: linear-gradient(90deg,
+    rgba(255, 255, 255, 0.4) 0%,
+    rgba(228, 5, 33, 0.6) 50%,
+    rgba(255, 255, 255, 0.05) 100%);
+  margin: 0 0 var(--space-md);
+  width: 100%;
+  position: relative;
+}
+/* Connector dot at the far end of the rule (extends "toward" centre) */
+.sf-point-rule::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-suzuki-red);
+  box-shadow: 0 0 8px var(--color-suzuki-red-glow);
+  transform: translateY(-50%);
+}
+
+/* Left-side points (1, 2): rule extends right toward centre */
+.sf-point--1 .sf-point-rule::after,
+.sf-point--2 .sf-point-rule::after { right: 0; }
+
+/* Right-side points (3, 4): rule extends left, dot on left */
+.sf-point--3 .sf-point-rule,
+.sf-point--4 .sf-point-rule {
+  background: linear-gradient(90deg,
+    rgba(255, 255, 255, 0.05) 0%,
+    rgba(228, 5, 33, 0.6) 50%,
+    rgba(255, 255, 255, 0.4) 100%);
+}
+.sf-point--3 .sf-point-rule::after,
+.sf-point--4 .sf-point-rule::after { left: 0; }
+
+/* Right-side cards mirror text alignment so number sits on the right edge */
+.sf-point--3,
+.sf-point--4 {
+  text-align: right;
+  align-items: flex-end;
+}
+
+/* Point title (the abbreviation: ABS / LED / FI / ERG) */
+.sf-point-title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(1rem, 1.3vw, 1.25rem);
+  line-height: 1;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+/* Sub: the description after the title */
+.sf-point-sub {
+  font-size: clamp(0.85rem, 1vw, 0.95rem);
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+  margin: 0;
+  max-width: 28ch;
+}
+
+/* Optional body paragraph for richer points (e.g., point 03 FI) */
+.sf-point-body {
+  font-size: clamp(0.78rem, 0.9vw, 0.85rem);
+  line-height: 1.55;
+  color: var(--color-text-muted);
+  margin: var(--space-xs) 0 0;
+  max-width: 32ch;
+}
+
+/* "Explore" arrow on richer points */
+.sf-point-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid var(--color-suzuki-red);
+  color: var(--color-suzuki-red);
+  font-size: 0.8rem;
+  margin-top: var(--space-sm);
+  transition: all var(--duration-fast) var(--ease-out-cinematic);
+  cursor: pointer;
+  text-decoration: none;
+}
+.sf-point-arrow:hover {
+  background: var(--color-suzuki-red);
+  color: var(--color-text-primary);
+  transform: translateX(2px);
+  box-shadow: 0 0 12px rgba(228, 5, 33, 0.5);
+}
+
+/* ============================================================
+   TAGLINE — bold uppercase red mono, centred under everything
+   ============================================================ */
+.sf-tagline {
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: clamp(0.85rem, 1.2vw, 1.05rem);
+  font-weight: 700;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--color-suzuki-red);
+  margin: 0;
+  padding-top: clamp(2rem, 4vw, 3rem);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+.sf-tagline strong {
+  color: var(--color-text-primary);
+  font-weight: 900;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 1024px) {
+  .sf-grid {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto auto;
+    grid-template-areas:
+      "image image"
+      "p1 p3"
+      "p2 p4";
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+  }
+  .sf-image { aspect-ratio: 16 / 10; min-height: clamp(16rem, 40vh, 22rem); }
+  .sf-point--3, .sf-point--4 {
+    /* Re-align right-column points to mirror left-column */
+    text-align: left;
+    align-items: flex-start;
+  }
+  .sf-point--3 .sf-point-rule,
+  .sf-point--4 .sf-point-rule {
+    background: linear-gradient(90deg,
+      rgba(255, 255, 255, 0.4) 0%,
+      rgba(228, 5, 33, 0.6) 50%,
+      rgba(255, 255, 255, 0.05) 100%);
+  }
+  .sf-point--3 .sf-point-rule::after,
+  .sf-point--4 .sf-point-rule::after { left: auto; right: 0; }
+}
+
+@media (max-width: 640px) {
+  .sf-grid {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "image"
+      "p1"
+      "p2"
+      "p3"
+      "p4";
+  }
+  .sf-image { aspect-ratio: 16 / 10; }
+}
+
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .sf-image img { animation: none !important; }
+  .sf-point-arrow { transition: none !important; }
+}

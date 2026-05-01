@@ -1,0 +1,284 @@
+/* ============================================================
+   SECTION 6 — MotoGP Heritage
+   ============================================================
+   Full-bleed photograph background (Suzuki Gixxer 250 launch
+   hero). Left column: lowercase title + signature red-dot accent.
+   Right column: 3 stacked white cards, each with the reference
+   image's red right-edge strip.
+
+   Reference: Bajaj Group "what we want to achieve" hero —
+   a darkened photo, big lowercase title with a red dot, and a
+   white card with red side strip.
+   ============================================================ */
+
+.mg-section {
+  position: relative;
+  min-height: 100vh;
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  padding-block: clamp(5rem, 10vw, 9rem);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* ============================================================
+   BACKGROUND PHOTO + GRADIENT TINT
+   ============================================================ */
+.mg-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+.mg-bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 40%;
+  filter: contrast(0.95) saturate(1.05);
+  transform: scaleX(-1);
+}
+.mg-bg::after {
+  /* Cinematic darkening — heavy ONLY on the far-left strip behind
+     the title. Middle of the photo (where the people + bikes are)
+     stays clear so all the launch-event participants are visible.
+     Right side gets a soft tint only — cards have their own white
+     surface so don't need backdrop darkening. */
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(95deg,
+      rgba(10, 10, 10, 0.88) 0%,
+      rgba(10, 10, 10, 0.55) 18%,
+      rgba(10, 10, 10, 0.12) 32%,
+      rgba(10, 10, 10, 0.06) 50%,
+      rgba(10, 10, 10, 0.06) 68%,
+      rgba(10, 10, 10, 0.20) 100%),
+    linear-gradient(180deg,
+      rgba(10, 10, 10, 0.10) 0%,
+      transparent 20%,
+      transparent 75%,
+      rgba(10, 10, 10, 0.45) 100%);
+  pointer-events: none;
+}
+
+/* ============================================================
+   CONTAINER + GRID
+   ============================================================ */
+.mg-container {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: var(--content-max-width);
+  margin-inline: auto;
+  padding-inline: var(--section-padding-x);
+}
+.mg-grid {
+  /* Three-column grid: title on the left, an empty "spacer" middle
+     so the photo's centre (where the people stand) is uncovered,
+     cards on the right where the rightmost bike sits in the photo. */
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1fr)                    /* left — title block */
+    clamp(2rem, 8vw, 8rem)            /* middle — empty spacer over the people */
+    clamp(380px, 38vw, 480px);        /* right — cards over the rightmost bike */
+  gap: 0;
+  align-items: center;
+  min-height: 75vh;
+}
+.mg-headline {
+  grid-column: 1;
+}
+.mg-cards {
+  /* The cards live in column 3, pushed flush to the section's right edge */
+  grid-column: 3;
+  justify-self: end;
+  width: 100%;
+}
+@media (max-width: 1024px) {
+  .mg-grid {
+    grid-template-columns: 1fr;
+    gap: clamp(2rem, 4vw, 3rem);
+  }
+  .mg-headline { grid-column: auto; }
+  .mg-cards { grid-column: auto; justify-self: stretch; }
+}
+
+/* ============================================================
+   LEFT COLUMN — title + red dot
+   ============================================================ */
+.mg-headline {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  align-items: flex-start;
+}
+
+.mg-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-suzuki-red);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0;
+}
+.mg-eyebrow::before {
+  content: '';
+  width: 28px;
+  height: 1px;
+  background: currentColor;
+}
+
+.mg-title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(1.85rem, 4vw, 3.2rem);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+  text-transform: lowercase;     /* signature reference style */
+  color: var(--color-text-primary);
+  margin: 0;
+  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.6);
+}
+.mg-title em {
+  font-style: italic;
+  color: var(--color-suzuki-red);
+}
+
+/* The signature red dot — sits below the title, oversized */
+.mg-dot {
+  display: inline-block;
+  width: clamp(70px, 8vw, 110px);
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  background: var(--color-suzuki-red);
+  margin-top: var(--space-xs);
+  box-shadow:
+    0 0 60px rgba(228, 5, 33, 0.55),
+    0 0 120px rgba(228, 5, 33, 0.25);
+  /* Subtle pulse */
+  animation: mg-dot-pulse 4s ease-in-out infinite;
+}
+@keyframes mg-dot-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50%      { transform: scale(1.06); opacity: 0.92; }
+}
+
+/* ============================================================
+   RIGHT COLUMN — 3 stacked cards
+   ============================================================ */
+.mg-cards {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.mg-card {
+  position: relative;
+  background: var(--color-text-primary);   /* white */
+  color: var(--color-bg-primary);
+  padding: clamp(1.25rem, 2.2vw, 1.75rem) clamp(1.5rem, 2.4vw, 2rem);
+  padding-right: clamp(2rem, 3vw, 2.5rem); /* extra room for the right red strip */
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.45);
+  /* dim by default — pop to full white on hover */
+  opacity: 0.9;
+  transition: opacity var(--duration-base) var(--ease-out-cinematic),
+              transform var(--duration-base) var(--ease-out-cinematic),
+              box-shadow var(--duration-base) var(--ease-out-cinematic);
+}
+.mg-card:hover {
+  opacity: 1;
+  transform: translateX(-4px);
+  box-shadow: 0 24px 56px rgba(0, 0, 0, 0.55), -4px 0 0 rgba(228, 5, 33, 0.15);
+}
+
+/* Right edge red strip — the signature element from the reference */
+.mg-card::after {
+  content: '';
+  position: absolute;
+  top: 0; right: 0; bottom: 0;
+  width: clamp(8px, 1.4vw, 14px);
+  background: var(--color-suzuki-red);
+  background-image: linear-gradient(180deg,
+    var(--color-suzuki-red) 0%,
+    var(--color-suzuki-red-glow) 50%,
+    var(--color-suzuki-red) 100%);
+}
+
+.mg-card-num {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-suzuki-red);
+}
+
+.mg-card-title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(1.1rem, 1.5vw, 1.4rem);
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  color: var(--color-bg-primary);
+  margin: 0 0 0.2rem;
+  text-transform: none;
+}
+
+.mg-card-body {
+  font-size: clamp(0.85rem, 0.95vw, 0.95rem);
+  line-height: 1.55;
+  color: #2a2a2a;
+  margin: 0 0 var(--space-xs);
+}
+
+.mg-card-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.4rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-suzuki-red);
+  text-decoration: none;
+  align-self: flex-start;
+  transition: gap var(--duration-fast) var(--ease-out-cinematic);
+}
+.mg-card-more:hover { gap: 0.75rem; color: var(--color-suzuki-red-glow); }
+.mg-card-more-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--color-suzuki-red);
+  color: var(--color-text-primary);
+  font-size: 0.72rem;
+  transition: background var(--duration-fast) var(--ease-out-cinematic),
+              transform var(--duration-fast) var(--ease-out-cinematic);
+}
+.mg-card-more:hover .mg-card-more-icon {
+  background: var(--color-suzuki-red-glow);
+  transform: translateX(2px);
+}
+
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .mg-dot { animation: none !important; }
+  .mg-card,
+  .mg-card-more,
+  .mg-card-more-icon { transition: none !important; }
+}

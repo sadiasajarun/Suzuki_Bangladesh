@@ -1,0 +1,416 @@
+/* ============================================================
+   SECTION 3 — Find Your Perfect Suzuki · v2 (continuous marquee)
+   ============================================================
+   Replaces v1 (synchronized crossfade auto-cycle). New behaviour:
+   one continuous left-sliding track of 5 category cards, looping
+   seamlessly via duplicated set + translateX(-50%) animation.
+
+     · Cards always moving (CSS @keyframes, never stops on its own)
+     · Hover anywhere on the track pauses the slide
+     · Click any card → that category's bike listing
+     · prefers-reduced-motion: animation disabled, cards static
+
+   5 categories: COMMUTER, SPORTS, PERFORMANCE SPORTS,
+                 SUPER SPORTS, SCOOTER
+   ============================================================ */
+
+.fb-section {
+  position: relative;
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  padding-block: clamp(4rem, 8vw, 8rem);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.fb-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 110%, rgba(228,5,33,0.06) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.fb-container {
+  position: relative;
+  z-index: 1;
+  max-width: var(--content-max-width);
+  margin-inline: auto;
+  padding-inline: var(--section-padding-x);
+}
+
+/* ============================================================
+   HEADING
+   ============================================================ */
+.fb-heading {
+  margin-bottom: clamp(2rem, 5vw, 4rem);
+  max-width: 60ch;
+}
+.fb-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-suzuki-red);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0 0 var(--space-md);
+}
+.fb-eyebrow::before {
+  content: '';
+  width: 28px;
+  height: 1px;
+  background: currentColor;
+  display: inline-block;
+}
+.fb-title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(1.6rem, 3.2vw, 2.6rem);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  margin: 0 0 var(--space-md);
+  color: var(--color-text-primary);
+}
+.fb-title em {
+  font-style: italic;
+  color: var(--color-suzuki-red);
+}
+.fb-sub {
+  font-size: clamp(1rem, 1.2vw, 1.15rem);
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+  max-width: 56ch;
+  margin: 0;
+}
+
+/* ============================================================
+   MARQUEE — continuous slide, full-bleed
+   ============================================================
+   Sits outside .fb-container so cards run edge-to-edge of the
+   viewport (the slide-off behaviour at the boundaries is part
+   of the visual). The mask gradient softens those boundaries.
+   ============================================================ */
+.fb-marquee {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  overflow: hidden;
+  margin-block: clamp(1.5rem, 3vw, 2.5rem);
+  /* Mask the left/right edges so cards fade in/out at the
+     boundaries instead of sharp-cutting */
+  -webkit-mask-image: linear-gradient(90deg,
+    transparent 0%, black 6%, black 94%, transparent 100%);
+          mask-image: linear-gradient(90deg,
+    transparent 0%, black 6%, black 94%, transparent 100%);
+}
+
+/* The track holds 2 copies of the 5-card list — 10 cards total.
+   Animating translateX from 0 to -50% lands at the start of the
+   second copy, which is visually identical to the start of the
+   first copy → seamless loop. */
+.fb-track {
+  display: flex;
+  flex-wrap: nowrap;
+  width: max-content;
+  /* `gap` would break the seamless loop math; we use margin-right
+     on each card instead so total track width is exactly 2x
+     the content of one copy. */
+  animation: fb-scroll var(--fb-scroll-duration, 36s) linear infinite;
+  will-change: transform;
+}
+
+/* Pause when user hovers OR focuses the marquee */
+.fb-marquee:hover .fb-track,
+.fb-marquee:focus-within .fb-track {
+  animation-play-state: paused;
+}
+
+@keyframes fb-scroll {
+  0%   { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(-50%, 0, 0); }
+}
+
+/* ============================================================
+   CARD
+   ============================================================ */
+.fb-card {
+  flex-shrink: 0;
+  width: clamp(280px, 30vw, 380px);
+  height: clamp(380px, 56vh, 480px);
+  margin-right: clamp(0.75rem, 1.5vw, 1.25rem);
+  position: relative;
+  display: block;
+  background: var(--color-bg-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+  text-decoration: none;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition:
+    transform var(--duration-base) var(--ease-out-cinematic),
+    border-color var(--duration-base) var(--ease-out-cinematic),
+    box-shadow var(--duration-base) var(--ease-out-cinematic);
+  isolation: isolate;
+}
+
+.fb-card:hover,
+.fb-card:focus-visible {
+  transform: translateY(-6px);
+  border-color: rgba(228, 5, 33, 0.5);
+  box-shadow:
+    0 16px 48px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(228, 5, 33, 0.5);
+  outline: none;
+}
+
+/* Top hairline draws in red on hover */
+.fb-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--color-suzuki-red);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 400ms var(--ease-out-cinematic);
+  z-index: 5;
+}
+.fb-card:hover::before,
+.fb-card:focus-visible::before { transform: scaleX(1); }
+
+/* ============================================================
+   CARD BACKGROUND IMAGE
+   ============================================================ */
+.fb-card-img {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center 55%;
+  background-repeat: no-repeat;
+  background-color: var(--color-bg-secondary);  /* fallback if image 404s */
+  /* Smoothing pass for the low-res source thumbnails:
+     - slight blur softens pixel-edges
+     - boosted contrast / saturation pulls the bike colour forward
+     - GPU-accelerated transform keeps it sharp on hover */
+  filter:
+    blur(0.6px)
+    grayscale(0.15)
+    brightness(0.85)
+    saturate(1.1)
+    contrast(1.05);
+  image-rendering: auto;
+  transform: scale(1.02);   /* slight zoom hides edge pixelation */
+  transform-origin: center center;
+  transition:
+    transform var(--duration-base) var(--ease-out-cinematic),
+    filter var(--duration-base) var(--ease-out-cinematic);
+  z-index: 1;
+  will-change: transform, filter;
+}
+.fb-card:hover .fb-card-img,
+.fb-card:focus-visible .fb-card-img {
+  /* On hover/focus drop the smoothing — bike comes forward, full colour.
+     The slight scale-up still helps mask any remaining edge pixels. */
+  transform: scale(1.06);
+  filter:
+    blur(0)
+    grayscale(0)
+    brightness(1)
+    saturate(1.15)
+    contrast(1.02);
+}
+
+/* Dark gradient overlay for text legibility AND to mask pixelation
+   on the low-res source images. Heavier top + bottom fade hides edges. */
+.fb-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg,
+    rgba(10, 10, 10, 0.65) 0%,
+    rgba(10, 10, 10, 0.25) 30%,
+    rgba(10, 10, 10, 0.30) 50%,
+    rgba(10, 10, 10, 0.92) 80%,
+    rgba(10, 10, 10, 0.98) 100%);
+  z-index: 2;
+  pointer-events: none;
+  transition: opacity var(--duration-base) var(--ease-out-cinematic);
+}
+.fb-card:hover::after,
+.fb-card:focus-visible::after {
+  /* On hover, lighten overlay so bike comes through more.
+     The hover state's clearer image carries the full saturation. */
+  opacity: 0.7;
+}
+
+/* ============================================================
+   CARD CONTENT
+   ============================================================ */
+.fb-card-content {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  padding: clamp(1.25rem, 2vw, 1.75rem);
+}
+
+.fb-card-top {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.fb-card-tag {
+  display: inline-block;
+  align-self: flex-start;
+  padding: 0.3rem 0.7rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(6px);
+}
+
+.fb-card-bottom {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.fb-card-tagline {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-suzuki-red);
+  margin: 0;
+}
+
+.fb-card-name {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(1.5rem, 2.4vw, 2.4rem);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  color: var(--color-text-primary);
+  margin: 0 0 0.25rem;
+}
+
+.fb-card-cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: var(--space-md);
+  padding-top: var(--space-md);
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text-primary);
+}
+.fb-card-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(228, 5, 33, 0.15);
+  border: 1px solid var(--color-suzuki-red);
+  color: var(--color-suzuki-red);
+  transition:
+    background var(--duration-fast) var(--ease-out-cinematic),
+    color var(--duration-fast) var(--ease-out-cinematic),
+    transform var(--duration-fast) var(--ease-out-cinematic);
+}
+.fb-card:hover .fb-card-arrow {
+  background: var(--color-suzuki-red);
+  color: var(--color-text-primary);
+  transform: translateX(4px);
+}
+
+/* ============================================================
+   FOOTER — "View All Bikes" CTA
+   ============================================================ */
+.fb-footer {
+  display: flex;
+  justify-content: center;
+  margin-top: clamp(2rem, 4vw, 3rem);
+}
+.fb-all-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: 1rem 2rem;
+  border: 1.5px solid rgba(255, 255, 255, 0.4);
+  color: var(--color-text-primary);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: all var(--duration-base) var(--ease-out-cinematic);
+}
+.fb-all-cta:hover {
+  background: var(--color-text-primary);
+  color: var(--color-bg-primary);
+  border-color: var(--color-text-primary);
+}
+.fb-all-cta::after {
+  content: '→';
+  transition: transform var(--duration-fast) var(--ease-out-cinematic);
+}
+.fb-all-cta:hover::after { transform: translateX(4px); }
+
+/* ============================================================
+   RESPONSIVE — slow the marquee a touch on smaller screens
+   ============================================================ */
+@media (max-width: 1024px) {
+  .fb-section { --fb-scroll-duration: 32s; }
+}
+@media (max-width: 600px) {
+  .fb-section { --fb-scroll-duration: 28s; }
+  .fb-card-cta { font-size: 0.7rem; }
+}
+
+/* ============================================================
+   REDUCED MOTION — stop the marquee, show 5 cards as a
+   horizontally scrollable strip (native scroll)
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .fb-track {
+    animation: none;
+    width: 100%;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-inline: var(--section-padding-x);
+  }
+  .fb-card {
+    scroll-snap-align: start;
+  }
+  .fb-card[aria-hidden="true"] {
+    /* Hide duplicates — the user can scroll the originals */
+    display: none;
+  }
+  .fb-marquee {
+    -webkit-mask-image: none;
+            mask-image: none;
+  }
+}

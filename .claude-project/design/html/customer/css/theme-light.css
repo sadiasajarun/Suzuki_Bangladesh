@@ -1,0 +1,591 @@
+/* ============================================================
+   Suzuki Bangladesh — Light Theme overrides
+   ============================================================
+   Most surfaces invert automatically via the token redefinitions
+   in tokens.css under :root[data-theme="light"]. This file patches
+   what cannot:
+     · subtle dividers hardcoded as rgba(255,255,255, x)
+     · dark gradient overlays hardcoded as rgba(10,10,10, x)
+     · mix-blend-mode: screen → multiply (only screen-blended images
+       work on dark; multiply works on light)
+     · per-section visuals that need explicit re-tinting
+
+   All selectors are scoped under :root[data-theme="light"] so they
+   only apply when the light theme is active. No specificity wars
+   with the default dark CSS.
+   ============================================================ */
+
+/* ============================================================
+   Globals
+   ============================================================ */
+:root[data-theme="light"] body {
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+}
+
+/* The mode itself — let images that were blended for a dark page
+   blend correctly against a light page instead. */
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+
+/* ============================================================
+   NAVBAR
+   ============================================================ */
+:root[data-theme="light"] .nav {
+  background: rgba(250, 250, 250, 0.85);
+  border-bottom-color: rgba(0, 0, 0, 0.08);
+}
+:root[data-theme="light"] .nav .bl-suzuki { color: #0A0A0A; }
+:root[data-theme="light"] .nav .bl-meta { color: rgba(0, 0, 0, 0.55); }
+:root[data-theme="light"] .nav__link { color: #0A0A0A; }
+:root[data-theme="light"] .nav__link:hover { color: var(--color-suzuki-red); }
+:root[data-theme="light"] .nav__hotline { color: #0A0A0A; }
+:root[data-theme="light"] .nav__mobile-toggle { color: #0A0A0A; }
+:root[data-theme="light"] .nav__mega { background: #FFFFFF; border-color: rgba(0,0,0,0.08); }
+:root[data-theme="light"] .nav__mega-card { background: #F7F7F7; border-color: rgba(0,0,0,0.08); }
+:root[data-theme="light"] .nav__mega-card:hover { background: #FFFFFF; }
+:root[data-theme="light"] .nav__mega-card-name { color: #0A0A0A; }
+:root[data-theme="light"] .nav__mega-card-price { color: rgba(0, 0, 0, 0.65); }
+
+/* ============================================================
+   HERO  (heavily dark-tinted in dark mode; soften for light)
+   ============================================================ */
+:root[data-theme="light"] .hero {
+  background: linear-gradient(180deg, #FAFAFA 0%, #F0F0F0 100%);
+}
+:root[data-theme="light"] .hero::before,
+:root[data-theme="light"] .hero::after {
+  /* Big dark vignettes — dial back to soft light wash */
+  opacity: 0.45;
+  mix-blend-mode: multiply;
+}
+:root[data-theme="light"] .hero .eyebrow,
+:root[data-theme="light"] .hero .headline,
+:root[data-theme="light"] .hero .bikeId,
+:root[data-theme="light"] .hero .bikePrice {
+  color: #0A0A0A;
+}
+:root[data-theme="light"] .hero .spec-card {
+  background: #FFFFFF;
+  border-color: rgba(0, 0, 0, 0.08);
+  color: #0A0A0A;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+}
+:root[data-theme="light"] .hero .spec-card .label,
+:root[data-theme="light"] .hero .spec-card .unit { color: rgba(0, 0, 0, 0.55); }
+:root[data-theme="light"] .hero .leader { stroke: rgba(0, 0, 0, 0.45); }
+:root[data-theme="light"] .hero .watermark,
+:root[data-theme="light"] .hero #hero-watermark {
+  /* Watermark uses screen blend on dark; multiply produces equivalent silhouette on light */
+  mix-blend-mode: multiply;
+  opacity: 0.08;
+}
+:root[data-theme="light"] .hero .bike-shadow {
+  /* Shadow ellipse uses dark gradient — boost slightly so the bike still grounds visually */
+  filter: blur(20px);
+  opacity: 0.35;
+}
+
+/* ============================================================
+   WHY SUZUKI — wordmark + white card + racing-line flow
+   ============================================================ */
+:root[data-theme="light"] .ws-section::before {
+  /* Dark radial vignette → softened cream wash */
+  background:
+    radial-gradient(ellipse at 50% 30%, rgba(228,5,33,0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 80%, rgba(0,0,0,0.04) 0%, transparent 70%);
+}
+/* Photo-letter outline shadow stack — keep white halo (helps photo
+   letters read against the page no matter what mode), but lighten
+   the extruded dark stack so it doesn't dominate on light bg. */
+:root[data-theme="light"] .ws-wordmark {
+  filter:
+    drop-shadow( 0px 0px 2px rgba(255, 255, 255, 0.95))
+    drop-shadow( 0px 0px 3px rgba(255, 255, 255, 0.6))
+    drop-shadow( 1px 2px 0   rgba(0, 0, 0, 0.30))
+    drop-shadow( 2px 3px 0   rgba(0, 0, 0, 0.22))
+    drop-shadow( 3px 5px 0   rgba(0, 0, 0, 0.14))
+    drop-shadow( 4px 8px 14px rgba(0, 0, 0, 0.20));
+}
+/* The white "104 years" card stays white in light mode (otherwise its
+   dark-mode inversion would flip it to dark-on-light, hiding the text). */
+:root[data-theme="light"] .ws-card {
+  background: #FFFFFF;
+  color: #0A0A0A;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.10);
+}
+:root[data-theme="light"] .ws-card-title { color: #0A0A0A; }
+:root[data-theme="light"] .ws-card-body  { color: #2a2a2a; }
+
+/* Eyebrow + 104-years pill copy — these were white in dark mode and
+   the theme swap takes them to black automatically. Make sure the
+   pill's outline + dot accents still read on a light page. */
+:root[data-theme="light"] .ws-years-pill {
+  border-color: rgba(228, 5, 33, 0.4);
+  background: rgba(228, 5, 33, 0.06);
+  color: #0A0A0A;
+}
+:root[data-theme="light"] .ws-years-pill strong { color: var(--color-suzuki-red); }
+:root[data-theme="light"] .ws-flow-point { color: #0A0A0A; }
+:root[data-theme="light"] .ws-point-num { color: var(--color-suzuki-red); }
+:root[data-theme="light"] .ws-point-headline { color: #0A0A0A; }
+:root[data-theme="light"] .ws-point-tagline { color: rgba(0, 0, 0, 0.6); }
+/* Flow road borders use rgba(255,255,255,...) — flip to dark */
+:root[data-theme="light"] .ws-flow {
+  border-top-color: rgba(0, 0, 0, 0.08);
+  border-bottom-color: rgba(0, 0, 0, 0.08);
+}
+:root[data-theme="light"] .ws-flow-road .ws-flow-path-base {
+  stroke: rgba(0, 0, 0, 0.14);
+}
+
+/* ============================================================
+   FIND BIKE — heavy black gradient overlays on cards
+   ============================================================ */
+:root[data-theme="light"] .fb-section { background: #FAFAFA; }
+:root[data-theme="light"] .fb-card-img::after {
+  /* The dark gradient that fades the bottom of each card to almost-black */
+  background: linear-gradient(180deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.25) 30%,
+    rgba(255, 255, 255, 0.55) 50%,
+    rgba(255, 255, 255, 0.92) 80%,
+    rgba(255, 255, 255, 0.98) 100%) !important;
+}
+:root[data-theme="light"] .fb-card { background: #FFFFFF; box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+:root[data-theme="light"] .fb-card-name,
+:root[data-theme="light"] .fb-card-tag,
+:root[data-theme="light"] .fb-card-cta { color: #0A0A0A; }
+:root[data-theme="light"] .fb-card-tagline { color: rgba(0, 0, 0, 0.55); }
+
+/* ============================================================
+   ENGINE SHOWCASE — image was screen-blended (assumes dark page);
+   flip to multiply so it now reads on the light page. The source
+   image has a black background, so multiply will keep the dark
+   engine visible while letting the page's light bg show through.
+   ============================================================ */
+:root[data-theme="light"] .es-section { background: var(--color-bg-primary); }
+:root[data-theme="light"] .es-engine-img {
+  /* Multiply turns the image's black bg → page bg, but also darkens
+     metallic engine highlights. Compensate with brightness +
+     contrast filters to keep the engine visually punchy. */
+  mix-blend-mode: multiply;
+  filter: brightness(1.05) contrast(1.05)
+          drop-shadow(0 30px 60px rgba(0, 0, 0, 0.18));
+}
+:root[data-theme="light"] .es-engine-podium::before {
+  background: radial-gradient(circle,
+    rgba(228, 5, 33, 0.10) 0%,
+    rgba(228, 5, 33, 0.04) 30%,
+    transparent 65%);
+}
+:root[data-theme="light"] .es-callout {
+  /* Dark glassy card → light card with red accent strip */
+  background: #FFFFFF;
+  border-color: rgba(0, 0, 0, 0.08);
+  border-left-color: var(--color-suzuki-red);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+:root[data-theme="light"] .es-callout:hover {
+  background: #FFF5F5;
+  border-color: rgba(228, 5, 33, 0.25);
+}
+:root[data-theme="light"] .es-callout-title { color: #0A0A0A; }
+:root[data-theme="light"] .es-callout-spec { color: rgba(0, 0, 0, 0.55); }
+
+/* ============================================================
+   BEST DEALS, MOTOGP, NEWS, SAFETY, SERVICE,
+   RIDER STORIES — sections that already use token-driven white
+   surfaces will mostly invert automatically. Patch the visible
+   gaps below.
+   ============================================================ */
+
+/* Best deals — card images sit on dark gradients */
+:root[data-theme="light"] .bd-section { background: #FAFAFA; }
+:root[data-theme="light"] .bd-card { background: #FFFFFF; box-shadow: 0 10px 28px rgba(0,0,0,0.08); }
+:root[data-theme="light"] .bd-card-name,
+:root[data-theme="light"] .bd-card-special,
+:root[data-theme="light"] .bd-card-cta { color: #0A0A0A; }
+:root[data-theme="light"] .bd-card-mrp { color: rgba(0, 0, 0, 0.45); }
+
+/* MotoGP — cards already use white-on-photo; in light mode they
+   become dark cards on photo. Force them to STAY white for
+   readability against the photo. */
+:root[data-theme="light"] .mg-card {
+  background: #FFFFFF;
+  color: #0A0A0A;
+}
+:root[data-theme="light"] .mg-card-title,
+:root[data-theme="light"] .mg-card-num { color: #0A0A0A; }
+:root[data-theme="light"] .mg-card-body { color: #2a2a2a; }
+:root[data-theme="light"] .mg-title { color: #0A0A0A; text-shadow: 0 2px 12px rgba(255, 255, 255, 0.6); }
+
+/* Safety — uses dark page bg + white cards */
+:root[data-theme="light"] .sf-section { background: #FAFAFA; }
+:root[data-theme="light"] .sf-point {
+  background: #FFFFFF;
+  border-color: rgba(0, 0, 0, 0.08);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+}
+:root[data-theme="light"] .sf-point-title,
+:root[data-theme="light"] .sf-point-sub,
+:root[data-theme="light"] .sf-point-body { color: #0A0A0A; }
+:root[data-theme="light"] .sf-tagline { color: #0A0A0A; }
+:root[data-theme="light"] .sf-tagline strong { color: var(--color-suzuki-red); }
+
+/* News marquee + cards */
+:root[data-theme="light"] .nw-section { background: #FAFAFA; }
+:root[data-theme="light"] .nw-marquee { background: #F0F0F0; border-color: rgba(0, 0, 0, 0.08); }
+:root[data-theme="light"] .nw-marquee-text { color: #0A0A0A; }
+:root[data-theme="light"] .nw-marquee-text--outline {
+  -webkit-text-stroke: 1px rgba(0, 0, 0, 0.45);
+  color: transparent;
+}
+:root[data-theme="light"] .nw-card {
+  background: #FFFFFF;
+  border-color: rgba(0, 0, 0, 0.08);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+}
+:root[data-theme="light"] .nw-card-title,
+:root[data-theme="light"] .nw-card-cta { color: #0A0A0A; }
+:root[data-theme="light"] .nw-card-excerpt,
+:root[data-theme="light"] .nw-card-meta { color: rgba(0, 0, 0, 0.55); }
+
+/* Rider Stories */
+:root[data-theme="light"] .rs-section { background: #FAFAFA; }
+:root[data-theme="light"] .rs-card--dark {
+  background: #1A1A1A;
+  color: #FFFFFF;
+}
+
+/* Service section (homepage block) — orb on dark page */
+:root[data-theme="light"] #service.sv-section {
+  background: linear-gradient(180deg, #F0F0F0 0%, #FAFAFA 100%);
+}
+:root[data-theme="light"] .sv-card {
+  background: #FFFFFF;
+  border-color: rgba(0, 0, 0, 0.08);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.06);
+}
+:root[data-theme="light"] .sv-card-title { color: #0A0A0A; }
+:root[data-theme="light"] .sv-card-desc { color: rgba(0, 0, 0, 0.55); }
+
+/* Service PAGE (sv2-*) */
+:root[data-theme="light"] .sv2-pageheader {
+  background: #FAFAFA;
+}
+:root[data-theme="light"] .sv2-pageheader::before,
+:root[data-theme="light"] .sv2-pageheader::after { opacity: 0.35; mix-blend-mode: multiply; }
+:root[data-theme="light"] .sv2-pageheader-title,
+:root[data-theme="light"] .sv2-trust-title { color: #0A0A0A; }
+:root[data-theme="light"] .sv2-pageheader-sub,
+:root[data-theme="light"] .sv2-trust-sub { color: rgba(0, 0, 0, 0.55); }
+:root[data-theme="light"] .sv2-trust { background: #FAFAFA; border-top-color: rgba(0, 0, 0, 0.08); }
+:root[data-theme="light"] .sv2-trust-stats li { border-color: rgba(0, 0, 0, 0.10); }
+:root[data-theme="light"] .sv2-trust-stat-label { color: rgba(0, 0, 0, 0.55); }
+:root[data-theme="light"] .sv2-checklist { background: #F5F5F5; }
+:root[data-theme="light"] .sv2-check-item {
+  background: #FFFFFF;
+  border-color: rgba(0, 0, 0, 0.08);
+  color: #0A0A0A;
+}
+:root[data-theme="light"] .sv2-policy { background: #FAFAFA; }
+:root[data-theme="light"] .sv2-policy-item { border-color: rgba(0, 0, 0, 0.08); }
+
+/* Final CTA / newsletter — heavy black backdrop */
+:root[data-theme="light"] .fc-section { background: #F0F0F0; }
+:root[data-theme="light"] .fc-section::before {
+  background: linear-gradient(180deg,
+    rgba(245, 245, 245, 0.85) 0%,
+    rgba(240, 240, 240, 0.92) 50%,
+    rgba(235, 235, 235, 0.95) 100%);
+}
+:root[data-theme="light"] .fc-form-input {
+  background: rgba(0, 0, 0, 0.04);
+  border-color: rgba(0, 0, 0, 0.16);
+  color: #0A0A0A;
+}
+:root[data-theme="light"] .fc-form-input::placeholder { color: rgba(0, 0, 0, 0.40); }
+
+/* Footer */
+:root[data-theme="light"] .ft-section,
+:root[data-theme="light"] footer.ft {
+  background: #1A1A1A;       /* keep footer dark — anchors the page */
+  color: #FFFFFF;
+}
+
+/* ============================================================
+   PAGES — bikes, dealers, offers, shop, technology, test-ride
+   ============================================================ */
+:root[data-theme="light"] .bp-section,
+:root[data-theme="light"] .bp-banner,
+:root[data-theme="light"] .dl-section,
+:root[data-theme="light"] .of-section,
+:root[data-theme="light"] .sh-section,
+:root[data-theme="light"] .tc-section,
+:root[data-theme="light"] .tr-section { background: #FAFAFA; }
+
+:root[data-theme="light"] .bp-cat,
+:root[data-theme="light"] .dl-card,
+:root[data-theme="light"] .of-card,
+:root[data-theme="light"] .sh-card,
+:root[data-theme="light"] .tc-card,
+:root[data-theme="light"] .tr-card {
+  background: #FFFFFF;
+  border-color: rgba(0, 0, 0, 0.08);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.06);
+}
+
+/* Shop product card image was screen-blended on dark → multiply on light */
+:root[data-theme="light"] .sh-card-image img,
+:root[data-theme="light"] .sh-show-image img {
+  mix-blend-mode: multiply;
+}
+
+/* Bike-detail page hero  */
+:root[data-theme="light"] .bd-hero {
+  background: linear-gradient(180deg, #FAFAFA 0%, #F0F0F0 100%);
+}
+
+/* ============================================================
+   GLOBAL TEXT-COLOR SWEEP
+   ============================================================
+   Anything that was white in dark mode (because of var(--color-text-primary))
+   already swaps to black via the token redefinition. The block below
+   handles the few residual surfaces that hardcoded their text color
+   through other tokens or rgba whites, and explicitly forces the
+   most-visible headings/eyebrows/links to a guaranteed-readable
+   black-or-red so nothing reads as ghost-white on light surfaces. */
+:root[data-theme="light"] .hero .eyebrow,
+:root[data-theme="light"] .hero .stats .stat .num,
+:root[data-theme="light"] .hero .stats .stat .label,
+:root[data-theme="light"] .hero .bikeName,
+:root[data-theme="light"] .ws-eyebrow,
+:root[data-theme="light"] .fb-eyebrow,
+:root[data-theme="light"] .fb-title,
+:root[data-theme="light"] .fb-sub,
+:root[data-theme="light"] .es-eyebrow,
+:root[data-theme="light"] .es-title,
+:root[data-theme="light"] .es-sub,
+:root[data-theme="light"] .bd-eyebrow,
+:root[data-theme="light"] .bd-title,
+:root[data-theme="light"] .bd-sub,
+:root[data-theme="light"] .mg-eyebrow,
+:root[data-theme="light"] .sf-eyebrow,
+:root[data-theme="light"] .sf-title,
+:root[data-theme="light"] .sf-sub,
+:root[data-theme="light"] .rs-title,
+:root[data-theme="light"] .rs-stat-num,
+:root[data-theme="light"] .rs-stat-label,
+:root[data-theme="light"] .nw-eyebrow,
+:root[data-theme="light"] .nw-title,
+:root[data-theme="light"] .sv-pill,
+:root[data-theme="light"] .sv-title,
+:root[data-theme="light"] .sv-sub,
+:root[data-theme="light"] .sv-card-title,
+:root[data-theme="light"] .fc-title,
+:root[data-theme="light"] .fc-sub {
+  color: #0A0A0A;
+}
+
+/* Italic / accent variants that were colored red in dark stay red */
+:root[data-theme="light"] .hero .headline em,
+:root[data-theme="light"] .ws-card-title em,
+:root[data-theme="light"] .fb-title em,
+:root[data-theme="light"] .es-title em,
+:root[data-theme="light"] .bd-title em,
+:root[data-theme="light"] .sf-title em,
+:root[data-theme="light"] .nw-title em,
+:root[data-theme="light"] .sv-title em,
+:root[data-theme="light"] .fc-title em,
+:root[data-theme="light"] .mg-title em,
+:root[data-theme="light"] .rs-title-highlight {
+  color: var(--color-suzuki-red);
+}
+
+/* "Inverted" cards that show dark text on white in dark mode — force
+   them to STAY white-on-page in light mode so their text doesn't
+   end up as light-on-dark (which reads as the original white). */
+:root[data-theme="light"] .fb-card-cta,
+:root[data-theme="light"] .nw-card-title,
+:root[data-theme="light"] .nw-card-cta,
+:root[data-theme="light"] .rs-card--white,
+:root[data-theme="light"] .rs-card-quote,
+:root[data-theme="light"] .rs-card-meta {
+  color: #0A0A0A;
+}
+:root[data-theme="light"] .rs-card--white {
+  background: #FFFFFF;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+/* Service homepage convergence cards — were white-on-dark; flip text dark */
+:root[data-theme="light"] .sv-card,
+:root[data-theme="light"] .sv-card * { color: #0A0A0A; }
+:root[data-theme="light"] .sv-card .sv-card-icon { color: var(--color-suzuki-red); }
+
+/* Bike-detail / service / test-ride white-card patterns — same fix */
+:root[data-theme="light"] .bd-detail-card,
+:root[data-theme="light"] .sv2-pkg,
+:root[data-theme="light"] .tr-summary-card {
+  background: #FFFFFF;
+  color: #0A0A0A;
+}
+:root[data-theme="light"] .bd-detail-card *,
+:root[data-theme="light"] .sv2-pkg *,
+:root[data-theme="light"] .tr-summary-card * { color: inherit; }
+
+/* Mobile overlay menu: in dark it has white text on a dark backdrop.
+   In light it should be dark text on a light backdrop. */
+:root[data-theme="light"] .nav__mobile-overlay,
+:root[data-theme="light"] .nav__mobile-overlay * { color: #0A0A0A; }
+:root[data-theme="light"] .nav__mobile-overlay { background: #FAFAFA; }
+
+/* ============================================================
+   USER-REQUESTED LIGHT-MODE TWEAKS
+   ============================================================ */
+
+/* Hero spec cards (engine / max power / mileage) — were dim white
+   panels in dark mode. In light mode flip them to red surfaces with
+   white text so they pop against the bright page. */
+:root[data-theme="light"] .hero .spec-card {
+  background: var(--color-suzuki-red);
+  border-color: var(--color-suzuki-red);
+  color: #FFFFFF;
+  box-shadow: 0 8px 24px rgba(228, 5, 33, 0.32);
+}
+:root[data-theme="light"] .hero .spec-card .label,
+:root[data-theme="light"] .hero .spec-card .value,
+:root[data-theme="light"] .hero .spec-card .unit {
+  color: #FFFFFF;
+}
+
+/* Safety section "Fast Enough to Thrill" — same treatment for the 4
+   numbered point cards (ABS, LED, FI, ERG). Red box, white type. */
+:root[data-theme="light"] .sf-point {
+  background: var(--color-suzuki-red);
+  border-color: var(--color-suzuki-red);
+  color: #FFFFFF;
+  box-shadow: 0 8px 22px rgba(228, 5, 33, 0.28);
+}
+:root[data-theme="light"] .sf-point-num,
+:root[data-theme="light"] .sf-point-title,
+:root[data-theme="light"] .sf-point-sub,
+:root[data-theme="light"] .sf-point-body {
+  color: #FFFFFF;
+}
+:root[data-theme="light"] .sf-point-rule,
+:root[data-theme="light"] .sf-point-rule::after {
+  background: rgba(255, 255, 255, 0.55);
+}
+:root[data-theme="light"] .sf-point-arrow {
+  color: #FFFFFF;
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* Find Your Perfect Suzuki — category headings (Sports, Super Sports,
+   Performance Sports, Commuter, Scooter) painted Suzuki red. */
+:root[data-theme="light"] .fb-card-name {
+  color: var(--color-suzuki-red);
+}
+
+/* Real Riders — the highlighted "Roads." word becomes a red
+   highlighter block with white text in light mode. */
+:root[data-theme="light"] .rs-title-highlight {
+  color: #FFFFFF;
+  background: var(--color-suzuki-red);
+  padding: 0 0.35em;
+  border-radius: 4px;
+  display: inline-block;
+  line-height: 1;
+}
+
+/* Final CTA email input — keep the field on a dark/red surface so
+   the placeholder + typed text can stay white. */
+:root[data-theme="light"] .fc-input {
+  background: rgba(0, 0, 0, 0.85);
+  border-color: rgba(0, 0, 0, 0.85);
+  color: #FFFFFF;
+}
+:root[data-theme="light"] .fc-input::placeholder {
+  color: rgba(255, 255, 255, 0.65);
+}
+:root[data-theme="light"] .fc-input:focus,
+:root[data-theme="light"] .fc-input:focus-visible {
+  border-color: var(--color-suzuki-red);
+  box-shadow: 0 0 0 3px rgba(228, 5, 33, 0.25);
+}
+
+/* Footer — kept dark intentionally (page-anchoring masthead). All
+   footer text — including the secondary/muted variants used for
+   sub-copy, links, social labels, and operator info — forced white
+   so nothing reads as ghost-grey on the dark backdrop. */
+:root[data-theme="light"] .ft-section,
+:root[data-theme="light"] .ft-section *,
+:root[data-theme="light"] footer.ft,
+:root[data-theme="light"] footer.ft * {
+  color: #FFFFFF;
+}
+/* Suzuki red links + accents inside the footer keep the brand red */
+:root[data-theme="light"] .ft-section a:hover,
+:root[data-theme="light"] .ft-link:hover,
+:root[data-theme="light"] .ft-social:hover {
+  color: var(--color-suzuki-red);
+}
+/* Footer dividers / borders should still read on the dark surface */
+:root[data-theme="light"] .ft-bottom {
+  border-top-color: rgba(255, 255, 255, 0.12);
+}
+
+/* ============================================================
+   THEME TOGGLE BUTTON visual
+   ============================================================ */
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  margin-inline: 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--color-text-primary);
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition: background var(--duration-fast) var(--ease-out-cinematic),
+              border-color var(--duration-fast) var(--ease-out-cinematic),
+              transform var(--duration-fast) var(--ease-out-cinematic);
+}
+.theme-toggle:hover {
+  background: rgba(255, 255, 255, 0.10);
+  border-color: var(--color-suzuki-red);
+  transform: scale(1.05);
+}
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--color-suzuki-red);
+  outline-offset: 2px;
+}
+.theme-toggle svg {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+/* In dark mode show the moon (current) → click to go light.
+   In light mode show the sun. JS toggles the .is-light class. */
+.theme-toggle .icon-sun  { display: none; }
+.theme-toggle .icon-moon { display: block; }
+:root[data-theme="light"] .theme-toggle {
+  background: rgba(0, 0, 0, 0.04);
+  border-color: rgba(0, 0, 0, 0.16);
+  color: #0A0A0A;
+}
+:root[data-theme="light"] .theme-toggle:hover {
+  background: rgba(0, 0, 0, 0.08);
+}
+:root[data-theme="light"] .theme-toggle .icon-sun  { display: block; }
+:root[data-theme="light"] .theme-toggle .icon-moon { display: none; }

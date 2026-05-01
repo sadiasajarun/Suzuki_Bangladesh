@@ -1,0 +1,750 @@
+/* ============================================================
+   Site-wide widgets — mock Messenger chat + cookies/lead popup
+   ============================================================
+   Two widgets that live on every page. Both pin to the viewport
+   and are independent of page layout.
+
+   Layout convention:
+     - Chat bubble + panel: bottom-right
+     - Cookies popup: bottom-left
+
+   Reuses tokens.css for colours / fonts / radii / easings.
+   ============================================================ */
+
+/* ============================================================
+   1. CHAT BUBBLE + PANEL
+   ============================================================ */
+/* Chat-only colour palette (Facebook blue family).
+   These vars override the site's red accents for the chat widget
+   surface only; everything below references them so swapping
+   palettes in the future means changing this block. */
+.cw-bubble,
+.cw-panel,
+.cw-bubble-badge,
+.cw-msg,
+.cw-chip,
+.cw-action,
+.cw-close-btn,
+.cw-footer-btn {
+  --cw-accent: #1877F2;
+  --cw-accent-hover: #166FE5;
+  --cw-accent-rgb: 24, 119, 242;
+}
+
+.cw-bubble {
+  position: fixed;
+  right: clamp(1rem, 2vw, 1.5rem);
+  bottom: clamp(1rem, 2vw, 1.5rem);
+  z-index: 1100;                /* above cart drawer (999) */
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: var(--cw-accent);
+  color: var(--color-text-primary);
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 12px 28px rgba(var(--cw-accent-rgb), 0.5),
+              0 0 0 4px rgba(var(--cw-accent-rgb), 0.15);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform var(--duration-base) var(--ease-out-cinematic),
+              box-shadow var(--duration-base) var(--ease-out-cinematic);
+}
+.cw-bubble:hover {
+  transform: scale(1.06);
+  box-shadow: 0 16px 36px rgba(var(--cw-accent-rgb), 0.6),
+              0 0 0 6px rgba(var(--cw-accent-rgb), 0.2);
+}
+.cw-bubble:focus-visible { outline: 2px solid var(--color-text-primary); outline-offset: 4px; }
+.cw-bubble svg {
+  width: 28px;
+  height: 28px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.cw-bubble.is-open svg { display: none; }
+.cw-bubble.is-open::before { content: '×'; font-size: 1.8rem; line-height: 1; font-weight: 300; }
+
+/* Soft pulse to draw the eye */
+.cw-bubble:not(.is-open):not(.is-suppressed)::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 2px solid rgba(var(--cw-accent-rgb), 0.5);
+  animation: cw-bubble-pulse 2.4s ease-out infinite;
+  pointer-events: none;
+}
+@keyframes cw-bubble-pulse {
+  0%   { transform: scale(1);    opacity: 0.6; }
+  100% { transform: scale(1.45); opacity: 0;   }
+}
+
+/* Unread badge */
+.cw-bubble-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 10px;
+  background: var(--color-text-primary);
+  color: var(--cw-accent);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 0 2px var(--cw-accent);
+}
+.cw-bubble.is-open .cw-bubble-badge,
+.cw-bubble-badge:empty { display: none; }
+
+/* ===== Chat panel ===== */
+.cw-panel {
+  position: fixed;
+  right: clamp(1rem, 2vw, 1.5rem);
+  bottom: calc(60px + clamp(1rem, 2vw, 1.5rem) + 1rem);
+  z-index: 1099;
+  width: min(360px, calc(100vw - 2rem));
+  height: min(560px, calc(100vh - 8rem));
+  background: var(--color-bg-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
+  opacity: 0;
+  transform: translateY(16px) scale(0.96);
+  transform-origin: bottom right;
+  pointer-events: none;
+  transition: opacity var(--duration-base) var(--ease-out-cinematic),
+              transform var(--duration-base) var(--ease-out-cinematic);
+}
+.cw-panel.is-open {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+.cw-header {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.9rem 1rem;
+  background: linear-gradient(180deg,
+    rgba(var(--cw-accent-rgb), 0.18) 0%,
+    rgba(var(--cw-accent-rgb), 0.05) 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+.cw-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--cw-accent);
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 1.1rem;
+  color: var(--color-text-primary);
+  box-shadow: 0 0 0 2px rgba(var(--cw-accent-rgb), 0.3);
+  position: relative;
+}
+.cw-avatar::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  right: -1px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #4ade80;
+  border: 2px solid var(--color-bg-secondary);
+}
+.cw-header-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 0;
+}
+.cw-header-name {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.95rem;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+.cw-header-status {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+}
+.cw-header-status::before {
+  content: '●  ';
+  color: #4ade80;
+}
+.cw-close-btn {
+  width: 32px;
+  height: 32px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  line-height: 1;
+}
+.cw-close-btn:hover { border-color: var(--cw-accent); color: var(--cw-accent); }
+
+/* Conversation thread */
+.cw-thread {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  background: var(--color-bg-primary);
+}
+.cw-thread::-webkit-scrollbar { width: 6px; }
+.cw-thread::-webkit-scrollbar-track { background: transparent; }
+.cw-thread::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+.cw-msg {
+  max-width: 80%;
+  padding: 0.65rem 0.9rem;
+  border-radius: var(--radius-md);
+  font-size: 0.88rem;
+  line-height: 1.45;
+  animation: cw-msg-in 0.32s var(--ease-out-cinematic);
+}
+@keyframes cw-msg-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+.cw-msg--bot {
+  align-self: flex-start;
+  background: var(--color-bg-secondary);
+  color: var(--color-text-primary);
+  border-bottom-left-radius: 4px;
+}
+.cw-msg--user {
+  align-self: flex-end;
+  background: var(--cw-accent);
+  color: var(--color-text-primary);
+  border-bottom-right-radius: 4px;
+}
+.cw-msg a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  font-weight: 600;
+}
+
+/* Typing dots indicator */
+.cw-typing {
+  align-self: flex-start;
+  background: var(--color-bg-secondary);
+  padding: 0.7rem 0.9rem;
+  border-radius: var(--radius-md);
+  border-bottom-left-radius: 4px;
+  display: inline-flex;
+  gap: 4px;
+}
+.cw-typing span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-text-secondary);
+  animation: cw-typing 1.2s ease-in-out infinite;
+}
+.cw-typing span:nth-child(2) { animation-delay: 0.15s; }
+.cw-typing span:nth-child(3) { animation-delay: 0.3s; }
+@keyframes cw-typing {
+  0%, 60%, 100% { opacity: 0.3; transform: translateY(0); }
+  30%           { opacity: 1;   transform: translateY(-3px); }
+}
+
+/* Quick reply chips */
+.cw-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  padding: 0.5rem 1rem 0.75rem;
+  background: var(--color-bg-primary);
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+}
+.cw-chip {
+  padding: 0.5rem 0.85rem;
+  background: transparent;
+  color: var(--cw-accent);
+  border: 1px solid rgba(var(--cw-accent-rgb), 0.5);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-out-cinematic);
+}
+.cw-chip:hover {
+  background: var(--cw-accent);
+  color: var(--color-text-primary);
+}
+
+/* Inline action buttons inside bot messages */
+.cw-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.4rem;
+  padding: 0.5rem 0.85rem;
+  background: var(--cw-accent);
+  color: var(--color-text-primary);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: background var(--duration-fast) var(--ease-out-cinematic);
+}
+.cw-action:hover { background: var(--cw-accent-hover); }
+.cw-action::after { content: '→'; }
+
+/* Footer "Continue on Messenger" + "Call" */
+.cw-footer {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.6rem 0.75rem;
+  background: var(--color-bg-secondary);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+.cw-footer-btn {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.65rem 0.6rem;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-primary);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: all var(--duration-fast) var(--ease-out-cinematic);
+}
+.cw-footer-btn:hover { border-color: var(--cw-accent); color: var(--cw-accent); }
+.cw-footer-btn svg {
+  width: 14px;
+  height: 14px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Hide chat bubble while cookies are visible to avoid stacking */
+@media (max-width: 540px) {
+  .cw-panel {
+    right: 0.5rem;
+    width: calc(100vw - 1rem);
+    height: calc(100vh - 7rem);
+  }
+}
+
+/* ============================================================
+   2. COOKIES + LEAD POPUP
+   ============================================================ */
+.ck-popup {
+  position: fixed;
+  left: clamp(1rem, 2vw, 1.5rem);
+  bottom: clamp(1rem, 2vw, 1.5rem);
+  z-index: 1100;
+  width: min(420px, calc(100vw - 2rem));
+  background: var(--color-bg-secondary);
+  border: 1px solid rgba(228, 5, 33, 0.4);
+  border-radius: var(--radius-lg);
+  padding: clamp(1rem, 2vw, 1.4rem);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
+  transform: translateY(16px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 600ms var(--ease-out-cinematic),
+              transform 600ms var(--ease-out-cinematic);
+}
+.ck-popup.is-open {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+.ck-popup::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--color-suzuki-red);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+.ck-header {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: var(--space-sm);
+}
+.ck-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(228, 5, 33, 0.15);
+  border: 1px solid rgba(228, 5, 33, 0.4);
+  color: var(--color-suzuki-red);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+.ck-title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 1rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+.ck-title em { font-style: italic; color: var(--color-suzuki-red); }
+
+.ck-body {
+  font-size: 0.85rem;
+  line-height: 1.55;
+  color: var(--color-text-secondary);
+  margin: 0 0 var(--space-md);
+}
+.ck-body a {
+  color: var(--color-suzuki-red);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* Cookie category toggles */
+.ck-cats {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: var(--space-sm) 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  margin-bottom: var(--space-md);
+}
+.ck-cat {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.45rem 0;
+}
+.ck-cat-label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  flex: 1;
+}
+.ck-cat-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.8rem;
+  color: var(--color-text-primary);
+  letter-spacing: 0.02em;
+}
+.ck-cat-desc {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+/* Switch toggle */
+.ck-switch {
+  position: relative;
+  width: 36px;
+  height: 20px;
+  flex-shrink: 0;
+}
+.ck-switch input { position: absolute; opacity: 0; width: 100%; height: 100%; cursor: pointer; margin: 0; }
+.ck-switch-track {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  transition: background var(--duration-fast) var(--ease-out-cinematic);
+}
+.ck-switch-track::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--color-text-primary);
+  transition: transform var(--duration-fast) var(--ease-out-cinematic);
+}
+.ck-switch input:checked + .ck-switch-track {
+  background: var(--color-suzuki-red);
+}
+.ck-switch input:checked + .ck-switch-track::after {
+  transform: translateX(16px);
+}
+.ck-switch input:disabled + .ck-switch-track {
+  background: rgba(228, 5, 33, 0.5);
+  cursor: not-allowed;
+}
+
+/* Lead-capture mini form */
+.ck-lead {
+  margin-bottom: var(--space-md);
+}
+.ck-lead-label {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin: 0 0 0.4rem;
+}
+.ck-lead-row {
+  display: flex;
+  gap: 0;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+.ck-lead-row:focus-within {
+  border-color: rgba(228, 5, 33, 0.6);
+  box-shadow: 0 0 0 2px rgba(228, 5, 33, 0.15);
+}
+.ck-lead-input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.65rem 0.85rem;
+  background: var(--color-bg-primary);
+  border: none;
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  outline: none;
+}
+.ck-lead-input::placeholder { color: var(--color-text-muted); }
+
+/* Action buttons row */
+.ck-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.4rem;
+}
+.ck-actions--3 { grid-template-columns: auto 1fr 1fr; }
+.ck-btn {
+  padding: 0.7rem 0.9rem;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-out-cinematic);
+  white-space: nowrap;
+}
+.ck-btn--ghost {
+  background: transparent;
+  color: var(--color-text-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+.ck-btn--ghost:hover {
+  border-color: var(--color-text-primary);
+  color: var(--color-text-primary);
+}
+.ck-btn--save {
+  background: transparent;
+  color: var(--color-text-primary);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+.ck-btn--save:hover {
+  background: var(--color-text-primary);
+  color: var(--color-bg-primary);
+}
+.ck-btn--accept {
+  background: var(--color-suzuki-red);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-suzuki-red);
+}
+.ck-btn--accept:hover {
+  background: var(--color-suzuki-red-glow);
+  border-color: var(--color-suzuki-red-glow);
+  box-shadow: 0 0 18px rgba(228, 5, 33, 0.4);
+}
+
+/* ============================================================
+   3. TOAST (success confirmation after consent / lead saved)
+   ============================================================ */
+.ck-toast {
+  position: fixed;
+  left: 50%;
+  bottom: clamp(1rem, 2vw, 1.5rem);
+  transform: translateX(-50%) translateY(20px);
+  z-index: 1101;
+  padding: 0.75rem 1.2rem;
+  background: var(--color-bg-secondary);
+  border: 1px solid rgba(228, 5, 33, 0.5);
+  border-radius: var(--radius-pill);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-text-primary);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 400ms var(--ease-out-cinematic),
+              transform 400ms var(--ease-out-cinematic);
+}
+.ck-toast.is-visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+.ck-toast::before {
+  content: '✓';
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--color-suzuki-red);
+  color: var(--color-text-primary);
+  font-size: 0.7rem;
+}
+
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .cw-bubble::after { animation: none !important; }
+  .cw-typing span { animation: none !important; }
+  .cw-bubble,
+  .cw-panel,
+  .cw-msg,
+  .ck-popup,
+  .ck-toast { transition: none !important; animation: none !important; }
+}
+
+/* ============================================================
+   3. SCROLL-TO-TOP BUTTON
+   ============================================================
+   Pinned to bottom-right, stacked above the chat bubble. Hidden
+   at the top of the page; fades in once the user scrolls past
+   ~320px and fades out again on return. Click smooth-scrolls home.
+   ============================================================ */
+.stt-btn {
+  position: fixed;
+  /* Sits to the LEFT of the 60px chat bubble at the same baseline.
+     Vertical centre is aligned with the chat bubble (chat = 60px tall,
+     stt = 48px tall, so stt's bottom = chat_bottom + (60-48)/2 = +6px). */
+  right: calc(clamp(1rem, 2vw, 1.5rem) + 60px + 12px);
+  bottom: calc(clamp(1rem, 2vw, 1.5rem) + 6px);
+  z-index: 1099;                       /* below chat bubble (1100), above content */
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--color-suzuki-red);
+  color: var(--color-text-primary);
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 26px rgba(228, 5, 33, 0.45),
+              0 0 0 1px rgba(228, 5, 33, 0.35);
+  /* Hidden state — invisible, untargetable, slightly translated down */
+  opacity: 0;
+  transform: translateY(12px) scale(0.92);
+  pointer-events: none;
+  transition: opacity 320ms var(--ease-out-cinematic),
+              transform 320ms var(--ease-out-cinematic),
+              background var(--duration-fast) var(--ease-out-cinematic),
+              box-shadow var(--duration-fast) var(--ease-out-cinematic);
+}
+.stt-btn.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+.stt-btn:hover {
+  background: var(--color-suzuki-red-glow, var(--color-suzuki-red));
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 14px 32px rgba(228, 5, 33, 0.6),
+              0 0 0 4px rgba(228, 5, 33, 0.18);
+}
+.stt-btn:focus-visible {
+  outline: 2px solid var(--color-text-primary);
+  outline-offset: 3px;
+}
+.stt-btn svg {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Mobile — tighter spacing to the left of the chat bubble */
+@media (max-width: 480px) {
+  .stt-btn {
+    width: 44px;
+    height: 44px;
+    right: calc(clamp(1rem, 2vw, 1.5rem) + 60px + 10px);
+    bottom: calc(clamp(1rem, 2vw, 1.5rem) + 8px);   /* (60-44)/2 = 8 */
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stt-btn { transition: opacity 200ms ease; transform: none !important; }
+  .stt-btn.is-visible { transform: none !important; }
+}

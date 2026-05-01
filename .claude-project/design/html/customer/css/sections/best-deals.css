@@ -1,0 +1,451 @@
+/* ============================================================
+   SECTION 5 — Best Deals (slideshow)
+   ============================================================
+   Layout matches the suzuki.com.bd reference (3 cards visible,
+   prev/next arrows, MRP struck through, special price prominent,
+   colors-available pill, EXPLORE CTA). Adapted to our dark canvas
+   + red palette.
+
+   Desktop: 3-card slider with prev/next arrows + dot indicators.
+   Tablet: 2 cards visible.
+   Mobile: 1 card, native horizontal scroll-snap (arrows hidden).
+   ============================================================ */
+
+.bd-section {
+  --bd-gap: 16px;
+  --bd-visible: 3;
+
+  position: relative;
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  padding-block: clamp(4rem, 8vw, 8rem);
+  overflow: hidden;
+  isolation: isolate;
+}
+.bd-section::before {
+  content: '';
+  position: absolute;
+  top: 30%;
+  right: -10%;
+  width: 50%;
+  aspect-ratio: 1/1;
+  background: radial-gradient(circle, rgba(228,5,33,0.08) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.bd-container {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: var(--content-max-width);
+  margin-inline: auto;
+  padding-inline: var(--section-padding-x);
+}
+
+/* ============================================================
+   HEADING ROW — eyebrow/title left, slider controls right
+   ============================================================ */
+.bd-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  flex-wrap: wrap;
+  gap: var(--space-lg);
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+.bd-heading-text { max-width: 56ch; }
+.bd-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-suzuki-red);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0 0 var(--space-md);
+}
+.bd-eyebrow::before {
+  content: '';
+  width: 28px;
+  height: 1px;
+  background: currentColor;
+}
+.bd-title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(1.6rem, 3.2vw, 2.6rem);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  margin: 0 0 var(--space-md);
+}
+.bd-title em {
+  font-style: italic;
+  color: var(--color-suzuki-red);
+}
+.bd-sub {
+  font-size: clamp(1rem, 1.2vw, 1.15rem);
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+/* ============================================================
+   SLIDER CONTROLS — prev/next arrows
+   ============================================================ */
+.bd-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  flex-shrink: 0;
+}
+.bd-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: transparent;
+  border: 1.5px solid rgba(255, 255, 255, 0.25);
+  color: var(--color-text-primary);
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-out-cinematic);
+}
+.bd-arrow:hover:not(:disabled) {
+  background: var(--color-suzuki-red);
+  border-color: var(--color-suzuki-red);
+  transform: scale(1.05);
+  box-shadow: 0 0 24px rgba(228, 5, 33, 0.4);
+}
+.bd-arrow:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+.bd-arrow:focus-visible {
+  outline: 2px solid var(--color-suzuki-red);
+  outline-offset: 4px;
+}
+
+.bd-counter {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  color: var(--color-text-secondary);
+  font-variant-numeric: tabular-nums;
+  min-width: 4ch;
+  text-align: center;
+}
+.bd-counter strong { color: var(--color-text-primary); font-size: 1.05rem; font-weight: 800; }
+
+/* ============================================================
+   SLIDER VIEWPORT + TRACK
+   ============================================================ */
+.bd-viewport {
+  position: relative;
+  overflow: hidden;
+}
+
+.bd-track {
+  display: flex;
+  gap: var(--bd-gap);
+  transition: transform 700ms var(--ease-out-cinematic);
+  will-change: transform;
+}
+
+/* ============================================================
+   CARD
+   ============================================================ */
+.bd-card {
+  flex: 0 0 calc((100% - var(--bd-gap) * (var(--bd-visible) - 1)) / var(--bd-visible));
+  display: flex;
+  flex-direction: column;
+  background: var(--color-bg-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  text-decoration: none;
+  color: var(--color-text-primary);
+  transition:
+    transform var(--duration-base) var(--ease-out-cinematic),
+    border-color var(--duration-base) var(--ease-out-cinematic),
+    box-shadow var(--duration-base) var(--ease-out-cinematic);
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.bd-card:hover,
+.bd-card:focus-visible {
+  transform: translateY(-6px);
+  border-color: rgba(228, 5, 33, 0.4);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(228, 5, 33, 0.4);
+  outline: none;
+}
+
+/* Top hairline draws red on hover */
+.bd-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--color-suzuki-red);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 400ms var(--ease-out-cinematic);
+  z-index: 5;
+}
+.bd-card:hover::before,
+.bd-card:focus-visible::before { transform: scaleX(1); }
+
+/* ============================================================
+   CARD IMAGE — bike photo top portion
+   ============================================================ */
+.bd-card-image {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 11;
+  background: var(--color-bg-secondary);
+  background-image:
+    radial-gradient(ellipse at 50% 100%, rgba(228, 5, 33, 0.08) 0%, transparent 70%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.bd-card-image img {
+  width: 88%;
+  height: 88%;
+  object-fit: contain;
+  object-position: center;
+  filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.6));
+  transition:
+    transform var(--duration-base) var(--ease-out-cinematic),
+    filter var(--duration-base) var(--ease-out-cinematic);
+}
+.bd-card:hover .bd-card-image img {
+  transform: scale(1.05);
+  filter: drop-shadow(0 16px 32px rgba(0, 0, 0, 0.7))
+          drop-shadow(0 0 24px rgba(228, 5, 33, 0.25));
+}
+
+/* "DEAL" / discount tag — top-left corner */
+.bd-card-tag {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  padding: 0.35rem 0.7rem;
+  background: var(--color-suzuki-red);
+  color: var(--color-text-primary);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  border-radius: 2px;
+  z-index: 4;
+  box-shadow: 0 4px 12px rgba(228, 5, 33, 0.4);
+}
+
+/* ============================================================
+   CARD BODY — name, price, MRP, colors, CTA
+   ============================================================ */
+.bd-card-body {
+  padding: clamp(1.25rem, 2vw, 1.75rem);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  text-align: center;
+  flex: 1;
+}
+
+.bd-card-name {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(1.1rem, 1.4vw, 1.4rem);
+  line-height: 1;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-text-primary);
+  margin: 0 0 var(--space-xs);
+}
+
+.bd-card-special {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(0.85rem, 1.05vw, 1rem);
+  letter-spacing: 0.02em;
+  color: var(--color-suzuki-red);
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+.bd-card-special .label {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.bd-card-mrp {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: var(--color-text-muted);
+  text-decoration: line-through;
+  text-decoration-color: rgba(228, 5, 33, 0.5);
+  text-decoration-thickness: 1.5px;
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.bd-card-savings {
+  display: inline-block;
+  align-self: center;
+  margin: 0.25rem 0;
+  padding: 0.2rem 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #22C55E;     /* success-green for "save BDT X" */
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  border-radius: var(--radius-pill);
+  background: rgba(34, 197, 94, 0.08);
+}
+
+.bd-card-colors {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+  margin: var(--space-xs) 0 0;
+}
+.bd-card-colors .dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-suzuki-red);
+  margin-inline-end: 0.5rem;
+  vertical-align: middle;
+  box-shadow: 0 0 6px var(--color-suzuki-red-glow);
+}
+
+.bd-card-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: var(--space-md);
+  padding: 0.7rem 1.5rem;
+  border: 1.5px solid var(--color-suzuki-red);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-suzuki-red);
+  text-decoration: none;
+  background: transparent;
+  align-self: center;
+  transition: all var(--duration-fast) var(--ease-out-cinematic);
+}
+.bd-card-cta::after {
+  content: '›';
+  font-size: 1rem;
+  line-height: 1;
+  transition: transform var(--duration-fast) var(--ease-out-cinematic);
+}
+.bd-card:hover .bd-card-cta {
+  background: var(--color-suzuki-red);
+  color: var(--color-text-primary);
+  box-shadow: 0 8px 24px rgba(228, 5, 33, 0.4);
+}
+.bd-card:hover .bd-card-cta::after {
+  transform: translateX(4px);
+}
+
+/* ============================================================
+   DOT INDICATORS — under the slider on desktop
+   ============================================================ */
+.bd-dots {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  margin-top: clamp(1.5rem, 3vw, 2.5rem);
+}
+.bd-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  border: 0;
+  padding: 0;
+  transition: all var(--duration-fast) var(--ease-out-cinematic);
+}
+.bd-dot:hover { background: rgba(255, 255, 255, 0.4); }
+.bd-dot.is-active {
+  width: 28px;
+  border-radius: var(--radius-pill);
+  background: var(--color-suzuki-red);
+  box-shadow: 0 0 8px var(--color-suzuki-red-glow);
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 1280px) {
+  .bd-section { --bd-visible: 3; }
+}
+@media (max-width: 1024px) {
+  .bd-section { --bd-visible: 2; }
+}
+@media (max-width: 640px) {
+  .bd-section { --bd-visible: 1; }
+
+  /* Replace the slider with native scroll-snap on mobile.
+     Hides the prev/next + dots — much smoother UX with thumb. */
+  .bd-viewport {
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    /* Hide scrollbar */
+    scrollbar-width: none;
+  }
+  .bd-viewport::-webkit-scrollbar { display: none; }
+  .bd-track {
+    transform: none !important;
+    transition: none !important;
+  }
+  .bd-card {
+    scroll-snap-align: start;
+    flex: 0 0 85%;       /* peek next card on the right */
+  }
+  .bd-controls,
+  .bd-dots { display: none; }
+  .bd-header { align-items: start; }
+}
+
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .bd-track,
+  .bd-card,
+  .bd-card-image img,
+  .bd-card::before,
+  .bd-arrow,
+  .bd-dot {
+    transition: none !important;
+  }
+}

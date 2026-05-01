@@ -1,0 +1,388 @@
+/* ============================================================
+   PHASE 14 — Site Footer
+   ============================================================
+   Anatomy (top → bottom):
+     1. Top row — brand lockup (logo + SUZUKI/Bangladesh) on the
+        left + tagline blurb + social icons on the right
+     2. Link grid — 4 columns (Bikes / Service & Support /
+        Company / Get in Touch)
+     3. Bottom bar — copyright + legal links + back-to-top
+        anchor
+
+   Palette: dark canvas, red accents, hairline dividers.
+   ============================================================ */
+
+.ft-section {
+  position: relative;
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  padding-block: clamp(3.5rem, 6vw, 5.5rem) 0;
+  isolation: isolate;
+  overflow: hidden;
+}
+/* Subtle red glow at top centre to bridge from .fc-section above */
+.ft-section::before {
+  content: '';
+  position: absolute;
+  top: -120px;
+  left: 50%;
+  width: 80%;
+  height: 240px;
+  background: radial-gradient(ellipse at center,
+    rgba(228, 5, 33, 0.08) 0%,
+    transparent 70%);
+  transform: translateX(-50%);
+  pointer-events: none;
+  z-index: -1;
+}
+/* Hairline strip across the top */
+.ft-section::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(228, 5, 33, 0.6) 50%,
+    transparent 100%);
+}
+
+.ft-container {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: var(--content-max-width);
+  margin-inline: auto;
+  padding-inline: var(--section-padding-x);
+}
+
+/* ============================================================
+   TOP ROW — brand + tagline + socials
+   ============================================================ */
+.ft-top {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: clamp(2rem, 4vw, 4rem);
+  align-items: start;
+  padding-bottom: clamp(2rem, 4vw, 3rem);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  margin-bottom: clamp(2.5rem, 5vw, 3.5rem);
+}
+@media (max-width: 768px) {
+  .ft-top { grid-template-columns: 1fr; gap: 2rem; }
+}
+
+/* Brand block (left) — reuses .brand-lockup so the logo is
+   automatically knocked-out by hero.js's prepareLogo() */
+.ft-brand {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+.ft-brand .brand-lockup {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+.ft-brand .bl-mark {
+  width: 44px;
+  height: 44px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  filter: drop-shadow(0 0 14px rgba(228, 5, 33, 0.45));
+  /* hero.js's prepareLogo() flips this on once the knockout PNG is ready,
+     so the mark fades in cleanly instead of flashing the white-grid PNG */
+  opacity: 0;
+  transition: opacity var(--duration-base) var(--ease-out-cinematic);
+}
+.ft-brand .bl-mark.is-ready { opacity: 1; }
+.ft-brand .bl-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+.ft-brand .bl-name {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 1.35rem;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  color: var(--color-text-primary);
+}
+.ft-brand .bl-sub {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-suzuki-red);
+}
+
+.ft-blurb {
+  font-size: clamp(0.9rem, 1vw, 0.98rem);
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+  margin: 0;
+  max-width: 52ch;
+}
+
+/* Right column — operator (RMBL) + socials */
+.ft-aside {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  align-items: flex-start;
+}
+@media (min-width: 769px) { .ft-aside { align-items: flex-end; text-align: right; } }
+
+.ft-operator {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+.ft-operator strong {
+  color: var(--color-text-primary);
+  font-weight: 800;
+}
+
+/* Social icons row */
+.ft-socials {
+  display: flex;
+  gap: 0.6rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.ft-social {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  transition: all var(--duration-fast) var(--ease-out-cinematic);
+}
+.ft-social svg { width: 16px; height: 16px; fill: currentColor; }
+.ft-social:hover {
+  background: var(--color-suzuki-red);
+  border-color: var(--color-suzuki-red);
+  color: var(--color-text-primary);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(228, 5, 33, 0.35);
+}
+
+/* ============================================================
+   LINK GRID — 4 columns
+   ============================================================ */
+.ft-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(1.5rem, 3vw, 3rem);
+  padding-bottom: clamp(2.5rem, 5vw, 3.5rem);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+@media (max-width: 1024px) { .ft-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 540px)  { .ft-grid { grid-template-columns: 1fr; } }
+
+.ft-col-title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text-primary);
+  margin: 0 0 var(--space-md);
+  position: relative;
+  padding-bottom: var(--space-sm);
+}
+.ft-col-title::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 24px;
+  height: 2px;
+  background: var(--color-suzuki-red);
+}
+
+.ft-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+.ft-list a {
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  transition: color var(--duration-fast) var(--ease-out-cinematic),
+              padding-left var(--duration-fast) var(--ease-out-cinematic);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.ft-list a::before {
+  content: '›';
+  color: var(--color-suzuki-red);
+  opacity: 0;
+  transform: translateX(-6px);
+  transition: all var(--duration-fast) var(--ease-out-cinematic);
+}
+.ft-list a:hover {
+  color: var(--color-text-primary);
+  padding-left: 4px;
+}
+.ft-list a:hover::before {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* "Get in Touch" column variants — phone/email/address */
+.ft-contact {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+.ft-contact-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: var(--color-text-secondary);
+}
+.ft-contact-row svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  margin-top: 2px;
+  stroke: var(--color-suzuki-red);
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.ft-contact-row a {
+  color: inherit;
+  text-decoration: none;
+  transition: color var(--duration-fast) var(--ease-out-cinematic);
+}
+.ft-contact-row a:hover { color: var(--color-suzuki-red); }
+.ft-contact-row strong {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--color-text-primary);
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+}
+
+/* Hotline highlighted — emphasis matches site CTA pattern */
+.ft-hotline {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(1.5rem, 2vw, 1.85rem);
+  letter-spacing: -0.01em;
+  color: var(--color-suzuki-red);
+  text-decoration: none;
+  margin-top: 0.2rem;
+  transition: color var(--duration-fast) var(--ease-out-cinematic);
+}
+.ft-hotline:hover { color: var(--color-suzuki-red-glow); }
+.ft-hotline span {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+/* ============================================================
+   BOTTOM BAR — copyright + legal + back-to-top
+   ============================================================ */
+.ft-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding-block: clamp(1.25rem, 2vw, 1.75rem);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+.ft-legal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.2rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.ft-legal a {
+  color: inherit;
+  text-decoration: none;
+  transition: color var(--duration-fast) var(--ease-out-cinematic);
+}
+.ft-legal a:hover { color: var(--color-text-primary); }
+
+.ft-totop {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: var(--radius-pill);
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  transition: all var(--duration-fast) var(--ease-out-cinematic);
+  cursor: pointer;
+}
+.ft-totop::before {
+  content: '↑';
+  font-size: 0.9rem;
+  line-height: 1;
+}
+.ft-totop:hover {
+  background: var(--color-suzuki-red);
+  border-color: var(--color-suzuki-red);
+  color: var(--color-text-primary);
+  transform: translateY(-2px);
+}
+
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .ft-social,
+  .ft-list a,
+  .ft-totop,
+  .ft-hotline,
+  .ft-contact-row a { transition: none !important; }
+}

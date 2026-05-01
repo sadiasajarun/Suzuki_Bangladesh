@@ -1,0 +1,324 @@
+/* ============================================================
+   SECTION 11 — Top News
+   ============================================================
+   Reference: oversized horizontally-scrolling headline with
+   text + small image thumbnails as separators ("stories that
+   inspire — [thumb] — stories that inspire — [thumb]…"),
+   followed by a 3-card news grid.
+
+   Adapted to the dark + red palette.
+   ============================================================ */
+
+.nw-section {
+  position: relative;
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  padding-block: clamp(4rem, 8vw, 8rem);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.nw-container {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: var(--content-max-width);
+  margin-inline: auto;
+  padding-inline: var(--section-padding-x);
+}
+
+/* ============================================================
+   MARQUEE — oversized scrolling headline
+   ============================================================
+   Full-bleed (sits OUTSIDE the .nw-container so cards on either
+   edge run off the viewport edge). Track contains 2 copies of
+   the same content; translateX(-50%) loops seamlessly.
+   ============================================================ */
+.nw-marquee {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  margin-bottom: clamp(3rem, 6vw, 5rem);
+  /* Soft edge fade — same trick as find-bike section */
+  -webkit-mask-image: linear-gradient(90deg,
+    transparent 0%, black 5%, black 95%, transparent 100%);
+          mask-image: linear-gradient(90deg,
+    transparent 0%, black 5%, black 95%, transparent 100%);
+}
+
+.nw-marquee-track {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  width: max-content;
+  gap: clamp(1rem, 2vw, 2.5rem);
+  animation: nw-marquee 38s linear infinite;
+  will-change: transform;
+}
+.nw-marquee:hover .nw-marquee-track,
+.nw-marquee:focus-within .nw-marquee-track {
+  animation-play-state: paused;
+}
+@keyframes nw-marquee {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-50%, 0, 0); }
+}
+
+/* Marquee text — huge, matched to other section titles
+   (uppercase 900 display + italic red em accent — same family
+   as Why Suzuki / Engine / Safety / Rider Stories headlines) */
+.nw-marquee-text {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(1.5rem, 2.8vw, 2.3rem);   /* aligned with the rest of the section titles after the global shrink */
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: var(--color-text-primary);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.nw-marquee-text em {
+  font-style: italic;
+  color: var(--color-suzuki-red);
+}
+.nw-marquee-text--outline {
+  /* Some segments use outline-only treatment for visual rhythm */
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--color-text-secondary);
+}
+
+/* Marquee separator — small circular thumbnail */
+.nw-marquee-thumb {
+  flex-shrink: 0;
+  width: clamp(56px, 6vw, 96px);
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--color-bg-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  position: relative;
+}
+.nw-marquee-thumb img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+
+/* Dash separator (between text/thumb segments) */
+.nw-marquee-dash {
+  flex-shrink: 0;
+  display: inline-block;
+  width: clamp(28px, 3vw, 48px);
+  height: 2px;
+  background: var(--color-suzuki-red);
+}
+
+/* ============================================================
+   SECTION HEADING (above cards)
+   ============================================================ */
+.nw-heading {
+  text-align: center;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+.nw-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--color-suzuki-red);
+  margin: 0 0 var(--space-md);
+}
+.nw-title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(1.6rem, 3.2vw, 2.6rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+.nw-title em { font-style: italic; color: var(--color-suzuki-red); }
+
+/* ============================================================
+   3-CARD NEWS GRID
+   ============================================================ */
+.nw-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(1rem, 2vw, 1.75rem);
+}
+@media (max-width: 1024px) { .nw-cards { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 640px)  { .nw-cards { grid-template-columns: 1fr; } }
+
+.nw-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--color-bg-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  transition: transform var(--duration-base) var(--ease-out-cinematic),
+              border-color var(--duration-base) var(--ease-out-cinematic),
+              box-shadow var(--duration-base) var(--ease-out-cinematic);
+  position: relative;
+  isolation: isolate;
+}
+.nw-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(228, 5, 33, 0.4);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5),
+              0 0 0 1px rgba(228, 5, 33, 0.4);
+}
+.nw-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--color-suzuki-red);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 400ms var(--ease-out-cinematic);
+  z-index: 5;
+}
+.nw-card:hover::before { transform: scaleX(1); }
+
+/* Image */
+.nw-card-image {
+  position: relative;
+  aspect-ratio: 16 / 11;
+  background: var(--color-bg-tertiary);
+  overflow: hidden;
+}
+.nw-card-image img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform var(--duration-base) var(--ease-out-cinematic);
+}
+.nw-card:hover .nw-card-image img { transform: scale(1.04); }
+
+/* Date + tag row */
+.nw-card-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-md) var(--space-md) 0;
+  gap: var(--space-sm);
+}
+.nw-card-date {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+}
+.nw-card-tag {
+  display: inline-block;
+  padding: 0.25rem 0.7rem;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+}
+
+.nw-card-body {
+  padding: var(--space-sm) var(--space-md) var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  flex: 1;
+}
+
+.nw-card-title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(1rem, 1.3vw, 1.2rem);
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.nw-card-excerpt {
+  font-size: clamp(0.85rem, 1vw, 0.95rem);
+  line-height: 1.55;
+  color: var(--color-text-secondary);
+  margin: 0;
+  /* Clamp to 3 lines for visual uniformity */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.nw-card-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: auto;
+  padding-top: var(--space-sm);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-suzuki-red);
+  align-self: flex-start;
+  transition: gap var(--duration-fast) var(--ease-out-cinematic);
+}
+.nw-card-cta::after { content: '›'; font-size: 1rem; line-height: 1; transition: transform var(--duration-fast); }
+.nw-card:hover .nw-card-cta { gap: 0.7rem; color: var(--color-suzuki-red-glow); }
+.nw-card:hover .nw-card-cta::after { transform: translateX(4px); }
+
+/* ============================================================
+   "View All News" footer CTA
+   ============================================================ */
+.nw-footer {
+  display: flex;
+  justify-content: center;
+  margin-top: clamp(2rem, 4vw, 3rem);
+}
+.nw-all-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: 1rem 2rem;
+  border: 1.5px solid rgba(255, 255, 255, 0.4);
+  color: var(--color-text-primary);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: all var(--duration-base) var(--ease-out-cinematic);
+}
+.nw-all-cta:hover {
+  background: var(--color-text-primary);
+  color: var(--color-bg-primary);
+}
+.nw-all-cta::after { content: '→'; transition: transform var(--duration-fast); }
+.nw-all-cta:hover::after { transform: translateX(4px); }
+
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .nw-marquee-track {
+    animation: none !important;
+    transform: translate3d(0, 0, 0) !important;
+  }
+  .nw-card,
+  .nw-card-image img,
+  .nw-card-cta { transition: none !important; }
+}

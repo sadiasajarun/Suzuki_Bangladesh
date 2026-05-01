@@ -1,0 +1,352 @@
+/* ============================================================
+   SECTION 10 — Suzuki Service
+   ============================================================
+   Reference: dark canvas hero with a centred title +
+   3-or-4 dark cards in a row, each connected via a thin
+   curve down to a glowing orb (brand logo) at the bottom.
+
+   Adapted: 4 service cards (Regular Service / Warranty Care /
+   Genuine Parts / Service Locator), each with its own SVG
+   connector path that meets the Suzuki logo orb at the bottom.
+   ============================================================ */
+
+.sv-section {
+  position: relative;
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  padding-block: clamp(4rem, 8vw, 8rem);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.sv-section::before {
+  /* Soft red glow halo behind the convergence orb */
+  content: '';
+  position: absolute;
+  bottom: 8%;
+  left: 50%;
+  width: clamp(280px, 30vw, 420px);
+  aspect-ratio: 1/1;
+  background: radial-gradient(circle,
+    rgba(228, 5, 33, 0.25) 0%,
+    rgba(228, 5, 33, 0.10) 30%,
+    transparent 65%);
+  filter: blur(20px);
+  transform: translateX(-50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.sv-container {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: var(--content-max-width);
+  margin-inline: auto;
+  padding-inline: var(--section-padding-x);
+}
+
+/* ============================================================
+   HEADING — centred (pill, title, sub)
+   ============================================================ */
+.sv-heading {
+  text-align: center;
+  margin-bottom: clamp(2.5rem, 5vw, 4rem);
+  max-width: 64ch;
+  margin-inline: auto;
+}
+
+.sv-pill {
+  display: inline-block;
+  padding: 0.4rem 1rem;
+  margin: 0 0 var(--space-md);
+  background: rgba(228, 5, 33, 0.12);
+  border: 1px solid rgba(228, 5, 33, 0.5);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-suzuki-red);
+}
+
+.sv-title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(1.6rem, 3.2vw, 2.6rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin: 0 0 var(--space-md);
+  color: var(--color-text-primary);
+}
+.sv-title em {
+  font-style: italic;
+  color: var(--color-suzuki-red);
+}
+
+.sv-sub {
+  font-size: clamp(1rem, 1.2vw, 1.15rem);
+  line-height: 1.65;
+  color: var(--color-text-secondary);
+  margin: 0 auto;
+  max-width: 60ch;
+}
+
+/* ============================================================
+   STAGE — cards row + convergence area below
+   ============================================================ */
+.sv-stage {
+  position: relative;
+  /* Reserve room for the connector area below cards */
+}
+
+/* ============================================================
+   4 CARDS
+   ============================================================ */
+.sv-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(1rem, 1.5vw, 1.5rem);
+  position: relative;
+  z-index: 2;
+}
+@media (max-width: 1024px) { .sv-cards { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 600px)  { .sv-cards { grid-template-columns: 1fr; } }
+
+.sv-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  padding: clamp(1.25rem, 2vw, 1.75rem);
+  background: var(--color-bg-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-md);
+  position: relative;
+  transition: transform var(--duration-base) var(--ease-out-cinematic),
+              border-color var(--duration-base) var(--ease-out-cinematic),
+              box-shadow var(--duration-base) var(--ease-out-cinematic);
+  /* Slight gradient lift behind every card */
+  background-image: linear-gradient(180deg,
+    rgba(255, 255, 255, 0.02) 0%,
+    transparent 50%);
+}
+.sv-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(228, 5, 33, 0.4);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5),
+              0 0 0 1px rgba(228, 5, 33, 0.4);
+}
+
+/* Top icon — large, red */
+.sv-icon {
+  width: 48px;
+  height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  background: rgba(228, 5, 33, 0.12);
+  border: 1px solid rgba(228, 5, 33, 0.35);
+  color: var(--color-suzuki-red);
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+.sv-icon svg { width: 24px; height: 24px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+.sv-card-title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(1.1rem, 1.4vw, 1.35rem);
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  text-transform: none;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+.sv-card-title em {
+  font-style: italic;
+  color: var(--color-suzuki-red);
+}
+
+.sv-card-body {
+  font-size: clamp(0.88rem, 1vw, 0.95rem);
+  line-height: 1.55;
+  color: var(--color-text-secondary);
+  margin: 0;
+  flex: 1;
+}
+
+.sv-card-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  padding: 0.7rem 1.1rem;
+  background: transparent;
+  color: var(--color-text-primary);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: all var(--duration-fast) var(--ease-out-cinematic);
+}
+.sv-card-cta::after {
+  content: '→';
+  transition: transform var(--duration-fast) var(--ease-out-cinematic);
+}
+.sv-card-cta:hover {
+  background: var(--color-suzuki-red);
+  border-color: var(--color-suzuki-red);
+  color: var(--color-text-primary);
+  box-shadow: 0 0 24px rgba(228, 5, 33, 0.4);
+}
+.sv-card-cta:hover::after { transform: translateX(4px); }
+
+/* ============================================================
+   CONNECTOR AREA — SVG paths from cards down to logo orb
+   ============================================================ */
+.sv-connectors {
+  position: relative;
+  width: 100%;
+  height: clamp(120px, 18vh, 220px);
+  margin-top: -2px;          /* lap onto cards' bottom edge */
+  pointer-events: none;
+  z-index: 1;
+}
+.sv-connectors svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.sv-connectors path {
+  fill: none;
+  stroke: var(--color-suzuki-red);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-dasharray: 4 5;
+  opacity: 0.55;
+  /* Slow flow animation — dashes drift toward the orb */
+  animation: sv-line-flow 8s linear infinite;
+}
+@keyframes sv-line-flow {
+  0%   { stroke-dashoffset: 0; }
+  100% { stroke-dashoffset: -90; }
+}
+.sv-connectors circle {
+  fill: var(--color-suzuki-red);
+  filter: drop-shadow(0 0 6px var(--color-suzuki-red-glow));
+}
+
+@media (max-width: 1024px) {
+  /* On smaller screens the cards stack to 2x2 — connectors don't
+     map cleanly. Hide them; the logo orb still anchors visually. */
+  .sv-connectors { display: none; }
+}
+
+/* ============================================================
+   LOGO ORB — convergence point below
+   ============================================================ */
+.sv-orb-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  z-index: 3;
+  margin-top: -64px;           /* lift orb up so connectors meet it cleanly */
+}
+@media (max-width: 1024px) {
+  .sv-orb-wrap { margin-top: var(--space-2xl); }
+}
+
+.sv-orb {
+  position: relative;
+  width: clamp(120px, 14vw, 170px);
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle,
+      rgba(228, 5, 33, 0.55) 0%,
+      rgba(228, 5, 33, 0.25) 40%,
+      rgba(228, 5, 33, 0.05) 70%,
+      transparent 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Soft pulsing glow */
+  animation: sv-orb-pulse 4.5s ease-in-out infinite;
+}
+.sv-orb::before {
+  /* Thin red ring */
+  content: '';
+  position: absolute;
+  inset: 14%;
+  border-radius: 50%;
+  border: 1px solid rgba(228, 5, 33, 0.45);
+}
+@keyframes sv-orb-pulse {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.04); }
+}
+
+/* The bold Suzuki S-mark sitting at the orb's centre — the convergence
+   point where all four service connector paths terminate. Uses a
+   transparent-PNG mark directly, so no knockout pipeline is needed. */
+.sv-orb-mark {
+  display: block;
+  width: 60%;
+  height: 60%;
+  background-image: url('../../assets/images/logo/suzuki-s.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  filter: drop-shadow(0 0 14px rgba(228, 5, 33, 0.55))
+          drop-shadow(0 0 28px rgba(228, 5, 33, 0.35));
+}
+
+/* Locator CTA — sits below the orb, centred */
+.sv-locator {
+  display: flex;
+  justify-content: center;
+  margin-top: clamp(1.5rem, 3vw, 2.5rem);
+}
+.sv-locator-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 1rem 2rem;
+  background: var(--color-suzuki-red);
+  color: var(--color-text-primary);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: var(--radius-pill);
+  transition: all var(--duration-base) var(--ease-out-cinematic);
+}
+.sv-locator-cta:hover {
+  background: var(--color-suzuki-red-glow);
+  transform: translateX(4px);
+  box-shadow: 0 0 32px rgba(228, 5, 33, 0.5);
+}
+.sv-locator-cta::after {
+  content: '→';
+  transition: transform var(--duration-fast) var(--ease-out-cinematic);
+}
+.sv-locator-cta:hover::after { transform: translateX(4px); }
+
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .sv-connectors path,
+  .sv-orb,
+  .sv-card,
+  .sv-locator-cta { animation: none !important; transition: none !important; }
+}

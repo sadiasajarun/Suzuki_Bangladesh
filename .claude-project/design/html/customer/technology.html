@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+  // Apply the saved theme before first paint to avoid a flash.
+  (function () {
+    try {
+      var t = localStorage.getItem('suzuki-theme');
+      if (t === 'light') document.documentElement.setAttribute('data-theme', 'light');
+    } catch (_) { /* localStorage blocked — default dark */ }
+  })();
+</script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#0A0A0A" />
+
+<title>Suzuki Engineering — The Technology Under Every Suzuki | Suzuki Bangladesh</title>
+<meta name="description" content="Six systems. One obsession. The engineering principles — SOCS, FI, ABS, 6-Speed Gearbox, SEP, MotoGP DNA — that make every Suzuki different. Built in Hamamatsu. Proven in Bangladesh." />
+
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Suzuki Engineering — Six Systems. One Obsession." />
+<meta property="og:description" content="The technology that lives under every Suzuki." />
+<meta property="og:image" content="assets/images/og-cover.jpg" />
+
+<link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet" />
+
+<link rel="stylesheet" href="css/tokens.css" />
+<link rel="stylesheet" href="css/base.css" />
+<link rel="stylesheet" href="css/components.css" />
+<link rel="stylesheet" href="css/sections/navbar.css" />
+<link rel="stylesheet" href="css/sections/footer.css" />
+<link rel="stylesheet" href="css/pages/technology.css" />
+<link rel="stylesheet" href="css/widgets.css" />
+<link rel="stylesheet" href="css/theme-light.css" />
+
+<!-- Animation libs (CDN, deferred) — GSAP reserved for Phase 2/3 if needed -->
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script defer src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+<script defer src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+<script defer src="js/lenis-init.js"></script>
+<script defer src="js/nav.js"></script>
+<script defer src="js/main.js"></script>
+<script defer src="js/sections/hero.js"></script>          <!-- prepareLogo() for navbar .bl-mark -->
+<script defer src="js/pages/technology.js"></script>
+<script defer src="js/widgets/chat.js"></script>
+<script defer src="js/widgets/cookies.js"></script>
+<script defer src="js/widgets/scroll-top.js"></script>
+<script defer src="js/widgets/theme-toggle.js"></script>
+
+</head>
+<body data-page="technology" id="top" class="tk-page">
+
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<!-- ============================================================
+     NAVBAR — Technology is the active page
+     ============================================================ -->
+<header class="nav" data-testid="navbar" role="banner">
+  <div class="container nav__inner">
+    <a href="index.html" class="nav__brand" aria-label="Suzuki Bangladesh — home">
+      <div class="brand-lockup" id="hero-brandLockup" aria-hidden="true">
+        <span class="bl-mark" id="hero-blMark"></span>
+        <div class="bl-text">
+          <span class="bl-suzuki">SUZUKI</span>
+          <span class="bl-tag">Bangladesh</span>
+          <span class="bl-meta">EST. 1909 · MOTOGP HERITAGE</span>
+        </div>
+      </div>
+    </a>
+
+    <nav class="nav__links" aria-label="Primary navigation">
+      <a href="bikes.html" class="nav__link" data-testid="nav-bikes" data-nav-trigger="mega" aria-haspopup="true" aria-expanded="false" aria-controls="nav-mega-bikes">
+        Bikes
+        <i data-lucide="chevron-down" class="nav__chevron" aria-hidden="true"></i>
+      </a>
+      <a href="technology.html" class="nav__link is-active" aria-current="page">Technology</a>
+      <a href="service.html" class="nav__link">Service</a>
+      <a href="shop.html" class="nav__link">Shop</a>
+      <a href="dealers.html" class="nav__link">Dealers</a>
+      <a href="offers.html" class="nav__link">Offers</a>
+    </nav>
+
+    <div class="nav__actions">
+      <a href="tel:16638" class="nav__hotline" aria-label="Call hotline 16638">
+        <i data-lucide="phone" class="icon" aria-hidden="true"></i>
+        <span class="nav__hotline-num">16638</span>
+      </a>
+      <a href="test-ride.html" class="btn btn-primary btn-sm nav__cta-desktop">Book Test Ride</a>
+      <button type="button" class="nav__mobile-toggle" data-nav-trigger="mobile" aria-label="Open menu" aria-expanded="false" aria-controls="nav-mobile-overlay">
+        <i data-lucide="menu" class="icon" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mega menu (Bikes) — same as elsewhere -->
+  <div class="nav__mega" id="nav-mega-bikes" role="region" aria-label="Bike lineup">
+    <div class="container">
+      <p class="nav__mega-eyebrow">› EXPLORE THE LINEUP · 10 MODELS</p>
+      <div class="nav__mega-filters" role="tablist" aria-label="Filter bikes by category">
+        <button type="button" class="nav__mega-filter" data-filter="all" aria-pressed="true">All</button>
+        <button type="button" class="nav__mega-filter" data-filter="scooter" aria-pressed="false">Scooter</button>
+        <button type="button" class="nav__mega-filter" data-filter="commuter" aria-pressed="false">Commuter</button>
+        <button type="button" class="nav__mega-filter" data-filter="sports" aria-pressed="false">Sports</button>
+        <button type="button" class="nav__mega-filter" data-filter="super-sports" aria-pressed="false">Super Sports</button>
+        <button type="button" class="nav__mega-filter" data-filter="performance-sports" aria-pressed="false">Performance Sports</button>
+      </div>
+      <div class="nav__mega-grid">
+        <a href="bikes/gixxer-sf-250.html" class="nav__mega-card" data-category="super-sports"><div class="nav__mega-card-image" aria-hidden="true"><img src="assets/images/bikes/gixxer-sf-250.webp" alt="Gixxer SF 250" loading="lazy" /></div><span class="nav__mega-card-cat">Super Sports · Hero</span><div class="nav__mega-card-name">Gixxer SF 250</div><div class="nav__mega-card-price">From BDT 429,950</div></a>
+        <a href="bikes/gsx-r150.html" class="nav__mega-card" data-category="performance-sports"><div class="nav__mega-card-image" aria-hidden="true"><img src="assets/images/bikes/gsx-r150.webp" alt="GSX-R150" loading="lazy" /></div><span class="nav__mega-card-cat">Performance Sports</span><div class="nav__mega-card-name">GSX-R150</div><div class="nav__mega-card-price">From BDT 524,950</div></a>
+        <a href="bikes/gixxer-250.html" class="nav__mega-card" data-category="sports"><div class="nav__mega-card-image" aria-hidden="true"><img src="assets/images/bikes/gixxer-250.webp" alt="Gixxer 250" loading="lazy" /></div><span class="nav__mega-card-cat">Sports</span><div class="nav__mega-card-name">Gixxer 250</div><div class="nav__mega-card-price">From BDT 379,950</div></a>
+        <a href="bikes/gixxer-sf.html" class="nav__mega-card" data-category="sports"><div class="nav__mega-card-image" aria-hidden="true"><img src="assets/images/bikes/gixxer-sf.webp" alt="Gixxer SF" loading="lazy" /></div><span class="nav__mega-card-cat">Sports</span><div class="nav__mega-card-name">Gixxer SF</div><div class="nav__mega-card-price">From BDT 329,950</div></a>
+        <a href="bikes/gixxer.html" class="nav__mega-card" data-category="commuter"><div class="nav__mega-card-image" aria-hidden="true"><img src="assets/images/bikes/gixxer.webp" alt="Gixxer" loading="lazy" /></div><span class="nav__mega-card-cat">Commuter</span><div class="nav__mega-card-name">Gixxer</div><div class="nav__mega-card-price">From BDT 229,950</div></a>
+        <a href="bikes/gixxer-classic-matt.html" class="nav__mega-card" data-category="commuter"><div class="nav__mega-card-image" aria-hidden="true"><img src="assets/images/bikes/gixxer-classic-matt.webp" alt="Gixxer Classic Matt" loading="lazy" /></div><span class="nav__mega-card-cat">Commuter</span><div class="nav__mega-card-name">Gixxer Classic Matt</div><div class="nav__mega-card-price">From BDT 202,950</div></a>
+        <a href="bikes/gixxer-monotone.html" class="nav__mega-card" data-category="commuter"><div class="nav__mega-card-image" aria-hidden="true"><img src="assets/images/bikes/gixxer-monotone.webp" alt="Gixxer Monotone" loading="lazy" /></div><span class="nav__mega-card-cat">Commuter</span><div class="nav__mega-card-name">Gixxer Monotone</div><div class="nav__mega-card-price">From BDT 199,950</div></a>
+        <a href="bikes/access-125.html" class="nav__mega-card" data-category="scooter"><div class="nav__mega-card-image" aria-hidden="true"><img src="assets/images/bikes/access-125.webp" alt="Access 125" loading="lazy" /></div><span class="nav__mega-card-cat">Scooter</span><div class="nav__mega-card-name">Access 125</div><div class="nav__mega-card-price">From BDT 215,000</div></a>
+        <a href="bikes/gsx-125.html" class="nav__mega-card" data-category="commuter"><div class="nav__mega-card-image" aria-hidden="true"><img src="assets/images/bikes/gsx-125.webp" alt="GSX 125" loading="lazy" /></div><span class="nav__mega-card-cat">Commuter</span><div class="nav__mega-card-name">GSX 125</div><div class="nav__mega-card-price">From BDT 141,950</div></a>
+        <a href="bikes/hayate-ep.html" class="nav__mega-card" data-category="commuter"><div class="nav__mega-card-image" aria-hidden="true"><img src="assets/images/bikes/hayate-ep.webp" alt="Hayate EP" loading="lazy" /></div><span class="nav__mega-card-cat">Commuter</span><div class="nav__mega-card-name">Hayate EP</div><div class="nav__mega-card-price">From BDT 118,000</div></a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile overlay -->
+  <div class="nav__mobile-overlay" id="nav-mobile-overlay" role="dialog" aria-modal="true" aria-labelledby="nav-mobile-title" hidden>
+    <div class="nav__mobile-header">
+      <a href="index.html" class="nav__brand" id="nav-mobile-title" aria-label="Suzuki Bangladesh — home">
+        <div class="brand-lockup" aria-hidden="true">
+          <span class="bl-mark"></span>
+          <div class="bl-text"><span class="bl-suzuki">SUZUKI</span><span class="bl-tag">Bangladesh</span></div>
+        </div>
+      </a>
+      <button type="button" class="nav__mobile-close" data-nav-trigger="mobile-close" aria-label="Close menu">
+        <i data-lucide="x" class="icon" aria-hidden="true"></i>
+      </button>
+    </div>
+    <div class="nav__mobile-body">
+      <a href="bikes.html" class="nav__mobile-link">Bikes</a>
+      <a href="technology.html" class="nav__mobile-link" aria-current="page">Technology</a>
+      <a href="service.html" class="nav__mobile-link">Service</a>
+      <a href="shop.html" class="nav__mobile-link">Shop</a>
+      <a href="dealers.html" class="nav__mobile-link">Dealers</a>
+      <a href="offers.html" class="nav__mobile-link">Offers</a>
+    </div>
+    <div class="nav__mobile-footer">
+      <a href="test-ride.html" class="btn btn-primary btn-lg">Book Test Ride</a>
+      <a href="tel:16638" class="btn btn-secondary btn-lg">
+        <i data-lucide="phone" class="icon" aria-hidden="true"></i>
+        Call Hotline 16638
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- ============================================================
+     MAIN
+     ============================================================ -->
+<main id="main" role="main">
+
+  <!-- ============================================================
+       SECTION 1 — HERO
+       ============================================================
+       Full-viewport opening. Animated schematic SVG lines drift
+       across the background at 8% opacity. Eyebrow + headline +
+       sub stack centered. Scroll cue at the bottom.
+       ============================================================ -->
+  <section class="tk-hero" aria-labelledby="tk-hero-title">
+
+    <!-- Schematic backdrop — pure SVG, animated via CSS keyframes.
+         Decorative, aria-hidden. -->
+    <div class="tk-hero-schematic" aria-hidden="true">
+      <svg viewBox="0 0 2400 900" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+        <!-- Horizontal grid lines -->
+        <g stroke="currentColor" stroke-width="1" fill="none">
+          <line x1="0" y1="120" x2="2400" y2="120" />
+          <line x1="0" y1="240" x2="2400" y2="240" />
+          <line x1="0" y1="360" x2="2400" y2="360" />
+          <line x1="0" y1="480" x2="2400" y2="480" />
+          <line x1="0" y1="600" x2="2400" y2="600" />
+          <line x1="0" y1="720" x2="2400" y2="720" />
+        </g>
+        <!-- Vertical grid lines -->
+        <g stroke="currentColor" stroke-width="1" fill="none">
+          <line x1="200"  y1="0" x2="200"  y2="900" />
+          <line x1="500"  y1="0" x2="500"  y2="900" />
+          <line x1="800"  y1="0" x2="800"  y2="900" />
+          <line x1="1100" y1="0" x2="1100" y2="900" />
+          <line x1="1400" y1="0" x2="1400" y2="900" />
+          <line x1="1700" y1="0" x2="1700" y2="900" />
+          <line x1="2000" y1="0" x2="2000" y2="900" />
+          <line x1="2300" y1="0" x2="2300" y2="900" />
+        </g>
+        <!-- Diagonal accent strokes — schematic feel -->
+        <g stroke="currentColor" stroke-width="1.5" fill="none" stroke-dasharray="3 6">
+          <path d="M 0 100 L 900 200 L 1500 350 L 2400 280" />
+          <path d="M 0 700 L 600 580 L 1200 660 L 1800 540 L 2400 620" />
+          <path d="M 200 0 L 280 300 L 200 600 L 320 900" />
+          <path d="M 1100 0 L 1180 300 L 1100 600 L 1220 900" />
+          <path d="M 2000 0 L 2080 300 L 2000 600 L 2120 900" />
+        </g>
+        <!-- Engine-block silhouettes (small detail glyphs) -->
+        <g stroke="currentColor" stroke-width="1.4" fill="none">
+          <rect x="320" y="380" width="180" height="140" rx="4" />
+          <line x1="320" y1="420" x2="500" y2="420" />
+          <line x1="320" y1="460" x2="500" y2="460" />
+          <circle cx="410" cy="450" r="22" />
+          <circle cx="410" cy="450" r="8" />
+
+          <rect x="1240" y="240" width="180" height="140" rx="4" />
+          <line x1="1240" y1="280" x2="1420" y2="280" />
+          <line x1="1240" y1="320" x2="1420" y2="320" />
+          <circle cx="1330" cy="310" r="22" />
+          <circle cx="1330" cy="310" r="8" />
+
+          <rect x="1900" y="500" width="180" height="140" rx="4" />
+          <line x1="1900" y1="540" x2="2080" y2="540" />
+          <line x1="1900" y1="580" x2="2080" y2="580" />
+          <circle cx="1990" cy="570" r="22" />
+          <circle cx="1990" cy="570" r="8" />
+        </g>
+      </svg>
+    </div>
+
+    <div class="tk-hero-container">
+      <p class="tk-hero-eyebrow">Suzuki Engineering</p>
+      <h1 id="tk-hero-title" class="tk-hero-headline">
+        The technology that lives under <em>every Suzuki.</em>
+      </h1>
+      <p class="tk-hero-sub">
+        Six systems. One obsession. Built in Hamamatsu. Proven in Bangladesh.
+      </p>
+    </div>
+
+    <!-- Scroll cue -->
+    <div class="tk-hero-cue" aria-hidden="true">
+      <span>Scroll</span>
+      <span class="tk-hero-cue-line"></span>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 2 — STAGE (sticky index + content) START
+       ============================================================
+       Two-column layout begins here and continues for all 6
+       technology articles. Left rail is sticky on desktop;
+       collapses to a sticky select on tablet/mobile.
+       ============================================================ -->
+  <div class="tk-stage">
+
+    <!-- Mobile-only "Jump to" select. On desktop this is hidden via CSS;
+         the sticky left rail below takes over. -->
+    <div class="tk-index-mobile">
+      <label for="tk-mobile-select" class="visually-hidden">Jump to technology</label>
+      <select id="tk-mobile-select" data-tk-mobile-select aria-label="Jump to technology">
+        <option value="socs">01 / SOCS</option>
+        <option value="fi">02 / FI</option>
+        <option value="abs">03 / ABS</option>
+        <option value="gearbox">04 / Gearbox</option>
+        <option value="sep">05 / SEP</option>
+        <option value="motogp">06 / MotoGP DNA</option>
+      </select>
+    </div>
+
+    <div class="tk-stage-grid">
+
+      <!-- ===== Sticky desktop index (left rail) ===== -->
+      <aside class="tk-index" aria-label="Technology index">
+        <p class="tk-index-eyebrow">› Six Systems</p>
+        <ul class="tk-index-list" role="list">
+          <li>
+            <a href="#socs" class="tk-index-link is-active" data-tk-index-link="socs">
+              <span class="tk-index-num">01</span><span>SOCS</span>
+            </a>
+          </li>
+          <li>
+            <a href="#fi" class="tk-index-link" data-tk-index-link="fi">
+              <span class="tk-index-num">02</span><span>FI</span>
+            </a>
+          </li>
+          <li>
+            <a href="#abs" class="tk-index-link" data-tk-index-link="abs">
+              <span class="tk-index-num">03</span><span>ABS</span>
+            </a>
+          </li>
+          <li>
+            <a href="#gearbox" class="tk-index-link" data-tk-index-link="gearbox">
+              <span class="tk-index-num">04</span><span>Gearbox</span>
+            </a>
+          </li>
+          <li>
+            <a href="#sep" class="tk-index-link" data-tk-index-link="sep">
+              <span class="tk-index-num">05</span><span>SEP</span>
+            </a>
+          </li>
+          <li>
+            <a href="#motogp" class="tk-index-link" data-tk-index-link="motogp">
+              <span class="tk-index-num">06</span><span>MotoGP DNA</span>
+            </a>
+          </li>
+        </ul>
+      </aside>
+
+      <!-- ===== Right column — technology articles ===== -->
+      <div class="tk-content">
+
+        <!-- ============================================================
+             SECTION 3 — SOCS (HERO TECHNOLOGY)
+             ============================================================ -->
+        <article id="socs" class="tk-tech tk-tech--hero" data-tk-tech aria-labelledby="tk-socs-title">
+
+          <p class="tk-tech-eyebrow"><strong>01</strong> / SOCS</p>
+          <h2 id="tk-socs-title" class="tk-tech-headline">
+            The cooling system that <em>doesn't quit</em> in Dhaka traffic.
+          </h2>
+
+          <!-- ===== Visual: animated SVG cutaway ===== -->
+          <div class="tk-tech-visual" aria-hidden="true">
+            <svg class="socs-svg" data-socs-svg viewBox="0 0 800 450" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+              <defs>
+                <!-- Oil channel paths used by motion-path animation on particles -->
+                <path id="socs-path-1" d="M 80 380 Q 80 280, 200 230 Q 320 180, 400 180" />
+                <path id="socs-path-2" d="M 80 380 Q 80 320, 200 300 Q 380 280, 480 200" />
+                <path id="socs-path-3" d="M 80 380 Q 200 380, 320 350 Q 480 320, 560 240" />
+              </defs>
+
+              <!-- Cylinder block (body) -->
+              <rect class="socs-cylinder" x="220" y="180" width="280" height="180" rx="6" />
+
+              <!-- Cylinder head (top fins) -->
+              <g class="socs-engine">
+                <rect x="200" y="120" width="320" height="60" rx="3" />
+                <line x1="220" y1="135" x2="500" y2="135" />
+                <line x1="220" y1="150" x2="500" y2="150" />
+                <line x1="220" y1="165" x2="500" y2="165" />
+                <!-- Head bolts -->
+                <circle cx="225" cy="125" r="3" />
+                <circle cx="495" cy="125" r="3" />
+              </g>
+
+              <!-- Spark plug dome -->
+              <g class="socs-engine">
+                <line x1="360" y1="120" x2="360" y2="80" />
+                <rect x="350" y="60" width="20" height="22" rx="2" />
+                <line x1="346" y1="58" x2="374" y2="58" />
+              </g>
+
+              <!-- Piston inside cylinder -->
+              <rect class="socs-piston" x="240" y="240" width="240" height="50" rx="3" />
+              <!-- Connecting rod hint -->
+              <line class="socs-engine" x1="360" y1="290" x2="360" y2="360" />
+              <circle class="socs-engine" cx="360" cy="365" r="6" />
+
+              <!-- Oil sump (bottom) -->
+              <path class="socs-engine" d="M 200 360 L 220 400 L 500 400 L 520 360 Z" />
+              <text x="280" y="425" font-family="JetBrains Mono, monospace" font-size="11" fill="#6B6B6B" letter-spacing="3" text-transform="uppercase">OIL SUMP</text>
+
+              <!-- Oil pump indicator (bottom-left) -->
+              <g class="socs-engine">
+                <circle cx="120" cy="380" r="22" />
+                <circle cx="120" cy="380" r="14" stroke-dasharray="3 4" />
+                <text x="105" y="423" font-family="JetBrains Mono, monospace" font-size="9" fill="#6B6B6B" letter-spacing="2">PUMP</text>
+              </g>
+
+              <!-- Three oil channels (dashed red guides) -->
+              <use class="socs-channel" href="#socs-path-1" />
+              <use class="socs-channel" href="#socs-path-2" />
+              <use class="socs-channel" href="#socs-path-3" />
+
+              <!-- Oil-jet target hot-spots (where pressurized oil hits) -->
+              <circle class="socs-jet" cx="400" cy="180" r="5" />     <!-- under cylinder head -->
+              <circle class="socs-jet" cx="480" cy="200" r="5" />     <!-- piston underside -->
+              <circle class="socs-jet" cx="560" cy="240" r="5" />     <!-- valve area -->
+
+              <!-- Particles flow along channels via CSS motion-path -->
+              <circle class="socs-particle" r="3" style="offset-path: path('M 80 380 Q 80 280, 200 230 Q 320 180, 400 180')" />
+              <circle class="socs-particle" r="3" style="offset-path: path('M 80 380 Q 80 280, 200 230 Q 320 180, 400 180')" />
+              <circle class="socs-particle" r="3" style="offset-path: path('M 80 380 Q 80 320, 200 300 Q 380 280, 480 200')" />
+              <circle class="socs-particle" r="3" style="offset-path: path('M 80 380 Q 80 320, 200 300 Q 380 280, 480 200')" />
+              <circle class="socs-particle" r="3" style="offset-path: path('M 80 380 Q 200 380, 320 350 Q 480 320, 560 240')" />
+
+              <!-- Heat shimmer lines coming off the head -->
+              <path class="socs-heat" d="M 240 100 Q 250 80, 240 60 Q 230 40, 240 25" />
+              <path class="socs-heat" d="M 380 100 Q 390 80, 380 60 Q 370 40, 380 25" />
+              <path class="socs-heat" d="M 480 100 Q 490 80, 480 60 Q 470 40, 480 25" />
+
+              <!-- Flow direction labels -->
+              <text x="20"  y="370" font-family="JetBrains Mono, monospace" font-size="10" fill="#E40521" letter-spacing="2">OIL IN</text>
+              <text x="540" y="170" font-family="JetBrains Mono, monospace" font-size="10" fill="#E40521" letter-spacing="2">→ HEAD</text>
+              <text x="540" y="220" font-family="JetBrains Mono, monospace" font-size="10" fill="#E40521" letter-spacing="2">→ PISTON</text>
+            </svg>
+            <span class="tk-tech-visual-caption">Oil flow · pressurised jets</span>
+          </div>
+
+          <!-- ===== 3-paragraph deep dive ===== -->
+          <div class="tk-tech-body">
+            <div class="tk-tech-paragraph">
+              <h3>What it is</h3>
+              <p>
+                The Suzuki Oil Cooling System (SOCS) takes the engine's own pressurised oil and re-routes a portion of it through dedicated channels in the cylinder head. From there, fine jets spray oil directly onto the underside of the piston and the hottest zones of the cylinder head — the same parts that suffer most under sustained load.
+              </p>
+            </div>
+            <div class="tk-tech-paragraph">
+              <h3>How it works</h3>
+              <p>
+                A high-output oil pump pressurises the lower circuit and feeds the cooling jets independently of the lubrication path. The jets atomise the oil onto hot metal, where it absorbs heat and falls back to the sump for recirculation. No coolant. No radiator. Just the engine cooling itself, the way a MotoGP block does.
+              </p>
+            </div>
+            <div class="tk-tech-paragraph">
+              <h3>Why it matters here</h3>
+              <p>
+                Bangladesh summers regularly cross 38&nbsp;°C, and the Dhaka commute is stop-and-go for hours. Air-cooled engines bleed heat into the rider; water-cooled ones add weight and complexity. SOCS keeps the engine in its sweet spot through traffic, monsoon humidity, and long highway runs — without the radiator, hose, or pump failures that come with liquid cooling.
+              </p>
+            </div>
+          </div>
+
+          <!-- ===== Spec strip ===== -->
+          <ul class="tk-tech-specs" aria-label="SOCS specifications">
+            <li class="tk-tech-spec">
+              <!-- TBD: confirm exact head-temperature reduction with Rancon engineering -->
+              <span class="tk-tech-spec-num">~10 <em>°C</em></span>
+              <span class="tk-tech-spec-label">Lower head temp vs. air-cooled equivalent</span>
+            </li>
+            <li class="tk-tech-spec">
+              <!-- TBD: confirm oil flow rate at 6,000 rpm — placeholder figure -->
+              <span class="tk-tech-spec-num">2.4 <em>L/min</em></span>
+              <span class="tk-tech-spec-label">Pressurised jet flow @ peak</span>
+            </li>
+            <li class="tk-tech-spec">
+              <!-- TBD: SOCS first appeared in production — confirm year + model -->
+              <span class="tk-tech-spec-num">1985<em>–</em></span>
+              <span class="tk-tech-spec-label">Years of refinement since debut</span>
+            </li>
+            <li class="tk-tech-spec--tag">MotoGP heritage</li>
+          </ul>
+
+        </article>
+
+        <!-- ============================================================
+             SECTION 4 — FUEL INJECTION
+             ============================================================ -->
+        <article id="fi" class="tk-tech" data-tk-tech aria-labelledby="tk-fi-title">
+
+          <p class="tk-tech-eyebrow"><strong>02</strong> / FI</p>
+          <h2 id="tk-fi-title" class="tk-tech-headline">First crank. <em>Every</em> morning.</h2>
+
+          <!-- ===== Visual: carburetor (chaos red) vs FI (precise white) ===== -->
+          <div class="tk-tech-visual" aria-hidden="true">
+            <svg class="fi-svg" viewBox="0 0 800 450" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+
+              <!-- Center divider -->
+              <line x1="400" y1="40" x2="400" y2="410" stroke="rgba(255,255,255,0.15)" stroke-width="1" stroke-dasharray="4 6" />
+
+              <!-- ===== LEFT — Carburetor ===== -->
+              <text x="60"  y="60" class="fi-label fi-label--carb">Carburetor</text>
+              <!-- Intake throat (wide funnel) -->
+              <path class="fi-frame" d="M 100 90 L 200 90 L 230 160 L 170 160 Z" />
+              <!-- Cylinder -->
+              <rect class="fi-cylinder" x="120" y="160" width="180" height="170" rx="3" />
+              <rect class="fi-piston" x="135" y="280" width="150" height="35" />
+              <!-- Combustion zone -->
+              <line class="fi-frame" x1="120" y1="200" x2="300" y2="200" stroke-dasharray="3 3" />
+
+              <!-- Wide chaotic spray pattern, 8 droplets at varying offsets -->
+              <circle class="fi-spray-carb" cx="195" cy="170" r="3.5" style="--fi-dx: -22px; --fi-dy: 60px;" />
+              <circle class="fi-spray-carb" cx="200" cy="170" r="2.5" style="--fi-dx: -8px;  --fi-dy: 70px;" />
+              <circle class="fi-spray-carb" cx="205" cy="170" r="3"   style="--fi-dx: 15px;  --fi-dy: 65px;" />
+              <circle class="fi-spray-carb" cx="200" cy="170" r="2"   style="--fi-dx: 30px;  --fi-dy: 75px;" />
+              <circle class="fi-spray-carb" cx="200" cy="170" r="3"   style="--fi-dx: -35px; --fi-dy: 75px;" />
+              <circle class="fi-spray-carb" cx="200" cy="170" r="2"   style="--fi-dx: 45px;  --fi-dy: 85px;" />
+              <circle class="fi-spray-carb" cx="200" cy="170" r="3"   style="--fi-dx: -50px; --fi-dy: 80px;" />
+              <circle class="fi-spray-carb" cx="200" cy="170" r="2.5" style="--fi-dx: 5px;   --fi-dy: 95px;" />
+
+              <text x="120" y="370" class="fi-label fi-label--carb">Wide / Wasteful</text>
+              <text x="120" y="390" class="fi-label" fill="#6B6B6B">Cold-start needs choke</text>
+
+              <!-- ===== RIGHT — Fuel Injection ===== -->
+              <text x="640" y="60" class="fi-label fi-label--fi">Fuel Injection</text>
+              <!-- Injector body -->
+              <rect class="fi-frame" x="540" y="80" width="80" height="90" rx="2" />
+              <rect class="fi-frame" x="555" y="60" width="50" height="22" rx="2" />
+              <!-- Cylinder -->
+              <rect class="fi-cylinder" x="500" y="170" width="180" height="160" rx="3" />
+              <rect class="fi-piston" x="515" y="280" width="150" height="35" />
+
+              <!-- Precise cone outline -->
+              <path class="fi-cone" d="M 575 170 L 555 260 L 605 260 Z" />
+              <!-- 6 white particles in precise straight column -->
+              <circle class="fi-spray-fi" cx="575" cy="170" r="2.4" />
+              <circle class="fi-spray-fi" cx="572" cy="170" r="2"   />
+              <circle class="fi-spray-fi" cx="578" cy="170" r="2"   />
+              <circle class="fi-spray-fi" cx="575" cy="170" r="2.4" />
+              <circle class="fi-spray-fi" cx="571" cy="170" r="1.8" />
+              <circle class="fi-spray-fi" cx="579" cy="170" r="1.8" />
+
+              <text x="500" y="370" class="fi-label fi-label--fi">Precise / Atomised</text>
+              <text x="500" y="390" class="fi-label" fill="#6B6B6B">Cold-start in one crank</text>
+            </svg>
+            <span class="tk-tech-visual-caption">Spray comparison · live</span>
+          </div>
+
+          <!-- ===== 3-paragraph deep dive ===== -->
+          <div class="tk-tech-body">
+            <div class="tk-tech-paragraph">
+              <h3>What it is</h3>
+              <p>
+                Fuel injection replaces the old carburetor with an electronic injector that sprays a precisely-metered mist of petrol directly into the intake port. A small ECU reads engine load, throttle position, intake temperature, and oxygen content, then adjusts each squirt in real time.
+              </p>
+            </div>
+            <div class="tk-tech-paragraph">
+              <h3>How it works</h3>
+              <p>
+                Pressurised fuel is delivered to the injector at constant pressure. The ECU triggers an electromagnetic valve in microsecond pulses; longer pulse = more fuel. The result is a tight conical spray that atomises into vapor immediately — not the wide, gravity-pulled fog a carburetor relies on.
+              </p>
+            </div>
+            <div class="tk-tech-paragraph">
+              <h3>Why it matters here</h3>
+              <p>
+                In Bangladesh, that means cold-morning starts with no choke, smoother throttle response in stop-and-go traffic, and noticeably better mileage during the highway commute. The system also self-adjusts as you climb out of Sylhet's hills or descend through Cox's Bazar humidity — no manual tuning, ever.
+              </p>
+            </div>
+          </div>
+
+          <!-- ===== Spec strip ===== -->
+          <ul class="tk-tech-specs" aria-label="Fuel Injection specifications">
+            <li class="tk-tech-spec">
+              <!-- TBD: confirm typical FI vs carb mileage uplift with Rancon — placeholder figure -->
+              <span class="tk-tech-spec-num">+12<em>%</em></span>
+              <span class="tk-tech-spec-label">Mileage gain vs. carburetor</span>
+            </li>
+            <li class="tk-tech-spec">
+              <!-- TBD: confirm injection pulse precision spec -->
+              <span class="tk-tech-spec-num">2 <em>ms</em></span>
+              <span class="tk-tech-spec-label">Injection pulse precision</span>
+            </li>
+            <li class="tk-tech-spec">
+              <!-- TBD: confirm fuel pressure rating -->
+              <span class="tk-tech-spec-num">3.0 <em>bar</em></span>
+              <span class="tk-tech-spec-label">Constant fuel pressure</span>
+            </li>
+            <li class="tk-tech-spec--tag">No-choke start</li>
+          </ul>
+
+        </article>
+
+        <!-- ============================================================
+             SECTION 5 — DUAL-CHANNEL ABS
+             ============================================================ -->
+        <article id="abs" class="tk-tech" data-tk-tech aria-labelledby="tk-abs-title">
+
+          <p class="tk-tech-eyebrow"><strong>03</strong> / ABS</p>
+          <h2 id="tk-abs-title" class="tk-tech-headline">Monsoon roads. <em>Confident</em> stops.</h2>
+
+          <!-- ===== Visual: with-ABS (clean) vs without-ABS (slide) ===== -->
+          <div class="tk-tech-visual" aria-hidden="true">
+            <svg class="abs-svg" viewBox="0 0 800 450" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+
+              <!-- ===== TOP — With Dual-Channel ABS ===== -->
+              <text x="40" y="50" class="abs-label abs-label--good">With Dual-Channel ABS</text>
+
+              <!-- Road -->
+              <line class="abs-road" x1="40" y1="180" x2="760" y2="180" />
+
+              <!-- Bike profile (simple silhouette) -->
+              <g class="abs-bike">
+                <!-- Body -->
+                <path d="M 200 150 L 260 110 L 360 110 L 400 130 L 440 150" />
+                <path d="M 220 150 L 240 90 L 320 90 L 350 110" />
+                <!-- Seat -->
+                <path d="M 280 90 L 380 90 L 380 105 L 280 105 Z" />
+                <!-- Tank -->
+                <path d="M 240 105 L 280 90 L 280 130 L 230 130 Z" />
+                <!-- Front fairing arc -->
+                <path d="M 440 150 L 480 130 L 470 100" />
+              </g>
+              <!-- Wheels -->
+              <circle class="abs-wheel" cx="180" cy="180" r="36" />
+              <circle class="abs-wheel" cx="500" cy="180" r="36" />
+              <!-- Spokes — keep rolling -->
+              <g class="abs-spoke abs-spoke--good">
+                <line x1="180" y1="148" x2="180" y2="212" />
+                <line x1="148" y1="180" x2="212" y2="180" />
+                <line x1="158" y1="158" x2="202" y2="202" />
+                <line x1="202" y1="158" x2="158" y2="202" />
+              </g>
+              <g class="abs-spoke abs-spoke--good">
+                <line x1="500" y1="148" x2="500" y2="212" />
+                <line x1="468" y1="180" x2="532" y2="180" />
+                <line x1="478" y1="158" x2="522" y2="202" />
+                <line x1="522" y1="158" x2="478" y2="202" />
+              </g>
+              <!-- Brake pulse dots — ABS rapidly modulates -->
+              <circle class="abs-pulse" cx="180" cy="180" r="4" />
+              <circle class="abs-pulse" cx="500" cy="180" r="4" style="animation-delay: 0.2s;" />
+
+              <!-- Stop indicator -->
+              <text x="540" y="170" class="abs-label abs-label--good">Stops in line</text>
+              <line stroke="rgba(255,255,255,0.5)" stroke-width="1.5" stroke-dasharray="3 3" x1="600" y1="180" x2="700" y2="180" />
+              <circle fill="#FFFFFF" cx="700" cy="180" r="3" />
+
+              <!-- Divider -->
+              <line x1="40" y1="240" x2="760" y2="240" stroke="rgba(255,255,255,0.15)" stroke-width="1" stroke-dasharray="4 6" />
+
+              <!-- ===== BOTTOM — Without ABS ===== -->
+              <text x="40" y="280" class="abs-label abs-label--bad">Without ABS</text>
+
+              <!-- Road -->
+              <line class="abs-road" x1="40" y1="400" x2="760" y2="400" />
+
+              <!-- Skid streak — grows from front wheel position -->
+              <path class="abs-skid" d="M 360 400 L 640 400" />
+
+              <!-- Tilted bike -->
+              <g class="abs-bike abs-bike--bad">
+                <!-- Body -->
+                <path d="M 220 370 L 280 330 L 380 330 L 420 350 L 460 370" />
+                <path d="M 240 370 L 260 310 L 340 310 L 370 330" />
+                <path d="M 300 310 L 400 310 L 400 325 L 300 325 Z" />
+                <path d="M 260 325 L 300 310 L 300 350 L 250 350 Z" />
+                <path d="M 460 370 L 500 350 L 490 320" />
+              </g>
+              <!-- Locked wheels (no spoke rotation) -->
+              <circle class="abs-wheel" cx="200" cy="400" r="36" />
+              <circle class="abs-wheel" cx="520" cy="400" r="36" />
+              <g stroke="rgba(228, 5, 33, 0.7)" stroke-width="1" fill="none">
+                <line x1="200" y1="368" x2="200" y2="432" />
+                <line x1="168" y1="400" x2="232" y2="400" />
+                <line x1="520" y1="368" x2="520" y2="432" />
+                <line x1="488" y1="400" x2="552" y2="400" />
+              </g>
+              <text x="640" y="396" class="abs-label abs-label--bad">Slides off line</text>
+            </svg>
+            <span class="tk-tech-visual-caption">Wet braking · simulation</span>
+          </div>
+
+          <!-- ===== 3-paragraph deep dive ===== -->
+          <div class="tk-tech-body">
+            <div class="tk-tech-paragraph">
+              <h3>What it is</h3>
+              <p>
+                Anti-lock Braking. Two wheel-speed sensors (front + rear, hence "dual-channel") feed a hydraulic control unit that watches each wheel 50 times a second. The instant a wheel starts to lock under braking, the unit modulates the brake pressure — releasing and re-applying it dozens of times per second.
+              </p>
+            </div>
+            <div class="tk-tech-paragraph">
+              <h3>How it works</h3>
+              <p>
+                You squeeze the lever as hard as you need. The ECU never lets the wheel actually stop rotating — it pulses the calliper just below the lock-up threshold, keeping rubber gripping the road instead of skating across it. You stop in a straight line, in the shortest distance physics will allow.
+              </p>
+            </div>
+            <div class="tk-tech-paragraph">
+              <h3>Why it matters here</h3>
+              <p>
+                Six months of the year, Bangladesh roads are wet. Diesel sheen, manhole covers, gravel patches, sudden monsoon downpours — every one a chance to lose grip. Dual-channel ABS turns "I'd better feather the brakes" into "I'll just stop", every time, no thinking required.
+              </p>
+            </div>
+          </div>
+
+          <!-- ===== Spec strip ===== -->
+          <ul class="tk-tech-specs" aria-label="ABS specifications">
+            <li class="tk-tech-spec">
+              <!-- TBD: confirm wheel-speed sample rate spec with Rancon -->
+              <span class="tk-tech-spec-num">50<em>×/s</em></span>
+              <span class="tk-tech-spec-label">Wheel-speed checks per second</span>
+            </li>
+            <li class="tk-tech-spec">
+              <!-- TBD: confirm braking-distance reduction figure -->
+              <span class="tk-tech-spec-num">~30<em>%</em></span>
+              <span class="tk-tech-spec-label">Shorter wet-braking distance</span>
+            </li>
+            <li class="tk-tech-spec">
+              <span class="tk-tech-spec-num">2 <em>ch</em></span>
+              <span class="tk-tech-spec-label">Front + rear independent control</span>
+            </li>
+            <li class="tk-tech-spec--tag">All Suzuki BD models</li>
+          </ul>
+
+        </article>
+
+        <!-- ============================================================
+             SECTION 6 — 6-SPEED PRECISION GEARBOX
+             ============================================================ -->
+        <article id="gearbox" class="tk-tech" data-tk-tech aria-labelledby="tk-gearbox-title">
+
+          <p class="tk-tech-eyebrow"><strong>04</strong> / GEARBOX</p>
+          <h2 id="tk-gearbox-title" class="tk-tech-headline">Six gears. <em>Six personalities.</em></h2>
+
+          <!-- ===== Visual: 6 gears engaging sequentially + speed mapping ===== -->
+          <div class="tk-tech-visual" aria-hidden="true">
+            <svg class="gx-svg" viewBox="0 0 800 450" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+
+              <!-- Gear cluster — 6 gears arranged in a row on a shaft -->
+              <text x="40"  y="50" class="gx-label">Gear cluster · sequential engagement</text>
+
+              <!-- Main shaft -->
+              <rect class="gx-housing" x="40" y="150" width="720" height="30" rx="2" />
+              <line x1="50" y1="165" x2="750" y2="165" stroke="rgba(255,255,255,0.3)" stroke-width="0.6" />
+
+              <!-- Each gear: outer ring (active stroke) + inner number -->
+              <g class="gx-gear--1" transform="translate(110, 165)">
+                <circle class="gx-gear gx-active" cx="0" cy="0" r="32" />
+                <circle class="gx-gear" cx="0" cy="0" r="22" stroke-dasharray="3 4" />
+                <text class="gx-num" text-anchor="middle" dy="6" x="0" y="0">1</text>
+              </g>
+              <g class="gx-gear--2" transform="translate(230, 165)">
+                <circle class="gx-gear gx-active" cx="0" cy="0" r="32" />
+                <circle class="gx-gear" cx="0" cy="0" r="22" stroke-dasharray="3 4" />
+                <text class="gx-num" text-anchor="middle" dy="6" x="0" y="0">2</text>
+              </g>
+              <g class="gx-gear--3" transform="translate(350, 165)">
+                <circle class="gx-gear gx-active" cx="0" cy="0" r="32" />
+                <circle class="gx-gear" cx="0" cy="0" r="22" stroke-dasharray="3 4" />
+                <text class="gx-num" text-anchor="middle" dy="6" x="0" y="0">3</text>
+              </g>
+              <g class="gx-gear--4" transform="translate(470, 165)">
+                <circle class="gx-gear gx-active" cx="0" cy="0" r="32" />
+                <circle class="gx-gear" cx="0" cy="0" r="22" stroke-dasharray="3 4" />
+                <text class="gx-num" text-anchor="middle" dy="6" x="0" y="0">4</text>
+              </g>
+              <g class="gx-gear--5" transform="translate(590, 165)">
+                <circle class="gx-gear gx-active" cx="0" cy="0" r="32" />
+                <circle class="gx-gear" cx="0" cy="0" r="22" stroke-dasharray="3 4" />
+                <text class="gx-num" text-anchor="middle" dy="6" x="0" y="0">5</text>
+              </g>
+              <g class="gx-gear--6" transform="translate(710, 165)">
+                <circle class="gx-gear gx-active" cx="0" cy="0" r="32" />
+                <circle class="gx-gear" cx="0" cy="0" r="22" stroke-dasharray="3 4" />
+                <text class="gx-num" text-anchor="middle" dy="6" x="0" y="0">6</text>
+              </g>
+
+              <!-- Speed-range mapping bar -->
+              <text x="40" y="280" class="gx-label">Speed range · km/h</text>
+              <g transform="translate(40, 300)">
+                <rect class="gx-bar-seg gx-bar-seg--1" x="0"   y="0" width="118" height="22" rx="2" />
+                <rect class="gx-bar-seg gx-bar-seg--2" x="120" y="0" width="118" height="22" rx="2" />
+                <rect class="gx-bar-seg gx-bar-seg--3" x="240" y="0" width="118" height="22" rx="2" />
+                <rect class="gx-bar-seg gx-bar-seg--4" x="360" y="0" width="118" height="22" rx="2" />
+                <rect class="gx-bar-seg gx-bar-seg--5" x="480" y="0" width="118" height="22" rx="2" />
+                <rect class="gx-bar-seg gx-bar-seg--6" x="600" y="0" width="120" height="22" rx="2" />
+              </g>
+
+              <!-- Speed labels -->
+              <g transform="translate(40, 348)">
+                <text x="0"   class="gx-label">0–20</text>
+                <text x="120" class="gx-label">15–40</text>
+                <text x="240" class="gx-label">30–60</text>
+                <text x="360" class="gx-label">50–80</text>
+                <text x="480" class="gx-label">70–100</text>
+                <text x="600" class="gx-label">100+</text>
+              </g>
+
+              <!-- Gear labels -->
+              <g transform="translate(40, 380)">
+                <text x="0"   class="gx-label">1st · pull</text>
+                <text x="120" class="gx-label">2nd · climb</text>
+                <text x="240" class="gx-label">3rd · city</text>
+                <text x="360" class="gx-label">4th · cruise</text>
+                <text x="480" class="gx-label">5th · open</text>
+                <text x="600" class="gx-label">6th · top</text>
+              </g>
+            </svg>
+            <span class="tk-tech-visual-caption">Gear ratios · live cycle</span>
+          </div>
+
+          <!-- ===== 3-paragraph deep dive ===== -->
+          <div class="tk-tech-body">
+            <div class="tk-tech-paragraph">
+              <h3>What it is</h3>
+              <p>
+                A 6-speed return-shift gearbox built into the engine block. Six discrete gears, six dedicated ratios, one click between each. The whole cluster sits on a single shaft inside a constant-mesh transmission tuned for both low-end pull and high-rpm efficiency.
+              </p>
+            </div>
+            <div class="tk-tech-paragraph">
+              <h3>How it works</h3>
+              <p>
+                Every gear pairs a fixed dog-tooth pinion with a sliding selector that engages on demand. Suzuki engineers tune each ratio so 1st gives explosive pull off the line, 2nd–3rd handle real traffic, 4th cruises Dhaka–Chittagong highway, and 5th–6th drop the engine into its torque sweet spot for fuel efficiency.
+              </p>
+            </div>
+            <div class="tk-tech-paragraph">
+              <h3>Why it matters here</h3>
+              <p>
+                In stop-and-go Dhaka traffic, a 5-speed gearbox forces the engine to over-rev between gears. The 6th gear gives the engine a "rest" cog at highway speed — same speed, less rpm, less fuel, less engine wear. On the GSX-R150 it lets you find the right gear for the corner; on the Hayate EP it makes 80 km/h feel calm instead of frantic.
+              </p>
+            </div>
+          </div>
+
+          <!-- ===== Spec strip ===== -->
+          <ul class="tk-tech-specs" aria-label="Gearbox specifications">
+            <li class="tk-tech-spec">
+              <span class="tk-tech-spec-num">6 <em>spd</em></span>
+              <span class="tk-tech-spec-label">Return-shift, constant-mesh</span>
+            </li>
+            <li class="tk-tech-spec">
+              <!-- TBD: confirm shift effort / lever travel spec -->
+              <span class="tk-tech-spec-num">22 <em>°</em></span>
+              <span class="tk-tech-spec-label">Lever throw per shift</span>
+            </li>
+            <li class="tk-tech-spec">
+              <!-- TBD: confirm rpm-drop between gears -->
+              <span class="tk-tech-spec-num">~1.4k <em>rpm</em></span>
+              <span class="tk-tech-spec-label">Drop between gears @ cruise</span>
+            </li>
+            <li class="tk-tech-spec--tag">Race-bred ratios</li>
+          </ul>
+
+        </article>
+
+        <!-- ============================================================
+             SECTION 7 — SEP (Suzuki Eco Performance)
+             ============================================================ -->
+        <article id="sep" class="tk-tech" data-tk-tech aria-labelledby="tk-sep-title">
+
+          <p class="tk-tech-eyebrow"><strong>05</strong> / SEP</p>
+          <h2 id="tk-sep-title" class="tk-tech-headline">More kilometres. <em>Same tank.</em></h2>
+
+          <!-- ===== Visual: piston cycle + reduced-friction zones + mileage ===== -->
+          <div class="tk-tech-visual" aria-hidden="true">
+            <svg class="sep-svg" viewBox="0 0 800 450" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+
+              <!-- ===== LEFT — piston cycle ===== -->
+              <text x="60" y="50" class="sep-counter-label">Reduced-friction piston</text>
+
+              <!-- Cylinder housing -->
+              <rect class="sep-cylinder" x="120" y="80" width="180" height="280" rx="3" />
+              <!-- Cylinder fins -->
+              <g stroke="rgba(255,255,255,0.3)" stroke-width="1" fill="none">
+                <line x1="100" y1="100" x2="120" y2="100" />
+                <line x1="100" y1="125" x2="120" y2="125" />
+                <line x1="100" y1="150" x2="120" y2="150" />
+                <line x1="300" y1="100" x2="320" y2="100" />
+                <line x1="300" y1="125" x2="320" y2="125" />
+                <line x1="300" y1="150" x2="320" y2="150" />
+              </g>
+
+              <!-- Piston (animated up-down) -->
+              <rect class="sep-piston" x="135" y="170" width="150" height="40" rx="2" />
+
+              <!-- Reduced-friction rings (red glow zones around piston) -->
+              <rect class="sep-friction" x="135" y="178" width="150" height="3" rx="1" />
+              <rect class="sep-friction" x="135" y="200" width="150" height="3" rx="1" />
+
+              <!-- Connecting rod -->
+              <line class="sep-rod" x1="210" y1="210" x2="210" y2="320" />
+              <circle class="sep-rod" cx="210" cy="320" r="12" />
+
+              <!-- Friction-zone callouts -->
+              <g stroke="rgba(228, 5, 33, 0.6)" stroke-width="1" fill="none" stroke-dasharray="2 3">
+                <line x1="290" y1="180" x2="380" y2="180" />
+                <line x1="290" y1="200" x2="380" y2="200" />
+              </g>
+              <text x="385" y="184" class="sep-counter-unit" font-size="10">Compression ring</text>
+              <text x="385" y="204" class="sep-counter-unit" font-size="10">Oil ring</text>
+
+              <!-- Divider -->
+              <line x1="500" y1="40" x2="500" y2="410" stroke="rgba(255,255,255,0.15)" stroke-width="1" stroke-dasharray="4 6" />
+
+              <!-- ===== RIGHT — mileage counter ===== -->
+              <text x="540" y="50"  class="sep-counter-label">Same tank · further</text>
+              <text x="540" y="140" class="sep-counter">52</text>
+              <text x="610" y="140" class="sep-counter-unit">km / L</text>
+              <line x1="540" y1="160" x2="740" y2="160" stroke="rgba(255,255,255,0.2)" stroke-width="1" />
+
+              <text x="540" y="200" class="sep-counter-label">Standard cruise mileage</text>
+              <text x="540" y="240" class="sep-counter" fill="#B0B0B0">45</text>
+              <text x="600" y="240" class="sep-counter-unit" fill="#B0B0B0">km / L</text>
+
+              <text x="540" y="290" class="sep-counter-unit">+15% efficiency</text>
+              <text x="540" y="320" class="sep-counter-label" fill="#6B6B6B">Same engine. Smarter internals.</text>
+
+              <!-- Tank icon (visual hook) -->
+              <g stroke="rgba(255,255,255,0.4)" stroke-width="1.5" fill="none">
+                <path d="M 540 360 L 700 360 L 700 395 L 540 395 Z" />
+                <line x1="555" y1="360" x2="555" y2="350" />
+                <rect x="552" y="346" width="8" height="6" />
+                <!-- Fuel level fill -->
+                <rect x="544" y="364" width="152" height="27" fill="rgba(228, 5, 33, 0.25)" stroke="none" />
+                <line x1="544" y1="372" x2="696" y2="372" stroke="rgba(228, 5, 33, 0.5)" stroke-width="0.6" />
+              </g>
+            </svg>
+            <span class="tk-tech-visual-caption">Friction reduction · live</span>
+          </div>
+
+          <!-- ===== 3-paragraph deep dive ===== -->
+          <div class="tk-tech-body">
+            <div class="tk-tech-paragraph">
+              <h3>What it is</h3>
+              <p>
+                Suzuki Eco Performance — a tuning philosophy applied to the entire combustion chain. Lighter pistons with low-friction skirt coatings, narrower rings, polished cam lobes, optimised intake-port geometry, and longer top-gear ratios. Each change is small. Together they free up power to do real work instead of fighting the engine itself.
+              </p>
+            </div>
+            <div class="tk-tech-paragraph">
+              <h3>How it works</h3>
+              <p>
+                Every internal component that moves loses energy to friction. SEP attacks each one: piston rings reduced from three to two, smaller piston-pin diameter, low-tension oil control rings, ion-plated cylinder bores. The result is less heat, less wasted power, and an engine that can lean out the air-fuel mixture without losing throttle response.
+              </p>
+            </div>
+            <div class="tk-tech-paragraph">
+              <h3>Why it matters here</h3>
+              <p>
+                Petrol prices in Dhaka. SEP turns the same 8.5-litre tank on a Gixxer into 50+ extra kilometres of usable range — that's the difference between two refuels a week and one. On the Access 125 scooter, it pushes mileage past 60 km/L on the daily commute. Same fuel. More road.
+              </p>
+            </div>
+          </div>
+
+          <!-- ===== Spec strip ===== -->
+          <ul class="tk-tech-specs" aria-label="SEP specifications">
+            <li class="tk-tech-spec">
+              <!-- TBD: confirm friction-reduction figure with engineering -->
+              <span class="tk-tech-spec-num">~15<em>%</em></span>
+              <span class="tk-tech-spec-label">Internal friction reduction</span>
+            </li>
+            <li class="tk-tech-spec">
+              <!-- TBD: real-world mileage uplift varies by model -->
+              <span class="tk-tech-spec-num">+7 <em>km/L</em></span>
+              <span class="tk-tech-spec-label">Typical mileage uplift</span>
+            </li>
+            <li class="tk-tech-spec">
+              <!-- TBD: confirm piston-mass reduction -->
+              <span class="tk-tech-spec-num">−12<em>%</em></span>
+              <span class="tk-tech-spec-label">Reciprocating mass cut</span>
+            </li>
+            <li class="tk-tech-spec--tag">Same engine, smarter</li>
+          </ul>
+
+        </article>
+
+        <!-- ============================================================
+             SECTION 8 — MOTOGP DNA
+             ============================================================ -->
+        <article id="motogp" class="tk-tech" data-tk-tech aria-labelledby="tk-motogp-title">
+
+          <p class="tk-tech-eyebrow"><strong>06</strong> / RACING DNA</p>
+          <h2 id="tk-motogp-title" class="tk-tech-headline">World Championship engineering, <em>on your street.</em></h2>
+
+          <!-- ===== Visual: GSX-RR (race) ↔ Gixxer SF 250 (street) with shared-engineering links ===== -->
+          <div class="tk-tech-visual" aria-hidden="true">
+            <svg class="mg-svg" viewBox="0 0 800 450" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+
+              <!-- ===== LEFT — Suzuki Ecstar GSX-RR (MotoGP race bike silhouette) ===== -->
+              <text x="40" y="40" class="mg-label mg-label--strong">Suzuki Ecstar GSX-RR</text>
+              <text x="40" y="58" class="mg-label">2020 World Champion · Joan Mir</text>
+
+              <!-- Race bike — aggressive forward stance, lower fairing -->
+              <g class="mg-bike mg-bike--race">
+                <!-- Front fairing -->
+                <path d="M 100 200 L 140 170 L 200 170 L 220 200 L 200 230 L 160 240" />
+                <!-- Tank + seat hump (race) -->
+                <path d="M 200 175 L 280 165 L 320 175 L 330 200 L 290 215 L 240 215 Z" />
+                <!-- Tail -->
+                <path d="M 320 175 L 360 165 L 350 195 L 320 195 Z" />
+                <!-- Frame triangle hint -->
+                <line x1="220" y1="200" x2="290" y2="215" />
+                <line x1="290" y1="215" x2="320" y2="240" />
+              </g>
+              <!-- Wheels -->
+              <circle class="mg-wheel mg-wheel--race" cx="140" cy="265" r="34" />
+              <circle class="mg-wheel mg-wheel--race" cx="320" cy="265" r="34" />
+              <!-- Rims -->
+              <g stroke="rgba(228,5,33,0.6)" stroke-width="1" fill="none">
+                <circle cx="140" cy="265" r="22" />
+                <circle cx="320" cy="265" r="22" />
+              </g>
+
+              <!-- Engineering callout markers (3 hot-spots) -->
+              <circle class="mg-link-end" cx="240" cy="190" r="5" />   <!-- engine -->
+              <circle class="mg-link-end" cx="200" cy="240" r="5" />   <!-- braking -->
+              <circle class="mg-link-end" cx="280" cy="225" r="5" />   <!-- cooling -->
+
+              <!-- Race tag -->
+              <text x="40" y="335" class="mg-callout">→ 17 World titles</text>
+              <text x="40" y="352" class="mg-callout">→ 4-cylinder DOHC</text>
+              <text x="40" y="369" class="mg-callout">→ Ride-by-wire / IMU</text>
+
+              <!-- ===== RIGHT — Gixxer SF 250 (street equivalent) ===== -->
+              <text x="500" y="40" class="mg-label mg-label--strong">Gixxer SF 250</text>
+              <text x="500" y="58" class="mg-label">Production · single-cylinder · street</text>
+
+              <!-- Street bike — friendlier upright stance -->
+              <g class="mg-bike">
+                <!-- Front fairing (smaller, less aggressive) -->
+                <path d="M 540 200 L 580 175 L 630 175 L 650 205 L 630 230 L 595 240" />
+                <!-- Tank + seat (more upright) -->
+                <path d="M 630 180 L 700 170 L 740 180 L 745 205 L 705 220 L 660 220 Z" />
+                <!-- Tail (street pillion-friendly) -->
+                <path d="M 740 180 L 780 175 L 770 210 L 740 210 Z" />
+                <!-- Frame -->
+                <line x1="650" y1="205" x2="705" y2="220" />
+                <line x1="705" y1="220" x2="730" y2="245" />
+              </g>
+              <circle class="mg-wheel" cx="580" cy="270" r="34" />
+              <circle class="mg-wheel" cx="730" cy="270" r="34" />
+              <g stroke="rgba(255,255,255,0.5)" stroke-width="1" fill="none">
+                <circle cx="580" cy="270" r="22" />
+                <circle cx="730" cy="270" r="22" />
+              </g>
+
+              <!-- Engineering callout markers (matched positions) -->
+              <circle class="mg-link-end" cx="660" cy="195" r="5" />   <!-- engine -->
+              <circle class="mg-link-end" cx="620" cy="245" r="5" />   <!-- braking -->
+              <circle class="mg-link-end" cx="700" cy="230" r="5" />   <!-- cooling -->
+
+              <text x="500" y="335" class="mg-callout">→ Same SOCS principle</text>
+              <text x="500" y="352" class="mg-callout">→ Same ABS algorithm</text>
+              <text x="500" y="369" class="mg-callout">→ Same FI ECU lineage</text>
+
+              <!-- ===== Connecting lines between matched callouts ===== -->
+              <path class="mg-link" d="M 240 190 C 350 190, 550 195, 660 195" />
+              <path class="mg-link" d="M 200 240 C 320 240, 500 245, 620 245" />
+              <path class="mg-link" d="M 280 225 C 400 225, 580 230, 700 230" />
+
+              <!-- "Shared engineering" label down the middle -->
+              <text x="400" y="408" class="mg-callout" text-anchor="middle">
+                Shared engineering · race ↔ street
+              </text>
+            </svg>
+            <span class="tk-tech-visual-caption">Engineering lineage · live</span>
+          </div>
+
+          <!-- ===== 3-paragraph deep dive ===== -->
+          <div class="tk-tech-body">
+            <div class="tk-tech-paragraph">
+              <h3>What it is</h3>
+              <p>
+                Suzuki has competed in MotoGP — the highest level of motorcycle racing on Earth — almost continuously since 1974. The Suzuki Ecstar GSX-RR took the 2020 World Championship under Joan Mir. The same engineering team designs the engines, gearboxes, ABS strategies, and frame geometries that end up on the bikes Suzuki sells in Bangladesh.
+              </p>
+            </div>
+            <div class="tk-tech-paragraph">
+              <h3>How it works</h3>
+              <p>
+                Race tech filters down: SOCS started as a MotoGP cooling solution. The dual-channel ABS modulation curves on the GSX-R150 are derived from race data. Suzuki's signature 6-speed close-ratio gearbox is a direct lineage from the GSX-RR. The bench tools are different; the principles are the same.
+              </p>
+            </div>
+            <div class="tk-tech-paragraph">
+              <h3>Why it matters here</h3>
+              <p>
+                When you crack the throttle on a Gixxer SF 250 in Bangladesh, you're not riding a beginner-friendly version of a racing motorcycle. You're riding the production-tuned cousin of one — the same engineering DNA, scaled and softened for the street, but never compromised. That's why Suzukis last and feel different from competitors built to a price.
+              </p>
+            </div>
+          </div>
+
+          <!-- ===== Spec strip ===== -->
+          <ul class="tk-tech-specs" aria-label="MotoGP DNA credentials">
+            <li class="tk-tech-spec">
+              <span class="tk-tech-spec-num">17</span>
+              <span class="tk-tech-spec-label">FIM Grand Prix world titles</span>
+            </li>
+            <li class="tk-tech-spec">
+              <span class="tk-tech-spec-num">2020</span>
+              <span class="tk-tech-spec-label">Most recent MotoGP championship</span>
+            </li>
+            <li class="tk-tech-spec">
+              <span class="tk-tech-spec-num">50+ <em>yrs</em></span>
+              <span class="tk-tech-spec-label">Continuous GP racing presence</span>
+            </li>
+            <li class="tk-tech-spec--tag">Race ↔ street lineage</li>
+          </ul>
+
+        </article>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       SECTION 9 — BIKE GRID (PHASE 3 PLACEHOLDER)
+       ============================================================ -->
+  <!-- TBD: Phase 3 — 10 bike cards with technology badges + filter pills -->
+
+  <!-- ============================================================
+       SECTION 10 — FINAL CTA (PHASE 3 PLACEHOLDER)
+       ============================================================ -->
+  <!-- TBD: Phase 3 — "Technology means nothing until you feel it" + Book Test Ride / Find Dealer CTAs -->
+
+</main>
+
+<!-- ============================================================
+     FOOTER — duplicated from index.html
+     ============================================================ -->
+<footer class="ft-section" role="contentinfo" data-testid="footer">
+  <div class="ft-container">
+
+    <div class="ft-top">
+      <div class="ft-brand">
+        <a class="brand-lockup" href="index.html" aria-label="Suzuki Bangladesh — home">
+          <span class="bl-mark" aria-hidden="true"></span>
+          <span class="bl-text"><span class="bl-name">SUZUKI</span><span class="bl-sub">Bangladesh</span></span>
+        </a>
+        <p class="ft-blurb">Suzuki Bangladesh, operated by Rancon Motor Bikes Ltd, brings MotoGP-bred engineering and Japanese craftsmanship to riders across the country — built for the road you ride every day.</p>
+      </div>
+      <div class="ft-aside">
+        <p class="ft-operator">Operated by <strong>Rancon Motor Bikes Ltd</strong></p>
+        <ul class="ft-socials" aria-label="Follow Suzuki Bangladesh">
+          <li><a class="ft-social" href="https://www.facebook.com/SuzukiBangladeshOfficial" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.7-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.7l-.4 2.9h-2.3v7A10 10 0 0 0 22 12z"/></svg></a></li>
+          <li><a class="ft-social" href="https://www.instagram.com/suzukibangladeshofficial" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.2c3.2 0 3.6 0 4.8.1 1.2 0 1.8.3 2.2.4.6.2 1 .5 1.4.9.4.4.7.8.9 1.4.2.4.4 1 .4 2.2 0 1.2.1 1.6.1 4.8s0 3.6-.1 4.8c0 1.2-.3 1.8-.4 2.2-.2.6-.5 1-.9 1.4-.4.4-.8.7-1.4.9-.4.2-1 .4-2.2.4-1.2 0-1.6.1-4.8.1s-3.6 0-4.8-.1c-1.2 0-1.8-.3-2.2-.4-.6-.2-1-.5-1.4-.9-.4-.4-.7-.8-.9-1.4-.2-.4-.4-1-.4-2.2 0-1.2-.1-1.6-.1-4.8s0-3.6.1-4.8c0-1.2.3-1.8.4-2.2.2-.6.5-1 .9-1.4.4-.4.8-.7 1.4-.9.4-.2 1-.4 2.2-.4C8.4 2.2 8.8 2.2 12 2.2zm0 1.8c-3.2 0-3.5 0-4.7.1-.9 0-1.4.2-1.7.3-.4.2-.7.4-1 .7-.3.3-.5.6-.7 1-.1.3-.3.8-.3 1.7C3.5 8.5 3.5 8.8 3.5 12s0 3.5.1 4.7c0 .9.2 1.4.3 1.7.2.4.4.7.7 1 .3.3.6.5 1 .7.3.1.8.3 1.7.3 1.2 0 1.5.1 4.7.1s3.5 0 4.7-.1c.9 0 1.4-.2 1.7-.3.4-.2.7-.4 1-.7.3-.3.5-.6.7-1 .1-.3.3-.8.3-1.7 0-1.2.1-1.5.1-4.7s0-3.5-.1-4.7c0-.9-.2-1.4-.3-1.7-.2-.4-.4-.7-.7-1-.3-.3-.6-.5-1-.7-.3-.1-.8-.3-1.7-.3-1.2-.1-1.5-.1-4.7-.1zm0 3.2a4.8 4.8 0 1 1 0 9.6 4.8 4.8 0 0 1 0-9.6zm0 1.8a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm5-2.1a1.1 1.1 0 1 1 0 2.2 1.1 1.1 0 0 1 0-2.2z"/></svg></a></li>
+          <li><a class="ft-social" href="https://www.youtube.com/@suzukimotorcyclebangladesh" aria-label="YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.6 3.6 12 3.6 12 3.6s-7.6 0-9.4.5A3 3 0 0 0 .5 6.2C0 8 0 12 0 12s0 4 .5 5.8a3 3 0 0 0 2.1 2.1c1.8.5 9.4.5 9.4.5s7.6 0 9.4-.5a3 3 0 0 0 2.1-2.1C24 16 24 12 24 12s0-4-.5-5.8zM9.6 15.6V8.4l6.3 3.6-6.3 3.6z"/></svg></a></li>
+          <li><a class="ft-social" href="https://www.linkedin.com/company/rancon-motor-bikes-ltd" aria-label="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 2h-17A1.5 1.5 0 0 0 2 3.5v17A1.5 1.5 0 0 0 3.5 22h17a1.5 1.5 0 0 0 1.5-1.5v-17A1.5 1.5 0 0 0 20.5 2zM8 19H5V9h3v10zM6.5 7.7a1.7 1.7 0 1 1 0-3.4 1.7 1.7 0 0 1 0 3.4zM19 19h-3v-5.5c0-1.3 0-3-1.8-3s-2.2 1.4-2.2 2.9V19h-3V9h2.9v1.4h.04c.4-.7 1.4-1.6 2.9-1.6 3.1 0 3.6 2 3.6 4.7V19z"/></svg></a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="ft-grid">
+      <div><h3 class="ft-col-title">Bikes</h3><ul class="ft-list"><li><a href="bikes.html#commuter">Commuter</a></li><li><a href="bikes.html#sports">Sports</a></li><li><a href="bikes.html#performance">Performance Sports</a></li><li><a href="bikes.html#super-sports">Super Sports</a></li><li><a href="bikes.html#scooter">Scooters</a></li><li><a href="bikes.html">View All Bikes</a></li></ul></div>
+      <div><h3 class="ft-col-title">Engineering</h3><ul class="ft-list"><li><a href="technology.html#socs" aria-current="page">SOCS Cooling</a></li><li><a href="technology.html#fi">Fuel Injection</a></li><li><a href="technology.html#abs">Dual-Channel ABS</a></li><li><a href="technology.html#gearbox">6-Speed Gearbox</a></li><li><a href="technology.html#sep">SEP Efficiency</a></li><li><a href="technology.html#motogp">MotoGP DNA</a></li></ul></div>
+      <div><h3 class="ft-col-title">Service &amp; Support</h3><ul class="ft-list"><li><a href="service.html">Service Packages</a></li><li><a href="shop.html">Genuine Parts</a></li><li><a href="dealers.html">Find a Dealer</a></li><li><a href="test-ride.html">Book a Test Ride</a></li><li><a href="tel:16638">Hotline 16638</a></li></ul></div>
+      <div>
+        <h3 class="ft-col-title">Get in Touch</h3>
+        <ul class="ft-contact">
+          <li class="ft-contact-row"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg><div><strong>24/7 Hotline</strong><a class="ft-hotline" href="tel:16638">16638 <span>Toll-Free</span></a></div></li>
+          <li class="ft-contact-row"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg><div><strong>Customer Care</strong><a href="mailto:info@suzuki.com.bd">info@suzuki.com.bd</a></div></li>
+          <li class="ft-contact-row"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><div><strong>Head Office</strong>Rangs Babylonia, Plot 246, Bir Uttam Mir Showkat Sarak,<br />Tejgaon I/A, Dhaka 1208, Bangladesh</div></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="ft-bottom">
+      <p>&copy; 2009&ndash;2026 Rancon Motor Bikes Ltd. All rights reserved.</p>
+      <ul class="ft-legal" aria-label="Legal"><li><a href="legal/privacy.html">Privacy Policy</a></li><li><a href="legal/terms.html">Terms of Use</a></li><li><a href="legal/cookies.html">Cookies</a></li><li><a href="sitemap.html">Sitemap</a></li></ul>
+      <a href="#top" class="ft-totop" aria-label="Back to top">Back to Top</a>
+    </div>
+
+  </div>
+</footer>
+
+</body>
+</html>

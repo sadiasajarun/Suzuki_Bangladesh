@@ -1,0 +1,92 @@
+# Seed Specification — suzuki-bangladesh
+# Generated: 2026-04-30
+# Ambiguity Score: 0.12
+# Source: .claude-project/status/suzuki-bangladesh/pre-intake.md (Appendices A-G locked)
+
+goal: "Redesign suzuki.com.bd into a premium digital experience platform that creates brand awareness, excites bikers through cinematic storytelling of MotoGP heritage and engine technology, and drives test-ride bookings, EMI applications, and dealer footfall — built mobile-first for Bangladeshi traffic on a fresh NestJS+React stack."
+
+constraints:
+  # Hard
+  - "Web only (no native mobile apps); must be mobile-first responsive (375px to 1440px)"
+  - "Mobile experience must be flawless — majority of BD traffic is mobile"
+  - "Hotline 16638 must be prominent in header + footer + service flows"
+  - "Must preserve existing product database, news archive (200+ articles since 2018), service booking system, and shop functionality during migration"
+  - "Payment gateway: SSLCommerz only (handles cards + bKash + Nagad + bank EMI partners through one integration)"
+  - "Auth: phone OTP primary + Google login secondary (no email+password in v1)"
+  - "Backend: fresh NestJS build (not BFF-wrapping api-v2.suzuki.com.bd)"
+  - "Language: English only for v1 (no react-i18next infrastructure, no Bangla copy)"
+  - "Roles for prototype: customer + admin (combined staff role); production splits admin into content-admin / service-manager / dealer-staff / sales-admin / admin"
+  # Soft / Brand
+  - "Premium dark aesthetic, Tesla/Ultraviolette-level fidelity"
+  - "Engine showcase + Technology section must use CSS+SVG scroll-driven animations (not stock video, not WebGL, not YouTube embeds) — fully self-contained, brand-customizable, mobile-friendly"
+  - "Color palette: matte black #0A0A0A, Suzuki blue #0033A0, warm amber #FFA726 (heat), cool cyan #00BCD4, white #FFFFFF, soft grey #B0B0B0"
+  - "Typography: bold sans-serif headlines, all-caps letter-spaced tags, 16-18px body"
+  - "Motion principles: weighted, mechanical, ease-out for reveals, ease-in-out for camera, no bouncy/playful animations"
+  - "Brand voice: blended — Premium/Tesla-clean default, MotoGP-aggressive on Sections 4 + 7, Bengali-warm on Sections 9 + Service + Community"
+  - "Accessibility: respect prefers-reduced-motion, WCAG 2.1 AA on conversion flows, screen-reader-readable callouts on animated sections"
+  # Dependencies
+  - "Photoreal 3D vendor work (8-12 weeks, BDT 8-25 lakh) is a separate Phase-1 deliverable — prototype uses CSS/SVG stand-ins"
+  - "MotoGP imagery licensing (Joan Mir, Suzuki Ecstar) deferred — prototype uses stylized silhouettes"
+  - "Engine specs (26 PS / 22.6 Nm) and SEP branding to be confirmed by client via Rancon — prototype uses placeholders tagged [verify with Rancon]"
+
+acceptance_criteria:
+  - "Homepage delivers 11+ sections in stated order: Hero, Why Suzuki Different, Find Your Perfect Suzuki, Suzuki Technology (6 activations), Engine Showcase (8 reveals), Best Deals, MotoGP Heritage, Why Suzuki Safe, Rider Stories, Bangladesh Pride, Service, Top News, Final CTA"
+  - "8 prototype pages generated and cross-linked: /, /bikes, /bikes/gixxer-sf-250, /test-ride, /service, /shop, /dealers, /contact"
+  - "Every CTA navigates to a real page (no href='#' dead links); every interactive element has an associated action"
+  - "Homepage Section 4 (Suzuki Technology) renders 6 sequential CSS+SVG scroll-driven activations: SOCS, SEP, FI, ABS, 6-Speed Gearbox, MotoGP DNA — each with origin point, animated overlay, callout card, exit behavior"
+  - "Homepage Section 5 (Engine Showcase) renders 8 SVG-based exploded-view reveals of the 250cc oil-cooled engine, ending in reassembly + ignition climax"
+  - "/bikes page implements Apple-style category filter (Scooter / Sports / Super Sports / Commuter / Performance Sports) with hover-driven preview swap"
+  - "/bikes/gixxer-sf-250 page features full-bleed hero, 360°-spin viewer placeholder, color picker, specs grid, 'What's in the Box', 'Compare with similar Suzuki' (never with competitors), CTA grid (Book Test Ride / Get EMI Quote / Find Dealer / Save)"
+  - "/test-ride page surfaces calendar+slot picker, nearest dealer auto-detect, multi-bike comparison option, primary CTA 'Book Test Ride' + secondary CTA 'Get EMI Quote' linking to calculator"
+  - "/service page leads with trust signals (service center count, certified technicians, average turnaround), package cards with pricing visible, primary CTA 'Book Service Now' + secondary 'Find Service Center', live slot calendar concept widget"
+  - "/shop page displays 3-category hero (Genuine Parts / Engine Oils / Accessories) with stock badges, fitment preview, and cross-sell row"
+  - "/dealers page renders Bangladesh map mockup with dealer pins + 'Share location for nearest dealers' permission flow + per-dealer card (name, address, hotline 16638, hours, services, WhatsApp deep link)"
+  - "/contact page foregrounds Hotline 16638, includes contact form (name/phone/email/topic/message), WhatsApp Business deep-link, and HQ map"
+  - "Bike configurator entry on /bikes implements filter chain: category → engine → brake → color → personalized 3D preview (concept-level, not real WebGL)"
+  - "Cookies popup (GDPR-style: accept/customize/reject) is separate from lead-capture popup (exit-intent EMI calculator preview + email/phone/WhatsApp opt-in)"
+  - "Multi-channel chatbot UI shells visible: FB Messenger button + WhatsApp Business button + on-site live chat trigger (functional integration is Phase-2)"
+  - "All HTML passes role-aware design QA: routing valid, navbar/footer programmatically identical across pages, design system compliance, no horizontal scroll on 375px, no dead buttons"
+  - "DESIGN_STATUS.md records approved:true with prd_hash_at_generation, roles=[customer,admin], html_bundle_hash, generated_at — unlocking /fullstack-dev handoff"
+  - "Client reviewer can navigate end-to-end via the homepage's section CTAs and the global navbar without encountering broken links or missing elements"
+
+ontology_schema:
+  name: "SuzukiBangladeshPlatform"
+  description: "Domain model for the Suzuki Bangladesh website redesign — captures bikes, dealers, services, shop products, customers, and content"
+  fields:
+    - { name: "Bike",                type: "object", description: "Motorcycle model — 10 instances at launch (Gixxer 250, Gixxer SF 250, GSX-R150, Gixxer SF, Gixxer, Gixxer Monotone, Gixxer Classic Matt, Access 125, Hayate EP, GSX 125)" }
+    - { name: "BikeCategory",        type: "string", description: "Enum: SCOOTER | SPORTS | SUPER_SPORTS | COMMUTER | PERFORMANCE_SPORTS" }
+    - { name: "BikeColor",           type: "object", description: "Color variant of a Bike with name, hex, environment-shot URL" }
+    - { name: "Dealer",              type: "object", description: "Physical Suzuki dealership — name, address, lat/long, hotline, hours, services_offered, inventory" }
+    - { name: "ServiceCenter",       type: "object", description: "Authorized service center — may overlap with Dealer; offers service packages with slot calendar" }
+    - { name: "ServicePackage",      type: "object", description: "Service tier with price, included items, duration, eligible bike categories" }
+    - { name: "ServiceBooking",      type: "object", description: "Customer's service appointment — service_center_id, slot, bike, status (Received|InDiagnosis|InService|QualityCheck|ReadyForPickup)" }
+    - { name: "TestRideBooking",     type: "object", description: "Test ride request — bike_id(s), dealer_id, slot, customer, status" }
+    - { name: "EmiLead",             type: "object", description: "EMI inquiry — bike_id, customer, monthly_income_band, bank_preference, status" }
+    - { name: "ShopProduct",         type: "object", description: "Genuine part / engine oil / accessory — sku, fitment_bike_ids, price, stock, category" }
+    - { name: "ShopOrder",           type: "object", description: "Customer order — line_items, total, payment_status (SSLCommerz), shipping_address, status" }
+    - { name: "Customer",            type: "object", description: "Authenticated user — phone (OTP), optional Google ID, name, address(es), saved_bikes, owner_portal flag" }
+    - { name: "Article",             type: "object", description: "News / MotoGP update / press release — title, body, hero_image, published_at, tags, ~200 migrated from current site" }
+    - { name: "Career",              type: "object", description: "Job vacancy at RMBL — title, department, location, JD; static markdown for v1" }
+    - { name: "AdminUser",           type: "object", description: "Internal staff — combined role for prototype; will split into content-admin / service-manager / dealer-staff / sales-admin / admin in production" }
+
+evaluation_principles:
+  - { name: "Brand fidelity",       description: "Visual + motion adherence to the cinematic premium brief (Tesla/Ultraviolette-level)", weight: 0.30 }
+  - { name: "Conversion clarity",    description: "Clear CTAs on every page (Book Test Ride / Apply EMI / Book Service / Buy Parts / Find Dealer); no dead buttons", weight: 0.20 }
+  - { name: "Mobile fluency",        description: "Mobile-first execution at 375px / 768px / 1024px / 1440px; no horizontal scroll; touch-friendly hit targets", weight: 0.15 }
+  - { name: "Storytelling depth",    description: "Section 4 (Tech) and Section 5 (Engine) deliver scroll-driven narrative reveals via CSS+SVG, not static cards", weight: 0.15 }
+  - { name: "Local trust signals",   description: "Hotline 16638 prominent, Rancon attribution, BD market context, WhatsApp/Messenger surfaces visible", weight: 0.10 }
+  - { name: "Handoff readiness",     description: "PRD + role-folder HTML + DESIGN_STATUS.md hash snapshot ready for /fullstack-dev Tier 1-3 validation", weight: 0.10 }
+
+exit_conditions:
+  - { name: "success",         description: "PM track complete; PRD locked; HTML approved by client; DESIGN_STATUS approved:true with snapshot",       criteria: "evaluation_score >= 0.80 AND DESIGN_STATUS.approved == true" }
+  - { name: "client_pivot",    description: "Client requests a different brand direction post-P3d; loop back to P3a with new design seeds",         criteria: "selected_variation == 'reject_all'" }
+  - { name: "max_iterations",  description: "Safety valve on P3 design loop",                                                                       criteria: "p3_iterations > 3" }
+
+metadata:
+  version: "1.0"
+  ambiguity_score: 0.12
+  interview_id: "pre-intake-driven"
+  created_at: "2026-04-30T00:00:00Z"
+  source_docs:
+    - .claude-project/status/suzuki-bangladesh/pre-intake.md
+  notes: "Pre-intake covered all required seed components (goal, constraints, AC, ontology, principles). Skipped Socratic interview because ambiguity was already below the 0.2 gate. Open items deferred (3D vendor selection, MotoGP licensing, exact engine spec confirmation) tracked in PRD Section 6 — Open Questions."

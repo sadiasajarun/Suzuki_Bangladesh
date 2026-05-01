@@ -1,0 +1,908 @@
+/* ============================================================
+   test-ride.html — page-specific styles
+   ============================================================
+   Section prefixes:
+     .tr-hero      — dramatic dark hero with rider/bike photo
+     .tr-form      — multi-section booking form
+     .tr-bikepick  — horizontal bike-tile picker
+     .tr-steps     — "what happens next" 3-step explainer
+     .tr-faq       — collapsible FAQ
+     .tr-success   — confirmation card shown after submit
+   ============================================================ */
+
+/* ============================================================
+   HERO — bike-themed stage with rider photo + headline
+   ============================================================ */
+.tr-hero {
+  position: relative;
+  min-height: clamp(520px, 78vh, 760px);
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  isolation: isolate;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  padding-block: clamp(7rem, 12vw, 11rem) clamp(3rem, 6vw, 5rem);
+}
+/* Full-bleed bike photo backdrop, heavily darkened */
+.tr-hero-bg {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  overflow: hidden;
+}
+.tr-hero-bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 40%;
+  filter: grayscale(0.2) brightness(0.5);
+  transform: scale(1.02);
+}
+/* Stacked dark + red wash for legibility */
+.tr-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(ellipse 70% 60% at 30% 50%,
+      rgba(228, 5, 33, 0.18) 0%,
+      transparent 60%),
+    linear-gradient(135deg,
+      rgba(10, 10, 10, 0.85) 0%,
+      rgba(10, 10, 10, 0.55) 60%,
+      rgba(10, 10, 10, 0.7) 100%);
+}
+/* Diagonal red slash, similar to homepage hero */
+.tr-hero::after {
+  content: '';
+  position: absolute;
+  top: 14%;
+  left: -2%;
+  width: 35%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, var(--color-suzuki-red) 50%, transparent 100%);
+  transform: rotate(-12deg);
+  opacity: 0.6;
+  z-index: -1;
+}
+
+.tr-hero-container {
+  position: relative;
+  width: 100%;
+  max-width: var(--content-max-width);
+  margin-inline: auto;
+  padding-inline: var(--section-padding-x);
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: center;
+}
+@media (max-width: 900px) { .tr-hero-container { grid-template-columns: 1fr; } }
+
+.tr-hero-text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  z-index: 1;
+}
+.tr-hero-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--color-suzuki-red);
+  margin: 0;
+}
+.tr-hero-title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(2rem, 4.5vw, 3.8rem);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+  text-transform: uppercase;
+  color: var(--color-text-primary);
+  margin: 0;
+  text-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+}
+.tr-hero-title em {
+  font-style: italic;
+  color: var(--color-suzuki-red);
+}
+.tr-hero-sub {
+  font-size: clamp(1rem, 1.3vw, 1.2rem);
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+  margin: 0;
+  max-width: 50ch;
+}
+/* "What you'll need" check-bullets */
+.tr-hero-checks {
+  list-style: none;
+  margin: var(--space-md) 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.tr-hero-checks li {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+}
+.tr-hero-checks li::before {
+  content: '✓';
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(228, 5, 33, 0.15);
+  border: 1px solid rgba(228, 5, 33, 0.5);
+  color: var(--color-suzuki-red);
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+
+/* Right column — supporting visual (bike photo overlay or cue) */
+.tr-hero-cue {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 280px;
+}
+.tr-hero-cue-card {
+  position: relative;
+  padding: clamp(1.5rem, 2.5vw, 2rem);
+  background: rgba(20, 20, 20, 0.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(228, 5, 33, 0.4);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  max-width: 360px;
+  width: 100%;
+}
+.tr-hero-cue-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--color-suzuki-red);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+.tr-hero-cue-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--color-suzuki-red);
+  margin: 0;
+}
+.tr-hero-cue-title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(1.4rem, 2vw, 1.7rem);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+.tr-hero-cue-title em { font-style: italic; color: var(--color-suzuki-red); }
+.tr-hero-cue-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+.tr-hero-cue-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  font-size: 0.85rem;
+  line-height: 1.45;
+  color: var(--color-text-secondary);
+}
+.tr-hero-cue-list li::before {
+  content: counter(step);
+  counter-increment: step;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--color-suzuki-red);
+  color: var(--color-text-primary);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 800;
+}
+.tr-hero-cue-list { counter-reset: step; }
+
+/* ============================================================
+   FORM STAGE
+   ============================================================ */
+.tr-form {
+  background: var(--color-bg-primary);
+  padding-block: clamp(4rem, 8vw, 7rem);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+.tr-form-container {
+  max-width: 960px;
+  margin-inline: auto;
+  padding-inline: var(--section-padding-x);
+}
+
+/* Step header — "01 / Pick your bike" style */
+.tr-step {
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+.tr-step:last-of-type { margin-bottom: 0; }
+.tr-step-head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.85rem;
+  margin-bottom: var(--space-md);
+  padding-bottom: var(--space-sm);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+.tr-step-num {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--color-suzuki-red);
+}
+.tr-step-title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(1.2rem, 2.2vw, 1.7rem);
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+  text-transform: uppercase;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+.tr-step-title em { font-style: italic; color: var(--color-suzuki-red); }
+
+/* ============================================================
+   BIKE PICKER — horizontal scrollable strip
+   ============================================================ */
+.tr-bikepick-wrap {
+  position: relative;
+}
+.tr-bikepick {
+  display: flex;
+  gap: 0.85rem;
+  overflow-x: auto;
+  padding: 0.5rem 0.5rem 1rem;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: thin;
+}
+.tr-bikepick::-webkit-scrollbar { height: 6px; }
+.tr-bikepick::-webkit-scrollbar-track { background: transparent; }
+.tr-bikepick::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 3px;
+}
+.tr-bikepick::-webkit-scrollbar-thumb:hover { background: rgba(228, 5, 33, 0.4); }
+
+/* Individual bike tile — uses <button> so reset chrome */
+.tr-tile {
+  flex-shrink: 0;
+  width: clamp(180px, 24vw, 220px);
+  scroll-snap-align: start;
+  background: var(--color-bg-secondary);
+  border: 1.5px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-md);
+  padding: 0;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  position: relative;
+  overflow: hidden;
+  transition: transform var(--duration-base) var(--ease-out-cinematic),
+              border-color var(--duration-base) var(--ease-out-cinematic),
+              box-shadow var(--duration-base) var(--ease-out-cinematic);
+  isolation: isolate;
+}
+.tr-tile:hover {
+  transform: translateY(-3px);
+  border-color: rgba(228, 5, 33, 0.4);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
+}
+.tr-tile.is-active {
+  border-color: var(--color-suzuki-red);
+  box-shadow: 0 0 0 2px rgba(228, 5, 33, 0.4),
+              0 12px 28px rgba(228, 5, 33, 0.25);
+}
+.tr-tile.is-active::before {
+  content: '✓';
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 3;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--color-suzuki-red);
+  color: var(--color-text-primary);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 14px rgba(228, 5, 33, 0.6);
+}
+
+.tr-tile-image {
+  aspect-ratio: 16 / 11;
+  background: var(--color-bg-tertiary);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.tr-tile-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 0.5rem;
+  transition: transform var(--duration-base) var(--ease-out-cinematic);
+}
+.tr-tile:hover .tr-tile-image img { transform: scale(1.04); }
+
+.tr-tile-body {
+  padding: var(--space-sm) var(--space-md) var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+.tr-tile-cat {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-suzuki-red);
+}
+.tr-tile-name {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.95rem;
+  letter-spacing: 0.01em;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+/* Selected bike confirmation badge below the picker */
+.tr-bike-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: var(--space-sm);
+  padding: 0.4rem 0.85rem;
+  background: rgba(228, 5, 33, 0.12);
+  border: 1px solid rgba(228, 5, 33, 0.5);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-suzuki-red);
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity var(--duration-base) var(--ease-out-cinematic),
+              transform var(--duration-base) var(--ease-out-cinematic);
+}
+.tr-bike-badge::before { content: '✓'; }
+.tr-bike-badge.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ============================================================
+   FIELD GROUPS — generic two-col / three-col input rows
+   ============================================================ */
+.tr-row {
+  display: grid;
+  gap: 1rem;
+}
+.tr-row--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.tr-row--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (max-width: 768px) {
+  .tr-row--3, .tr-row--2 { grid-template-columns: 1fr; }
+}
+
+.tr-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.tr-label {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+.tr-label .req { color: var(--color-suzuki-red); }
+
+.tr-input,
+.tr-select,
+.tr-textarea {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  background: var(--color-bg-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color var(--duration-fast) var(--ease-out-cinematic);
+}
+.tr-input:focus,
+.tr-select:focus,
+.tr-textarea:focus {
+  border-color: var(--color-suzuki-red);
+  box-shadow: 0 0 0 2px rgba(228, 5, 33, 0.15);
+}
+.tr-input::placeholder,
+.tr-textarea::placeholder { color: var(--color-text-muted); }
+.tr-textarea { resize: vertical; min-height: 90px; }
+
+.tr-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.85rem center;
+  background-size: 16px 16px;
+  padding-right: 2.4rem;
+  cursor: pointer;
+}
+.tr-select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Date input — keep native picker but tone the chrome */
+.tr-input[type="date"] {
+  font-family: var(--font-body);
+  cursor: pointer;
+}
+.tr-input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.8) sepia(1) hue-rotate(330deg) saturate(8);
+  cursor: pointer;
+}
+
+/* Time slot pills */
+.tr-slots {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.tr-slot {
+  padding: 0.7rem 1.1rem;
+  background: var(--color-bg-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-out-cinematic);
+}
+.tr-slot:hover {
+  border-color: rgba(228, 5, 33, 0.5);
+  color: var(--color-suzuki-red);
+}
+.tr-slot.is-active {
+  background: var(--color-suzuki-red);
+  border-color: var(--color-suzuki-red);
+  color: var(--color-text-primary);
+  box-shadow: 0 6px 16px rgba(228, 5, 33, 0.35);
+}
+
+/* License acknowledgment */
+.tr-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
+  padding: var(--space-md);
+  background: rgba(228, 5, 33, 0.06);
+  border: 1px solid rgba(228, 5, 33, 0.25);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  margin: var(--space-md) 0;
+}
+.tr-check input[type="checkbox"] {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  accent-color: var(--color-suzuki-red);
+  cursor: pointer;
+}
+.tr-check-text {
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+}
+.tr-check-text strong { color: var(--color-text-primary); }
+
+/* Submit + reset row */
+.tr-submit-row {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  flex-wrap: wrap;
+  margin-top: var(--space-lg);
+}
+.tr-submit {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 1.1rem 2rem;
+  background: var(--color-suzuki-red);
+  color: var(--color-text-primary);
+  border: 1.5px solid var(--color-suzuki-red);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.9rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all var(--duration-base) var(--ease-out-cinematic);
+}
+.tr-submit::after { content: '→'; transition: transform var(--duration-fast); }
+.tr-submit:hover {
+  background: var(--color-suzuki-red-glow);
+  border-color: var(--color-suzuki-red-glow);
+  box-shadow: 0 0 32px rgba(228, 5, 33, 0.5);
+}
+.tr-submit:hover::after { transform: translateX(4px); }
+
+.tr-cancel {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.tr-cancel:hover { color: var(--color-text-primary); }
+
+/* Error box */
+.tr-errors {
+  margin-top: var(--space-md);
+  padding: var(--space-md);
+  background: rgba(255, 100, 100, 0.08);
+  border: 1px solid rgba(255, 100, 100, 0.4);
+  border-radius: var(--radius-md);
+  color: #ffb4b4;
+  font-size: 0.9rem;
+}
+.tr-errors strong {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+}
+.tr-errors ul {
+  margin: 0;
+  padding-left: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+/* ============================================================
+   SUCCESS CARD
+   ============================================================ */
+.tr-success {
+  background: var(--color-bg-secondary);
+  border: 1px solid rgba(228, 5, 33, 0.4);
+  border-radius: var(--radius-lg);
+  padding: clamp(1.5rem, 4vw, 3rem);
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.tr-success::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -30%;
+  width: 60%;
+  aspect-ratio: 1/1;
+  background: radial-gradient(circle,
+    rgba(228, 5, 33, 0.25) 0%,
+    transparent 70%);
+  z-index: -1;
+}
+.tr-success-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--color-suzuki-red);
+  color: var(--color-text-primary);
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 1.8rem;
+  margin-bottom: var(--space-md);
+  box-shadow: 0 0 28px rgba(228, 5, 33, 0.5);
+}
+.tr-success-title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(1.5rem, 2.8vw, 2.3rem);
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+  text-transform: uppercase;
+  color: var(--color-text-primary);
+  margin: 0 0 var(--space-md);
+}
+.tr-success-title em { font-style: italic; color: var(--color-suzuki-red); }
+.tr-success-sub {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+  margin: 0 0 var(--space-lg);
+  max-width: 60ch;
+}
+.tr-success-summary {
+  list-style: none;
+  margin: 0 0 var(--space-lg);
+  padding: var(--space-md) 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+@media (max-width: 540px) { .tr-success-summary { grid-template-columns: 1fr; } }
+.tr-success-summary li {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+.tr-success-summary span {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+.tr-success-summary strong {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.95rem;
+  color: var(--color-text-primary);
+}
+.tr-success-actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+.tr-success-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.95rem 1.5rem;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-out-cinematic);
+}
+.tr-success-cta--primary {
+  background: var(--color-suzuki-red);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-suzuki-red);
+}
+.tr-success-cta--primary:hover {
+  background: var(--color-suzuki-red-glow);
+  border-color: var(--color-suzuki-red-glow);
+}
+.tr-success-cta--secondary {
+  background: transparent;
+  color: var(--color-text-primary);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+.tr-success-cta--secondary:hover {
+  background: var(--color-text-primary);
+  color: var(--color-bg-primary);
+}
+
+/* ============================================================
+   STEPS — what happens next (3-bullet)
+   ============================================================ */
+.tr-steps {
+  background: var(--color-bg-secondary);
+  padding-block: clamp(4rem, 7vw, 6rem);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+.tr-steps-container {
+  max-width: var(--content-max-width);
+  margin-inline: auto;
+  padding-inline: var(--section-padding-x);
+}
+.tr-steps-heading {
+  text-align: center;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+.tr-steps-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--color-suzuki-red);
+  margin: 0 0 var(--space-md);
+}
+.tr-steps-title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(1.6rem, 3.2vw, 2.6rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+.tr-steps-title em { font-style: italic; color: var(--color-suzuki-red); }
+
+.tr-steps-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 2vw, 2rem);
+  position: relative;
+}
+@media (max-width: 768px) { .tr-steps-grid { grid-template-columns: 1fr; } }
+
+.tr-step-card {
+  position: relative;
+  padding: var(--space-lg);
+  background: var(--color-bg-primary);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  isolation: isolate;
+}
+.tr-step-card-num {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 3rem;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: var(--color-suzuki-red);
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 0 24px rgba(228, 5, 33, 0.3);
+}
+.tr-step-card-title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 1.1rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+.tr-step-card-body {
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+/* ============================================================
+   FAQ
+   ============================================================ */
+.tr-faq {
+  background: var(--color-bg-primary);
+  padding-block: clamp(4rem, 7vw, 6rem);
+}
+.tr-faq-container {
+  max-width: 880px;
+  margin-inline: auto;
+  padding-inline: var(--section-padding-x);
+}
+.tr-faq-heading { text-align: center; margin-bottom: clamp(2rem, 4vw, 3rem); }
+
+.tr-faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.tr-faq-item {
+  background: var(--color-bg-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+.tr-faq-summary {
+  padding: clamp(0.9rem, 1.5vw, 1.1rem) clamp(1rem, 2vw, 1.5rem);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+  transition: background var(--duration-fast) var(--ease-out-cinematic);
+}
+.tr-faq-summary::-webkit-details-marker { display: none; }
+.tr-faq-summary:hover { background: rgba(255, 255, 255, 0.03); }
+.tr-faq-summary::after {
+  content: '+';
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 1.4rem;
+  line-height: 1;
+  color: var(--color-suzuki-red);
+}
+.tr-faq-item[open] > .tr-faq-summary::after { content: '−'; }
+.tr-faq-body {
+  padding: 0 clamp(1rem, 2vw, 1.5rem) clamp(0.9rem, 1.5vw, 1.1rem);
+  font-size: 0.92rem;
+  line-height: 1.65;
+  color: var(--color-text-secondary);
+}
+
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .tr-tile,
+  .tr-tile-image img,
+  .tr-bike-badge,
+  .tr-submit,
+  .tr-input,
+  .tr-select,
+  .tr-textarea,
+  .tr-slot { transition: none !important; }
+}

@@ -1,0 +1,386 @@
+/* ============================================================
+   SECTION 4 — Engine Showcase (250cc oil-cooled SOCS)
+   ============================================================
+   Real engine cutaway image sits on a soft white podium so the
+   metal tones read against the dark page. Six key-feature
+   callouts radiate around it — title + a 2–3 word speciality
+   line, with a dashed connector pointing toward the engine.
+   IntersectionObserver staggers them in as the section enters.
+   ============================================================ */
+
+.es-section {
+  position: relative;
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  padding-block: clamp(4rem, 8vw, 8rem);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.es-section::before {
+  /* Dramatic spotlight glow behind the engine */
+  content: '';
+  position: absolute;
+  top: 30%;
+  left: 25%;
+  width: 50%;
+  aspect-ratio: 1/1;
+  background: radial-gradient(circle,
+    rgba(228, 5, 33, 0.10) 0%,
+    rgba(228, 5, 33, 0.04) 30%,
+    transparent 65%);
+  filter: blur(40px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.es-container {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: var(--content-max-width);
+  margin-inline: auto;
+  padding-inline: var(--section-padding-x);
+}
+
+/* ============================================================
+   HEADING
+   ============================================================ */
+.es-heading {
+  text-align: center;
+  margin-bottom: clamp(3rem, 6vw, 5rem);
+  max-width: 64ch;
+  margin-inline: auto;
+}
+.es-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-suzuki-red);
+  margin: 0 0 var(--space-md);
+}
+.es-eyebrow::before,
+.es-eyebrow::after {
+  content: '';
+  width: 28px;
+  height: 1px;
+  background: currentColor;
+}
+.es-title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(1.6rem, 3.2vw, 2.6rem);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  margin: 0 0 var(--space-md);
+}
+.es-title em {
+  font-style: italic;
+  color: var(--color-suzuki-red);
+}
+.es-sub {
+  font-size: clamp(1rem, 1.2vw, 1.15rem);
+  line-height: 1.65;
+  color: var(--color-text-secondary);
+  margin: 0 auto;
+  max-width: 56ch;
+}
+
+/* ============================================================
+   STAGE 2 — image-based engine with surrounding callouts
+   ============================================================ */
+.es-stage2 {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(2.5rem, 5vw, 4rem);
+}
+
+.es-engine-stage {
+  position: relative;
+  width: 100%;
+  max-width: 1180px;
+  aspect-ratio: 16 / 11;
+  margin-inline: auto;
+}
+
+/* Ambient glow podium — image source has a black background,
+   so we blend with screen to knock the black out against the
+   dark page; podium below is just an atmospheric red glow. */
+.es-engine-podium {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  z-index: 1;
+}
+.es-engine-podium::before {
+  /* faint warm core glow behind engine */
+  content: '';
+  position: absolute;
+  width: 60%;
+  aspect-ratio: 1;
+  background: radial-gradient(circle,
+    rgba(228, 5, 33, 0.22) 0%,
+    rgba(228, 5, 33, 0.10) 30%,
+    transparent 65%);
+  filter: blur(22px);
+}
+.es-engine-podium::after {
+  /* outer wider red ambience */
+  content: '';
+  position: absolute;
+  width: 78%;
+  aspect-ratio: 1;
+  background: radial-gradient(circle,
+    rgba(228, 5, 33, 0.28) 0%,
+    rgba(228, 5, 33, 0.06) 42%,
+    transparent 72%);
+  filter: blur(50px);
+  z-index: -1;
+}
+
+.es-engine-img {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 56%;
+  max-width: 680px;
+  height: auto;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  /* screen blend hides the image's black background against the
+     dark page while keeping the bright metallic engine visible */
+  mix-blend-mode: screen;
+  filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 0.55))
+          drop-shadow(0 0 80px rgba(228, 5, 33, 0.25));
+  animation: es-img-bob 7s ease-in-out infinite;
+  transform-origin: center center;
+  pointer-events: none;
+}
+@keyframes es-img-bob {
+  0%, 100% { transform: translate(-50%, -50%) rotate(-0.6deg); }
+  50%      { transform: translate(-50%, -52%) rotate(0.6deg); }
+}
+
+/* ============================================================
+   CALLOUTS — radial layout, dashed connector toward engine
+   ============================================================ */
+.es-callout {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 1rem 1.15rem;
+  width: clamp(160px, 17vw, 200px);
+  background: linear-gradient(135deg,
+    rgba(20, 20, 22, 0.86),
+    rgba(10, 10, 12, 0.95));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-left: 2px solid var(--color-suzuki-red);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 4;
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 700ms var(--ease-out-cinematic),
+              transform 700ms var(--ease-out-cinematic),
+              border-color 300ms ease,
+              background 300ms ease,
+              box-shadow 300ms ease;
+}
+.es-callout.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+.es-callout:hover {
+  border-color: rgba(228, 5, 33, 0.5);
+  background: linear-gradient(135deg,
+    rgba(40, 10, 14, 0.92),
+    rgba(20, 8, 10, 0.98));
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5),
+              0 0 0 1px rgba(228, 5, 33, 0.18);
+}
+
+.es-callout-num {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  color: var(--color-suzuki-red);
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+.es-callout-num::before {
+  content: '';
+  width: 14px;
+  height: 1px;
+  background: currentColor;
+}
+
+.es-callout-title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(0.95rem, 1.15vw, 1.08rem);
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  text-transform: uppercase;
+  margin: 0;
+  color: var(--color-text-primary);
+}
+
+.es-callout-spec {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  color: var(--color-text-secondary);
+  font-style: italic;
+  margin: 0;
+}
+
+/* Dashed connector — positioned half-way down the callout edge,
+   pointing toward engine. Side determined per-position. */
+.es-callout::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 56px;
+  height: 1px;
+  background: repeating-linear-gradient(to right,
+    rgba(228, 5, 33, 0.55) 0 4px,
+    transparent 4px 8px);
+  transition: width 350ms ease, background 350ms ease;
+}
+.es-callout::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--color-suzuki-red);
+  box-shadow: 0 0 10px rgba(228, 5, 33, 0.7);
+  transform: translateY(-50%);
+}
+.es-callout:hover::before { width: 78px; }
+
+/* Position each callout absolutely on the stage.
+   Left-side connectors point right; right-side connectors point left. */
+.es-callout--01 { top: 6%;    left: 0%; }
+.es-callout--01::before { right: -60px; }
+.es-callout--01::after  { right: -65px; }
+
+.es-callout--02 { top: 6%;    right: 0%; }
+.es-callout--02::before { left: -60px; }
+.es-callout--02::after  { left: -65px; }
+
+.es-callout--03 { top: 42%;   left: 0%; }
+.es-callout--03::before { right: -60px; }
+.es-callout--03::after  { right: -65px; }
+
+.es-callout--04 { top: 42%;   right: 0%; }
+.es-callout--04::before { left: -60px; }
+.es-callout--04::after  { left: -65px; }
+
+.es-callout--05 { bottom: 6%; left: 0%; }
+.es-callout--05::before { right: -60px; }
+.es-callout--05::after  { right: -65px; }
+
+.es-callout--06 { bottom: 6%; right: 0%; }
+.es-callout--06::before { left: -60px; }
+.es-callout--06::after  { left: -65px; }
+
+/* ============================================================
+   CTA below the stage
+   ============================================================ */
+.es-stage2-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 1rem 2rem;
+  background: var(--color-suzuki-red);
+  color: var(--color-text-primary);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: 2px;
+  transition: all var(--duration-base) var(--ease-out-cinematic);
+}
+.es-stage2-cta:hover {
+  background: var(--color-suzuki-red-glow, var(--color-suzuki-red));
+  box-shadow: 0 0 32px rgba(228, 5, 33, 0.5);
+  transform: translateY(-2px);
+}
+.es-stage2-cta-arrow {
+  display: inline-block;
+  transition: transform var(--duration-fast) var(--ease-out-cinematic);
+}
+.es-stage2-cta:hover .es-stage2-cta-arrow { transform: translateX(4px); }
+
+/* ============================================================
+   RESPONSIVE — stack callouts in a grid below the engine
+   ============================================================ */
+@media (max-width: 1024px) {
+  .es-engine-stage {
+    aspect-ratio: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+  }
+  .es-engine-podium {
+    position: relative;
+    inset: auto;
+    width: 100%;
+    aspect-ratio: 1;
+    max-width: 460px;
+  }
+  .es-engine-img {
+    width: 78%;
+    max-width: 380px;
+  }
+  .es-callout {
+    position: relative;
+    inset: auto !important;
+    top: auto !important;
+    bottom: auto !important;
+    left: auto !important;
+    right: auto !important;
+    width: 100%;
+    max-width: 320px;
+    opacity: 1;
+    transform: none;
+  }
+  .es-callout::before,
+  .es-callout::after { display: none; }
+}
+
+@media (max-width: 768px) {
+  .es-engine-stage { gap: 1rem; }
+  .es-stage2 { gap: 2rem; }
+}
+
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .es-engine-img { animation: none !important; }
+  .es-callout {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}

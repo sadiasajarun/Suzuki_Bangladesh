@@ -1,0 +1,1856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Suzuki Bangladesh — Hero v3</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+<style>
+  /* ============================================================
+     LOCKED PALETTE — black, white, red ONLY
+     ============================================================ */
+  :root {
+    --bg-primary:       #0A0A0A;
+    --bg-secondary:     #141414;
+    --accent-red:       #E40521;     /* Suzuki Red — pure, saturated */
+    --accent-red-glow:  #FF0418;     /* High-energy red for halos/glows */
+    --accent-red-deep:  #B30015;     /* Deeper red for shadow stops */
+    --text-primary:     #FFFFFF;
+    --text-secondary:   #B0B0B0;
+    --text-muted:       #6B6B6B;
+
+    --ease-cinematic:  cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-mechanical: cubic-bezier(0.65, 0, 0.35, 1);
+  }
+
+  * { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; box-sizing: border-box; }
+  html, body { background: var(--bg-primary); color: var(--text-primary); }
+  body { font-family: 'Inter', system-ui, -apple-system, sans-serif; overflow-x: hidden; margin: 0; }
+
+  /* ============================================================
+     HERO SHELL
+     ============================================================ */
+  .hero {
+    position: relative;
+    width: 100%;
+    height: 100dvh;
+    min-height: 540px;
+    overflow: hidden;
+    background: var(--bg-primary);
+    isolation: isolate;
+  }
+
+  /* ============================================================
+     LAYER — Massive radial red glow halo behind bike
+     ============================================================ */
+  .red-halo {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -48%) scale(0.7);
+    width: 95vw; max-width: 1500px;
+    aspect-ratio: 1/1;
+    /* Pure-red gradient, no blur (blur was washing the red toward orange).
+       Multi-stop radial holds saturation through the falloff. */
+    background: radial-gradient(circle,
+      rgba(255, 4, 24, 0.85) 0%,
+      rgba(228, 5, 33, 0.55) 18%,
+      rgba(179, 0, 21, 0.30) 38%,
+      rgba(120, 0, 14, 0.12) 58%,
+      rgba(0, 0, 0, 0) 75%);
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0;
+    will-change: opacity, transform;
+    mix-blend-mode: screen;  /* Screen-blend on black keeps the red truly red */
+  }
+
+  /* ============================================================
+     LAYER — Diagonal red slashes top-right
+     ============================================================ */
+  .slashes {
+    position: absolute;
+    top: -10%; right: -5%;
+    width: 55%; height: 130%;
+    z-index: 2;
+    pointer-events: none;
+    transform: rotate(-25deg);
+    transform-origin: top right;
+  }
+  .slash {
+    position: absolute;
+    top: -5%;
+    height: 130%;
+    background: linear-gradient(180deg,
+      rgba(230,0,18,0) 0%,
+      rgba(230,0,18,0.95) 12%,
+      rgba(230,0,18,1) 50%,
+      rgba(230,0,18,0.95) 88%,
+      rgba(230,0,18,0) 100%);
+    transform-origin: top center;
+    transform: scaleY(0);
+    will-change: transform, opacity;
+  }
+  .slash-1 { right: 6%;  width: 8px; opacity: 0.95; }
+  .slash-2 { right: 13%; width: 4px; opacity: 0.7;  }
+  .slash-3 { right: 20%; width: 4px; opacity: 0.5;  }
+  .slash-4 { right: 27%; width: 2px; opacity: 0.35; }
+
+  .slash::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 0%, rgba(255,255,255,0.6) 50%, transparent 100%);
+    background-size: 100% 30%;
+    background-repeat: no-repeat;
+    animation: shimmer 4s linear infinite;
+    mix-blend-mode: screen;
+  }
+  @keyframes shimmer {
+    0%   { background-position: 0% -30%; opacity: 0; }
+    20%  { opacity: 0.5; }
+    80%  { opacity: 0.5; }
+    100% { background-position: 0% 130%; opacity: 0; }
+  }
+
+  /* ============================================================
+     LAYER — Speed-line particles
+     ============================================================ */
+  .particles {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .particle {
+    position: absolute;
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, var(--p-color, #fff) 50%, transparent 100%);
+    opacity: 0;
+    will-change: transform, opacity;
+  }
+
+  /* ============================================================
+     LAYER — Faint S watermark (uses real Suzuki S-mark, knocked out)
+     ============================================================ */
+  .watermark {
+    position: absolute;
+    right: -8vw; bottom: -10vw;
+    z-index: 1;
+    pointer-events: none;
+    user-select: none;
+    width: clamp(28rem, 55vw, 60rem);
+    aspect-ratio: 1 / 1;
+    opacity: 0.045;
+    /* image is set via JS once the logo is knocked out */
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    transform: rotate(-8deg);
+    filter: drop-shadow(0 0 60px rgba(230,0,18,0.4));
+  }
+  /* fallback type-based watermark while image loads */
+  .watermark-fallback {
+    position: absolute;
+    left: -3vw; bottom: -8vw;
+    z-index: 1;
+    pointer-events: none;
+    user-select: none;
+    font-family: 'Inter', sans-serif;
+    font-weight: 900;
+    font-size: clamp(20rem, 42vw, 42rem);
+    line-height: 0.8;
+    color: rgba(255,255,255,0.018);
+    letter-spacing: -0.05em;
+  }
+
+  /* ============================================================
+     NAV BAR
+     ============================================================ */
+  .nav {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    z-index: 20;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: clamp(1rem, 4vw, 3rem);
+    padding: 1.1rem clamp(1.5rem, 4vw, 4rem);
+    background: linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0) 100%);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    opacity: 0;
+    transform: translateY(-12px);
+    will-change: transform, opacity;
+  }
+  .nav.lit { opacity: 1; transform: translateY(0); transition: opacity 600ms ease, transform 600ms cubic-bezier(0.16,1,0.3,1); }
+
+  .nav-logo {
+    display: flex; align-items: center; gap: 0.7rem;
+    text-decoration: none;
+  }
+  .nav-logo-mark {
+    /* set via JS background-image once knocked out */
+    width: 38px; height: 38px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    flex-shrink: 0;
+  }
+  .nav-logo-word {
+    font-family: 'Inter', sans-serif;
+    font-weight: 900;
+    font-size: 1rem;
+    letter-spacing: 0.06em;
+    color: var(--text-primary);
+    line-height: 1;
+    display: flex; flex-direction: column;
+  }
+  .nav-logo-word .lo-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.55rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    color: var(--accent-red);
+    text-transform: uppercase;
+    margin-top: 0.15rem;
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(1rem, 2.5vw, 2.25rem);
+    list-style: none;
+    padding: 0; margin: 0;
+  }
+  .nav-links a {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    text-decoration: none;
+    padding: 0.5rem 0;
+    position: relative;
+    transition: color 200ms ease;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; bottom: 0.15rem;
+    height: 1px;
+    background: var(--accent-red);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 250ms cubic-bezier(0.16,1,0.3,1);
+  }
+  .nav-links a:hover,
+  .nav-links a.is-active { color: var(--text-primary); }
+  .nav-links a:hover::after,
+  .nav-links a.is-active::after { transform: scaleX(1); }
+  .nav-links a.is-active { color: var(--accent-red); }
+
+  .nav-actions {
+    display: flex; align-items: center; gap: 0.75rem;
+  }
+  .nav-action {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.14);
+    color: var(--text-secondary);
+    width: 38px; height: 38px;
+    display: inline-flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: all 200ms ease;
+  }
+  .nav-action:hover {
+    border-color: var(--accent-red);
+    color: var(--accent-red);
+  }
+  .nav-cta {
+    background: var(--accent-red);
+    color: #fff;
+    border: none;
+    padding: 0.65rem 1.1rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    cursor: pointer;
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    transition: all 200ms ease;
+  }
+  .nav-cta:hover { background: #ff1a2e; transform: translateX(2px); }
+
+  @media (max-width: 767px) {
+    .nav-links { display: none; }
+  }
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .nav-links { gap: 0.9rem; }
+    .nav-links a { font-size: 0.62rem; letter-spacing: 0.14em; }
+  }
+  @media (max-width: 640px) {
+    .nav-cta { display: none; }
+    .nav-actions { gap: 0.5rem; }
+  }
+
+  /* ============================================================
+     HERO HEADLINE — Cinematic, dramatic, poster-style.
+     The bike rides through this typography.
+     Two parts:
+     (a) MASSIVE outline word "BIKE" centered behind the bike (movie-poster scale)
+     (b) Punchy editorial line "THIS ISN'T JUST A BIKE." in red+white above
+     ============================================================ */
+  .hero-headline {
+    position: absolute;
+    z-index: 2;       /* BEHIND bike (z=5), above watermark (z=1), above halo (z=1) */
+    top: 38%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    pointer-events: none;
+    text-align: center;
+  }
+
+  /* The colossal outline word. Sits dead-center, bike rides over it.
+     RED stroke — needs presence to read as the dramatic backdrop. */
+  .hl-mega {
+    display: block;
+    font-family: 'Inter', sans-serif;
+    font-weight: 900;
+    font-size: clamp(8rem, 22vw, 22rem);
+    line-height: 0.78;
+    letter-spacing: -0.06em;
+    text-transform: uppercase;
+    color: transparent;
+    -webkit-text-stroke: 3px rgba(228, 5, 33, 0.55);
+    text-shadow:
+      0 0 80px rgba(228, 5, 33, 0.45),
+      0 0 160px rgba(228, 5, 33, 0.22);
+    opacity: 0;
+    transform: translateY(20px) scale(0.96);
+    will-change: opacity, transform;
+  }
+
+  /* Editorial top line — sharper, smaller, sits ABOVE the mega word */
+  .hl-editorial {
+    position: absolute;
+    top: 12%;
+    left: 50%;
+    transform: translateX(-50%) translateY(12px);
+    width: max-content;
+    z-index: 9;     /* Above the bike — it's a foreground element */
+    text-align: center;
+    opacity: 0;
+    will-change: opacity, transform;
+  }
+  .hl-editorial .hl-line {
+    display: block;
+    font-family: 'Inter', sans-serif;
+    font-weight: 900;
+    font-size: clamp(1.4rem, 2.6vw, 2.4rem);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    color: var(--text-primary);
+  }
+  .hl-editorial .hl-line.muted {
+    font-weight: 700;
+    font-size: clamp(0.85rem, 1.4vw, 1.2rem);
+    letter-spacing: 0.32em;
+    color: var(--text-muted);
+    margin-top: 0.55rem;
+  }
+  .hl-editorial .hl-line .accent { color: var(--accent-red); }
+
+  .hl-rule {
+    display: block;
+    width: 56px; height: 2px;
+    background: var(--accent-red);
+    margin: 0.7rem auto 0.7rem;
+    transform-origin: center;
+    transform: scaleX(0);
+    transition: transform 600ms cubic-bezier(0.16,1,0.3,1) 200ms;
+    box-shadow: 0 0 12px var(--accent-red-glow);
+  }
+  .hero-headline.lit .hl-rule { transform: scaleX(1); }
+
+  /* On short viewports tighten vertical space + push headline higher
+     so the bike doesn't eat it */
+  @media (max-height: 720px) {
+    .hero-headline { top: 30%; }
+    .hl-mega { font-size: clamp(6rem, 18vw, 14rem); }
+    .hl-editorial { top: 9%; }
+  }
+  @media (max-height: 600px) {
+    .hero-headline { top: 26%; }
+    .hl-editorial .hl-line.muted { display: none; }
+  }
+  /* Hide on phone */
+  @media (max-width: 767px) {
+    .hl-mega { display: none; }
+    .hl-editorial .hl-line { font-size: 1.2rem; }
+  }
+
+  /* ============================================================
+     BRAND LOCKUP — Suzuki Bangladesh + S-mark, prominent
+     TOP-LEFT, sits BELOW the nav. Cannot collide with bike-id at the bottom.
+     ============================================================ */
+  .brand-lockup {
+    position: absolute;
+    z-index: 9;
+    left: clamp(1.5rem, 4vw, 4rem);
+    top: clamp(5.5rem, 9vh, 7.5rem);
+    display: flex;
+    align-items: center;
+    gap: 0.95rem;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(-8px);
+    will-change: opacity, transform;
+  }
+  .bl-mark {
+    width: clamp(46px, 5vw, 64px);
+    aspect-ratio: 1 / 1;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    flex-shrink: 0;
+    filter: drop-shadow(0 0 14px rgba(228, 5, 33, 0.45));
+  }
+  .bl-text { display: flex; flex-direction: column; gap: 0.1rem; }
+  .bl-suzuki {
+    font-family: 'Inter', sans-serif;
+    font-weight: 900;
+    font-size: clamp(1.1rem, 1.6vw, 1.5rem);
+    letter-spacing: 0.05em;
+    color: var(--text-primary);
+    text-transform: uppercase;
+    line-height: 1;
+  }
+  .bl-tag {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: clamp(0.7rem, 1vw, 0.9rem);
+    letter-spacing: 0.06em;
+    color: var(--accent-red);
+    text-transform: uppercase;
+    line-height: 1;
+    margin-top: 0.1rem;
+  }
+  .bl-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+    font-size: clamp(0.5rem, 0.65vw, 0.62rem);
+    letter-spacing: 0.22em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-top: 0.35rem;
+  }
+  @media (max-height: 720px) {
+    .brand-lockup { top: clamp(4.5rem, 7.5vh, 6rem); gap: 0.7rem; }
+    .bl-meta { display: none; }
+  }
+  /* Hide on phone (already crowded) */
+  @media (max-width: 767px) {
+    .brand-lockup { display: none; }
+  }
+
+  /* ============================================================
+     TOP BAR — eyebrow + corner mark
+     ============================================================ */
+  .topbar {
+    position: absolute;
+    top: clamp(5rem, 9vh, 6.5rem);
+    left: 0; right: 0;
+    z-index: 8;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0 clamp(1.5rem, 4vw, 4rem);
+    pointer-events: none;
+  }
+  .eyebrow-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+    font-size: 0.7rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent-red);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    position: relative;
+    padding-bottom: 0.5rem;
+    opacity: 0;
+  }
+  .eyebrow-tag::before {
+    content: '';
+    width: 28px; height: 1px;
+    background: currentColor;
+    display: inline-block;
+  }
+  .eyebrow-tag::after {
+    content: '';
+    position: absolute;
+    left: 40px; bottom: 0;
+    height: 1px;
+    width: 0;
+    background: var(--accent-red);
+    transition: width 700ms cubic-bezier(0.16,1,0.3,1) 200ms;
+  }
+  .eyebrow-tag.lit::after { width: calc(100% - 40px); }
+
+  .corner-mark {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    opacity: 0;
+  }
+  .corner-mark .dot {
+    width: 6px; height: 6px;
+    background: var(--accent-red);
+    border-radius: 999px;
+    box-shadow: 0 0 8px var(--accent-red);
+    animation: pulseDot 2s ease-in-out infinite;
+  }
+  @keyframes pulseDot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%      { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  /* ============================================================
+     STAGE — full-bleed bike showcase
+     ============================================================ */
+  .stage {
+    position: relative;
+    z-index: 5;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    /* Reserve space for top eyebrow */
+    padding-top: clamp(3.5rem, 6vh, 4.5rem);
+  }
+
+  .bike-frame {
+    position: relative;
+    flex: 1 1 0;
+    min-height: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 clamp(1rem, 4vw, 4rem);
+  }
+
+  .bike-img-wrap {
+    position: relative;
+    width: 60vw;
+    max-width: 1000px;
+    min-width: 320px;
+    /* Lock to a consistent 4:3 frame so EVERY bike renders at the same visual size */
+    aspect-ratio: 4 / 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    will-change: transform;
+  }
+  /* Tablet — slightly smaller so spec cards on either side have room */
+  @media (min-width: 768px) and (max-width: 1023px) { .bike-img-wrap { width: 56vw; } }
+  @media (max-width: 767px) { .bike-img-wrap { width: 92vw; } }
+
+  .bike-img {
+    /* Each bike applies its own --bike-scale (set per-bike in JS) so the
+       different source aspect ratios all read at the same on-screen size. */
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    transform: scale(var(--bike-scale, 1));
+    transform-origin: center center;
+    transition: transform 500ms var(--ease-mechanical);
+    filter: drop-shadow(0 40px 80px rgba(0,0,0,0.85))
+            drop-shadow(0 0 90px rgba(255, 4, 24, 0.35));
+    will-change: transform, opacity, filter;
+  }
+  /* Knock-out class is applied dynamically once we've replaced the JPEG with
+     a canvas-knocked-out PNG. No CSS blend-mode hacks (those eat dark details). */
+
+  /* Idle bob (scoped to inner image so entry transform stays clean on wrap)
+     We compose the per-bike scale into the bob keyframe to avoid transform
+     fights between bob and the scale rule above. */
+  .bike-bob { animation: bob 4s ease-in-out infinite; }
+  @keyframes bob {
+    0%, 100% { transform: scale(var(--bike-scale, 1)) translateY(0px); }
+    50%      { transform: scale(var(--bike-scale, 1)) translateY(-8px); }
+  }
+
+  .red-halo-pulse { animation: haloPulse 6s ease-in-out infinite; }
+  @keyframes haloPulse {
+    0%, 100% { opacity: 0.4; }
+    50%      { opacity: 0.55; }
+  }
+
+  /* Spotlight beam under bike (entry sweep) */
+  .beam {
+    position: absolute;
+    left: 8%; right: 8%;
+    bottom: 18%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent 0%, var(--accent-red-glow) 50%, transparent 100%);
+    transform: scaleX(0);
+    transform-origin: left center;
+    will-change: transform;
+    box-shadow: 0 0 20px rgba(255,26,46,0.8);
+    z-index: 4;
+  }
+
+  /* Bike floor shadow */
+  .bike-shadow {
+    position: absolute;
+    left: 50%; bottom: 12%;
+    width: 50%; height: 30px;
+    transform: translateX(-50%);
+    background: radial-gradient(ellipse at center, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 70%);
+    filter: blur(10px);
+    z-index: 3;
+    opacity: 0;
+  }
+
+  /* ============================================================
+     FLOATING SPEC CARDS WITH LEADER LINES
+     ============================================================ */
+  .specs-layer {
+    position: absolute;
+    inset: 0;
+    z-index: 6;
+    pointer-events: none;
+  }
+  .spec-card {
+    position: absolute;
+    pointer-events: auto;
+    background: rgba(20, 20, 20, 0.78);
+    backdrop-filter: blur(12px) saturate(140%);
+    -webkit-backdrop-filter: blur(12px) saturate(140%);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-left: 2px solid var(--accent-red);
+    padding: 0.875rem 1.25rem 1rem;
+    min-width: 170px;
+    opacity: 0;
+    transform: translateY(8px);
+    will-change: transform, opacity;
+  }
+  .spec-card .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+    font-size: 0.6rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    display: block;
+    margin-bottom: 0.4rem;
+  }
+  .spec-card .value {
+    font-family: 'Inter', sans-serif;
+    font-weight: 800;
+    font-size: 1.6rem;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+    font-variant-numeric: tabular-nums;
+    display: flex;
+    align-items: baseline;
+    gap: 0.2rem;
+  }
+  .spec-card .unit {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+    font-size: 0.7rem;
+    color: var(--accent-red);
+    letter-spacing: 0.05em;
+  }
+
+  /* Card positions (anchored to hero viewport, pointing inward to bike).
+     These are POSITIONED ABSOLUTELY relative to the .specs-layer (= full hero),
+     so the bike stays centered in its own frame regardless. */
+  .spec-engine  { top: 22%;  left:  3%;  }
+  .spec-power   { top: 44%;  left:  3%;  }
+  .spec-mileage { top: 30%;  right: 3%;  }
+
+  /* On wide screens give cards a little more breathing room so they don't crowd */
+  @media (min-width: 1280px) {
+    .spec-engine  { top: 24%;  left:  4%;  }
+    .spec-power   { top: 50%;  left:  4%;  }
+    .spec-mileage { top: 32%;  right: 4%;  }
+  }
+
+  /* Leader lines (SVG layer that draws polylines from card to bike) */
+  .leaders-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 5;
+    overflow: visible;
+  }
+  .leader-path {
+    fill: none;
+    stroke: var(--accent-red);
+    stroke-width: 1;
+    stroke-dasharray: 2 4;
+    opacity: 0;
+    stroke-linecap: square;
+  }
+  .leader-end {
+    fill: var(--accent-red);
+    opacity: 0;
+  }
+
+  /* Tighten on very-short viewports so bottom row stays visible */
+  @media (max-height: 640px) {
+    .stage { padding-top: 3rem; }
+    .bike-frame { padding: 0 clamp(1rem, 3vw, 2rem); }
+    .spec-card { padding: 0.55rem 0.7rem; min-width: 120px; }
+    .spec-card .value { font-size: 1.1rem; }
+    .spec-card .label { font-size: 0.55rem; margin-bottom: 0.2rem; }
+    .spec-engine  { top: 18%; }
+    .spec-power   { top: 40%; }
+    .spec-mileage { top: 22%; }
+    .bike-id .name { font-size: clamp(1.2rem, 3vw, 1.75rem); }
+    .ctas { margin-top: 0.5rem; }
+    .btn { padding: 0.65rem 1.1rem; font-size: 0.7rem; }
+    .scroll-cue { display: none; }
+    .topbar { top: 4rem; }
+    .nav { padding: 0.5rem 1rem; }
+    .nav-logo-mark { width: 28px; height: 28px; }
+    .bottom-row { padding-bottom: 0.75rem; }
+  }
+
+  /* Below 768px (phones), drop the leader lines and stack specs in a compact strip */
+  @media (max-width: 767px) {
+    .specs-layer { position: relative; inset: auto; height: auto; padding: 0 1rem 0.5rem; pointer-events: auto; }
+    .leaders-svg { display: none; }
+    .specs-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.4rem;
+    }
+    .spec-card {
+      position: static;
+      min-width: 0;
+      padding: 0.55rem 0.7rem;
+    }
+    .spec-card .value { font-size: 1rem; }
+    .spec-card .label { font-size: 0.55rem; margin-bottom: 0.2rem; }
+    .spec-card .unit { font-size: 0.6rem; }
+    .spec-engine, .spec-power, .spec-mileage { top: auto; left: auto; right: auto; }
+  }
+
+  /* Tablet (768–1023px): keep floating cards but tighten positions + scale down */
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .spec-card { min-width: 130px; padding: 0.7rem 0.9rem; }
+    .spec-card .value { font-size: 1.25rem; }
+    .spec-engine  { top: 18%; left: 1.5%; }
+    .spec-power   { top: 42%; left: 1.5%; }
+    .spec-mileage { top: 24%; right: 1.5%; }
+  }
+
+  /* ============================================================
+     BOTTOM ROW — bike name + thumbnail strip
+     ============================================================ */
+  .bottom-row {
+    position: relative;
+    z-index: 7;
+    padding: 0 clamp(1.5rem, 4vw, 4rem) clamp(1rem, 2.5vw, 1.75rem);
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: clamp(1rem, 4vw, 3rem);
+    align-items: end;
+    flex-shrink: 0;
+  }
+  @media (max-width: 767px) {
+    .bottom-row { grid-template-columns: 1fr; gap: 0.75rem; }
+  }
+
+  .bike-id {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    opacity: 0;
+  }
+  .bike-id .pre {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .bike-id .name {
+    font-family: 'Inter', sans-serif;
+    font-weight: 900;
+    font-size: clamp(1.4rem, 3vw, 2.4rem);
+    line-height: 1;
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+    color: var(--text-primary);
+    /* Allow wrap as a fallback rather than ellipsis-truncating the model name */
+    overflow-wrap: break-word;
+  }
+  .bike-id .name .accent { color: var(--accent-red); }
+  .bike-id .price {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    letter-spacing: 0.05em;
+    margin-top: 0.25rem;
+  }
+  .bike-id .price .currency { color: var(--text-muted); }
+
+  /* CTAs floated near bike id */
+  .ctas {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 0.75rem;
+    flex-wrap: wrap;
+    opacity: 0;
+  }
+  @media (max-width: 640px) {
+    .ctas .btn { flex: 1; justify-content: center; }
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.85rem 1.5rem;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: background 200ms var(--ease-mechanical),
+                color 200ms var(--ease-mechanical),
+                transform 200ms var(--ease-mechanical),
+                box-shadow 300ms var(--ease-mechanical);
+    border: 1.5px solid transparent;
+    white-space: nowrap;
+    background: transparent;
+    color: var(--text-primary);
+  }
+  .btn:focus-visible { outline: 2px solid var(--accent-red); outline-offset: 4px; }
+  .btn-primary {
+    background: var(--accent-red);
+    color: var(--text-primary);
+  }
+  .btn-primary:hover {
+    background: var(--accent-red-glow);
+    transform: scale(1.02);
+    box-shadow: 0 8px 32px rgba(230, 0, 18, 0.5);
+  }
+  .btn-primary .arrow { transition: transform 200ms var(--ease-mechanical); }
+  .btn-primary:hover .arrow { transform: translateX(4px); }
+  .btn-secondary {
+    border-color: rgba(255,255,255,0.4);
+    color: var(--text-primary);
+  }
+  .btn-secondary:hover {
+    background: var(--text-primary);
+    color: var(--bg-primary);
+    border-color: var(--text-primary);
+  }
+
+  /* ============================================================
+     THUMBNAIL STRIP
+     ============================================================ */
+  .thumb-strip-wrap {
+    width: 100%;
+    max-width: 560px;
+    opacity: 0;
+  }
+  .progress-track {
+    position: relative;
+    width: 100%; height: 1px;
+    background: rgba(255,255,255,0.1);
+    overflow: hidden;
+    margin-bottom: 0.75rem;
+  }
+  .progress-bar {
+    position: absolute;
+    left: 0; top: 0;
+    height: 100%;
+    width: 100%;
+    background: var(--accent-red);
+    transform: scaleX(0);
+    transform-origin: left center;
+    will-change: transform;
+  }
+
+  .thumb-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.5rem;
+    width: 100%;
+  }
+  .thumb {
+    position: relative;
+    background: rgba(20, 20, 20, 0.6);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.06);
+    padding: 0.5rem;
+    cursor: pointer;
+    transition: background 200ms var(--ease-mechanical),
+                border-color 200ms var(--ease-mechanical),
+                transform 200ms var(--ease-mechanical);
+    text-align: left;
+    overflow: hidden;
+    border-radius: 2px;
+    color: inherit;
+  }
+  .thumb:hover { background: rgba(28,28,28,0.85); border-color: rgba(255,255,255,0.12); transform: translateY(-2px); }
+  .thumb:focus-visible { outline: 2px solid var(--accent-red); outline-offset: 2px; }
+
+  .thumb-img-box {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    margin-bottom: 0.4rem;
+  }
+  .thumb-img {
+    max-width: 100%; max-height: 100%;
+    object-fit: contain;
+    transition: transform 300ms var(--ease-mechanical);
+  }
+  .thumb:hover .thumb-img { transform: scale(1.05); }
+
+  .thumb-name {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 0.62rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-primary);
+    line-height: 1.2;
+  }
+  .thumb-cc {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+    font-size: 0.55rem;
+    color: var(--accent-red);
+    letter-spacing: 0.05em;
+    margin-top: 0.15rem;
+  }
+  .thumb.active {
+    background: rgba(28,28,28,0.95);
+    border-color: rgba(230,0,18,0.5);
+    box-shadow: 0 0 0 1px var(--accent-red), 0 8px 24px rgba(230,0,18,0.18);
+  }
+  .thumb.active::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 2px;
+    background: var(--accent-red);
+    box-shadow: 0 0 12px var(--accent-red-glow);
+  }
+
+  /* ============================================================
+     SCROLL CUE
+     ============================================================ */
+  /* SCROLL CUE: only show on tall viewports. Use !important so GSAP can't override. */
+  .scroll-cue {
+    position: absolute;
+    left: 50%; bottom: 0.75rem;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    z-index: 9;
+    pointer-events: none;
+    opacity: 0;
+  }
+  .scroll-cue-chev { animation: chevronBob 2s ease-in-out infinite; color: var(--accent-red); }
+  .scroll-cue-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+    font-size: 0.6rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  @media (max-height: 720px) {
+    .scroll-cue { display: none !important; }
+  }
+  @keyframes chevronBob {
+    0%, 100% { transform: translateY(0); opacity: 0.6; }
+    50%      { transform: translateY(6px); opacity: 1; }
+  }
+
+  /* ============================================================
+     BELOW HERO (so scroll has somewhere to go)
+     ============================================================ */
+  .below {
+    min-height: 80vh;
+    padding: 6rem 2rem;
+    background: var(--bg-secondary);
+    border-top: 1px solid rgba(255,255,255,0.06);
+    color: var(--text-secondary);
+  }
+  .below h2 {
+    font-family: 'Inter', sans-serif;
+    font-weight: 900;
+    font-size: clamp(2rem, 5vw, 4rem);
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+  }
+
+  /* ============================================================
+     REDUCED MOTION
+     ============================================================ */
+  @media (prefers-reduced-motion: reduce) {
+    .bike-bob, .red-halo-pulse, .scroll-cue-chev, .slash::after, .corner-mark .dot { animation: none !important; }
+    .particles { display: none; }
+    .red-halo { opacity: 0.45 !important; transform: translate(-50%,-48%) scale(1) !important; }
+    .slash { transform: scaleY(1) !important; }
+    .eyebrow-tag, .corner-mark, .scroll-cue, .ctas, .bike-id, .thumb-strip-wrap, .spec-card { opacity: 1 !important; transform: none !important; }
+    .eyebrow-tag::after { width: calc(100% - 40px) !important; }
+    .bike-shadow { opacity: 0.7 !important; }
+    .leader-path, .leader-end { opacity: 0.5 !important; }
+  }
+
+  /* ============================================================
+     RESPONSIVE
+     ============================================================ */
+  @media (max-width: 640px) {
+    .bottom-row { padding: 0 1rem 1rem; }
+    .bike-id .name { font-size: clamp(1.4rem, 8vw, 2rem); }
+    .thumb { padding: 0.4rem; }
+    .thumb-name { font-size: 0.55rem; }
+    .thumb-cc { font-size: 0.5rem; }
+    .specs-grid { gap: 0.4rem; }
+  }
+</style>
+</head>
+<body>
+
+<section class="hero" id="hero">
+
+  <!-- NAV BAR -->
+  <nav class="nav" id="nav" aria-label="Primary">
+    <a class="nav-logo" href="#" aria-label="Suzuki Bangladesh home">
+      <span class="nav-logo-word">
+        SUZUKI
+        <span class="lo-tag">Bangladesh</span>
+      </span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#" class="is-active">Bikes</a></li>
+      <li><a href="#">MotoGP</a></li>
+      <li><a href="#">Service</a></li>
+      <li><a href="#">Dealers</a></li>
+      <li><a href="#">Shop</a></li>
+      <li><a href="#">About</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="nav-action" aria-label="Search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="square" stroke-linejoin="miter"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/></svg>
+      </button>
+      <button class="nav-cta">Test Ride
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="square" stroke-linejoin="miter"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/></svg>
+      </button>
+    </div>
+  </nav>
+
+  <!-- watermark (image set via JS once knocked out) -->
+  <div class="watermark" id="watermark" aria-hidden="true"></div>
+  <div class="watermark-fallback" aria-hidden="true">S</div>
+
+  <!-- HERO HEADLINE — cinematic poster treatment -->
+  <div class="hero-headline" id="heroHeadline">
+    <!-- BIG outline word, BEHIND the bike -->
+    <span class="hl-mega" id="hlMega">BIKE</span>
+    <!-- Editorial line ABOVE the mega word, on top of bike -->
+    <div class="hl-editorial" id="hlEditorial">
+      <span class="hl-line">This isn't just <span class="accent">a bike.</span></span>
+      <span class="hl-rule"></span>
+      <span class="hl-line">This is <span class="accent">who you are.</span></span>
+      <span class="hl-line muted">Suzuki Bangladesh — Since 1909</span>
+    </div>
+  </div>
+
+  <!-- PROMINENT BRAND LOCKUP — bottom-left of bike, BIG -->
+  <div class="brand-lockup" id="brandLockup" aria-hidden="true">
+    <span class="bl-mark" id="blMark"></span>
+    <div class="bl-text">
+      <span class="bl-suzuki">SUZUKI</span>
+      <span class="bl-tag">Bangladesh</span>
+      <span class="bl-meta">EST. 1909 · MOTOGP HERITAGE</span>
+    </div>
+  </div>
+
+  <!-- red halo -->
+  <div class="red-halo red-halo-pulse" id="redHalo" aria-hidden="true"></div>
+
+  <!-- diagonal slashes -->
+  <div class="slashes" aria-hidden="true">
+    <div class="slash slash-1"></div>
+    <div class="slash slash-2"></div>
+    <div class="slash slash-3"></div>
+    <div class="slash slash-4"></div>
+  </div>
+
+  <!-- speed-line particles -->
+  <div class="particles" id="particles" aria-hidden="true"></div>
+
+  <!-- top bar: eyebrow + corner mark -->
+  <div class="topbar">
+    <span class="eyebrow-tag" id="eyebrow">
+      <span>Racing in your blood — Since 1909</span>
+    </span>
+  </div>
+
+  <!-- ============================================================
+       BIKE STAGE (full-bleed)
+       ============================================================ -->
+  <div class="stage">
+    <div class="bike-frame">
+      <div class="beam" id="beam"></div>
+      <div class="bike-img-wrap" id="bikeWrap">
+        <img class="bike-img bike-bob" id="bikeImg"
+             src="assets/bikes/gixxer-sf-250.webp"
+             alt="Suzuki Gixxer SF 250"
+             fetchpriority="high" />
+      </div>
+      <div class="bike-shadow" id="bikeShadow"></div>
+
+    </div>
+
+    <!-- Leader-line SVG layer (drawn between cards and bike anchor in HERO coords) -->
+    <svg class="leaders-svg" id="leaders" aria-hidden="true">
+      <polyline class="leader-path" id="leader-engine"  points="0,0 0,0" />
+      <circle    class="leader-end"  id="leader-engine-dot"  r="3" />
+      <polyline class="leader-path" id="leader-power"   points="0,0 0,0" />
+      <circle    class="leader-end"  id="leader-power-dot"   r="3" />
+      <polyline class="leader-path" id="leader-mileage" points="0,0 0,0" />
+      <circle    class="leader-end"  id="leader-mileage-dot" r="3" />
+    </svg>
+
+    <!-- Floating spec cards (positioned absolutely vs hero, NOT vs bike-frame) -->
+    <div class="specs-layer">
+      <div class="specs-grid">
+        <div class="spec-card spec-engine" id="spec-engine" data-anchor="0.42,0.42">
+          <span class="label">Engine</span>
+          <span class="value"><span class="num" data-target="249" data-suffix="">0</span><span class="unit">cc</span></span>
+        </div>
+
+        <div class="spec-card spec-power" id="spec-power" data-anchor="0.55,0.55">
+          <span class="label">Max Power</span>
+          <span class="value"><span class="num" data-target="26.5" data-decimals="1">0</span><span class="unit">PS</span></span>
+        </div>
+
+        <div class="spec-card spec-mileage" id="spec-mileage" data-anchor="0.62,0.40">
+          <span class="label">Mileage</span>
+          <span class="value"><span class="num" data-target="40">0</span><span class="unit">km/l</span></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom row: bike id + thumbs -->
+    <div class="bottom-row">
+      <div>
+        <div class="bike-id" id="bikeId">
+          <span class="pre" id="bikePre">Featured · 250cc Sport</span>
+          <span class="name" id="bikeName">Gixxer<span class="accent"> SF </span>250</span>
+          <span class="price" id="bikePrice"><span class="currency">BDT</span> 4,29,950</span>
+        </div>
+        <div class="ctas" id="ctas">
+          <button class="btn btn-primary" id="btn-primary">
+            <span>Explore the Lineup</span>
+            <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/></svg>
+          </button>
+          <button class="btn btn-secondary" id="btn-secondary">
+            <span>Book a Test Ride</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="thumb-strip-wrap" id="thumbWrap">
+        <div class="progress-track" aria-hidden="true">
+          <div class="progress-bar" id="progressBar"></div>
+        </div>
+        <div class="thumb-strip" role="tablist" aria-label="Featured Suzuki bikes" id="thumbStrip"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll cue -->
+  <div class="scroll-cue" id="scrollCue">
+    <span class="scroll-cue-label">Scroll to ignite</span>
+    <svg class="scroll-cue-chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+  </div>
+
+</section>
+
+<section class="below">
+  <h2>The Lineup</h2>
+  <p style="max-width:60ch">Continue the story below — bike grid, MotoGP heritage, dealer locator, and test-ride booking. (Out of scope for this artifact; provided so the hero's scroll behavior feels real.)</p>
+</section>
+
+<script>
+/* ============================================================
+   BIKE DATA
+   ============================================================ */
+const BIKES = [
+  {
+    id: 'gixxer-sf-250',
+    pre: 'Featured · 250cc Sport',
+    name: ['Gixxer', ' SF ', '250'],
+    price: '4,29,950',
+    img: 'assets/bikes/gixxer-sf-250.webp',
+    cc: 249,
+    knockout: false,
+    scale: 1.0,
+    specs: { engine: 249, power: 26.5, mileage: 40 },
+    anchors: { engine: [0.42, 0.42], power: [0.55, 0.55], mileage: [0.62, 0.40] },
+  },
+  {
+    id: 'gsx-r150',
+    pre: 'Track-Bred · 150cc Supersport',
+    name: ['GSX', '-R', '150'],
+    price: '3,79,950',
+    img: 'assets/bikes/gsx-r150.webp',
+    cc: 147,
+    knockout: false,
+    scale: 1.0,
+    specs: { engine: 147, power: 19.0, mileage: 45 },
+    anchors: { engine: [0.42, 0.45], power: [0.55, 0.58], mileage: [0.62, 0.42] },
+  },
+  {
+    id: 'gixxer-150',
+    pre: 'Streetfighter · 150cc Naked',
+    name: ['Gixxer', ' ', '150'],
+    price: '2,49,950',
+    img: 'assets/bikes/gixxer-sf-250.webp',
+    cc: 155,
+    knockout: false,
+    scale: 1.0,
+    specs: { engine: 155, power: 13.6, mileage: 48 },
+    anchors: { engine: [0.42, 0.42], power: [0.55, 0.55], mileage: [0.62, 0.40] },
+  },
+  {
+    id: 'access-125',
+    pre: 'Daily · 125cc Scooter',
+    name: ['Access', ' ', '125'],
+    price: '1,89,950',
+    img: 'assets/bikes/access-125.jpg',
+    cc: 124,
+    knockout: true,
+    /* Scooters are squatter than sportbikes — auto-trim leaves them as wide-but-short.
+       Inside a 4:3 contain box, a 2.4:1 trimmed scooter will hit width first (good).
+       The remaining vertical headroom is fine — it floats with breathing space. */
+    scale: 1.0,
+    specs: { engine: 124, power: 8.7, mileage: 64 },
+    anchors: { engine: [0.42, 0.45], power: [0.55, 0.55], mileage: [0.62, 0.45] },
+  },
+];
+let activeIdx = 0;
+let userInteracted = false;
+const AUTO_MS = 6000;
+
+/* ============================================================
+   WHITE-BACKGROUND KNOCKOUT
+   For JPEG/non-transparent bike photos, sample the corner pixel
+   and turn anything close to that color into transparent alpha.
+   Replaces b.img in-place with a data URL once processed.
+   ============================================================ */
+/* ============================================================
+   IMAGE PROCESSING
+   - knockoutWhite: turn near-bg-color pixels transparent
+   - trimTransparent: crop fully-transparent borders
+   - normalizeBike: knockout (if needed) + trim, returns data URL
+     so EVERY bike ends up with its content tightly fit to the canvas.
+     Combined with a fixed .bike-img-wrap aspect-ratio, all bikes
+     render at uniform on-screen size.
+   ============================================================ */
+function _drawToCanvas(img) {
+  const c = document.createElement('canvas');
+  c.width = img.naturalWidth;
+  c.height = img.naturalHeight;
+  const ctx = c.getContext('2d');
+  ctx.drawImage(img, 0, 0);
+  return { canvas: c, ctx };
+}
+
+function _knockoutPixels(canvas, ctx, tolerance) {
+  const data = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  const px = data.data;
+  const corners = [
+    [0, 0],
+    [canvas.width - 1, 0],
+    [0, canvas.height - 1],
+    [canvas.width - 1, canvas.height - 1],
+  ].map(([x, y]) => {
+    const i = (y * canvas.width + x) * 4;
+    return [px[i], px[i + 1], px[i + 2]];
+  });
+  const bgR = Math.round(corners.reduce((s, c) => s + c[0], 0) / 4);
+  const bgG = Math.round(corners.reduce((s, c) => s + c[1], 0) / 4);
+  const bgB = Math.round(corners.reduce((s, c) => s + c[2], 0) / 4);
+
+  // Don't knock out if the bg is already mostly black/dark — no white to remove
+  const bgLum = (bgR + bgG + bgB) / 3;
+  if (bgLum < 80) return false;
+
+  for (let i = 0; i < px.length; i += 4) {
+    const dr = px[i] - bgR, dg = px[i + 1] - bgG, db = px[i + 2] - bgB;
+    const dist = Math.sqrt(dr * dr + dg * dg + db * db);
+    if (dist < tolerance) {
+      px[i + 3] = 0;
+    } else if (dist < tolerance * 2.2) {
+      px[i + 3] = Math.round(((dist - tolerance) / (tolerance * 1.2)) * 255);
+    }
+  }
+  ctx.putImageData(data, 0, 0);
+  return true;
+}
+
+function _trimTransparent(canvas, ctx, alphaThreshold = 8) {
+  const w = canvas.width, h = canvas.height;
+  const data = ctx.getImageData(0, 0, w, h).data;
+  let top = h, left = w, right = 0, bottom = 0;
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
+      const a = data[(y * w + x) * 4 + 3];
+      if (a > alphaThreshold) {
+        if (x < left) left = x;
+        if (x > right) right = x;
+        if (y < top) top = y;
+        if (y > bottom) bottom = y;
+      }
+    }
+  }
+  if (right < left || bottom < top) return canvas; // empty image — return as-is
+  // Add 1.5% padding around the trim so drop shadows have a little breathing room
+  const padX = Math.round((right - left) * 0.015);
+  const padY = Math.round((bottom - top) * 0.015);
+  left = Math.max(0, left - padX);
+  top  = Math.max(0, top - padY);
+  right = Math.min(w - 1, right + padX);
+  bottom = Math.min(h - 1, bottom + padY);
+
+  const cropped = document.createElement('canvas');
+  cropped.width = right - left + 1;
+  cropped.height = bottom - top + 1;
+  const cctx = cropped.getContext('2d');
+  cctx.drawImage(canvas, left, top, cropped.width, cropped.height, 0, 0, cropped.width, cropped.height);
+  return cropped;
+}
+
+async function knockoutWhite(url, tolerance = 28) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => {
+      try {
+        const { canvas, ctx } = _drawToCanvas(img);
+        _knockoutPixels(canvas, ctx, tolerance);
+        const trimmed = _trimTransparent(canvas, ctx);
+        resolve(trimmed.toDataURL('image/png'));
+      } catch (err) {
+        console.warn('knockoutWhite failed for', url, err);
+        resolve(url);
+      }
+    };
+    img.onerror = () => resolve(url);
+    img.src = url;
+  });
+}
+
+/* For already-transparent PNGs (the WebP bikes): just trim the empty borders
+   so they share the same uniform on-screen size as the knocked-out ones. */
+async function trimImage(url) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => {
+      try {
+        const { canvas, ctx } = _drawToCanvas(img);
+        const trimmed = _trimTransparent(canvas, ctx);
+        resolve(trimmed.toDataURL('image/png'));
+      } catch (err) {
+        console.warn('trimImage failed for', url, err);
+        resolve(url);
+      }
+    };
+    img.onerror = () => resolve(url);
+    img.src = url;
+  });
+}
+
+async function preprocessKnockouts() {
+  await Promise.all(BIKES.map(async (b) => {
+    // Knock-out + trim for JPEGs (white bg). Plain trim for transparent PNGs/WebPs.
+    const newSrc = b.knockout ? await knockoutWhite(b.img) : await trimImage(b.img);
+    b.img = newSrc;
+  }));
+}
+
+/* ============================================================
+   THUMBNAIL RENDER (called after knockouts complete)
+   ============================================================ */
+const thumbStrip = document.getElementById('thumbStrip');
+function renderThumbs() {
+  thumbStrip.innerHTML = '';
+  BIKES.forEach((b, i) => {
+    const t = document.createElement('button');
+    t.className = 'thumb' + (i === activeIdx ? ' active' : '');
+    t.setAttribute('role', 'tab');
+    t.setAttribute('aria-selected', i === activeIdx ? 'true' : 'false');
+    t.setAttribute('aria-label', `Show Suzuki ${b.name.join('').trim()}`);
+    t.dataset.idx = i;
+    t.innerHTML = `
+      <div class="thumb-img-box"><img class="thumb-img" src="${b.img}" alt="" loading="lazy" /></div>
+      <div class="thumb-name">${b.name.join('').trim()}</div>
+      <div class="thumb-cc">${b.cc}cc</div>
+    `;
+    t.addEventListener('click', () => selectBike(i, true));
+    thumbStrip.appendChild(t);
+  });
+}
+
+/* ============================================================
+   BIKE SWAP
+   ============================================================ */
+const bikeImg = document.getElementById('bikeImg');
+const bikeWrap = document.getElementById('bikeWrap');
+const redHalo = document.getElementById('redHalo');
+
+function selectBike(idx, fromUser) {
+  if (idx === activeIdx) return;
+  if (fromUser) { userInteracted = true; stopAutoAdvance(); }
+
+  [...thumbStrip.children].forEach((el, i) => {
+    el.classList.toggle('active', i === idx);
+    el.setAttribute('aria-selected', i === idx ? 'true' : 'false');
+  });
+
+  const b = BIKES[idx];
+
+  const tl = gsap.timeline();
+  tl.to(bikeWrap, { x: -60, opacity: 0, rotation: -8, duration: 0.3, ease: 'power2.in' })
+    .add(() => {
+      bikeImg.src = b.img;
+      bikeImg.alt = `Suzuki ${b.name.join('').trim()}`;
+      // Apply per-bike scale via CSS custom property so all bikes read at same size
+      bikeImg.style.setProperty('--bike-scale', b.scale ?? 1);
+      // Update bike id + price + specs simultaneously
+      document.getElementById('bikePre').textContent = b.pre;
+      document.getElementById('bikeName').innerHTML = `${b.name[0]}<span class="accent">${b.name[1]}</span>${b.name[2]}`;
+      document.getElementById('bikePrice').innerHTML = `<span class="currency">BDT</span> ${b.price}`;
+      // Update spec card values + recount
+      setSpecTargets(b.specs);
+      countUpStats();
+      // Update anchor data attrs for leader recompute
+      document.getElementById('spec-engine').dataset.anchor = b.anchors.engine.join(',');
+      document.getElementById('spec-power').dataset.anchor = b.anchors.power.join(',');
+      document.getElementById('spec-mileage').dataset.anchor = b.anchors.mileage.join(',');
+      // Recompute leader paths after image swap
+      requestAnimationFrame(() => requestAnimationFrame(updateLeaders));
+    })
+    .fromTo(bikeWrap,
+      { x: 120, opacity: 0, rotation: 30 },
+      { x: 0, opacity: 1, rotation: 0, duration: 0.85, ease: 'power3.out' });
+
+  // Halo flash
+  gsap.fromTo(redHalo, { scale: 0.8 }, { scale: 1.08, duration: 0.25, ease: 'power2.out', yoyo: true, repeat: 1 });
+
+  activeIdx = idx;
+}
+
+function setSpecTargets(specs) {
+  document.querySelector('#spec-engine .num').dataset.target  = specs.engine;
+  document.querySelector('#spec-power .num').dataset.target   = specs.power;
+  document.querySelector('#spec-mileage .num').dataset.target = specs.mileage;
+}
+
+/* ============================================================
+   AUTO-ADVANCE
+   ============================================================ */
+const progressBar = document.getElementById('progressBar');
+let progressTween = null;
+
+function startAutoAdvance() {
+  if (userInteracted) return;
+  if (progressTween) progressTween.kill();
+  progressTween = gsap.fromTo(progressBar,
+    { scaleX: 0 },
+    { scaleX: 1, duration: AUTO_MS / 1000, ease: 'none',
+      onComplete: () => {
+        const next = (activeIdx + 1) % BIKES.length;
+        selectBike(next, false);
+        startAutoAdvance();
+      }
+    });
+}
+function stopAutoAdvance() {
+  if (progressTween) progressTween.kill();
+  gsap.to(progressBar, { opacity: 0, duration: 0.3 });
+}
+
+/* ============================================================
+   PARTICLES
+   ============================================================ */
+function spawnParticles() {
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce) return;
+  const container = document.getElementById('particles');
+  const count = window.innerWidth < 768 ? 6 : 10;
+  for (let i = 0; i < count; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const w = 80 + Math.random() * 220;
+    p.style.width = w + 'px';
+    p.style.top = (Math.random() * 100) + '%';
+    p.style.right = '-300px';
+    p.style.setProperty('--p-color', Math.random() < 0.3 ? '#FF1A2E' : 'rgba(255,255,255,0.55)');
+    container.appendChild(p);
+    animateParticle(p);
+  }
+}
+function animateParticle(p) {
+  const dur = 4 + Math.random() * 6;
+  const opacity = 0.2 + Math.random() * 0.2;
+  const startDelay = Math.random() * 5;
+  gsap.fromTo(p,
+    { x: 0, opacity: 0 },
+    { x: -(window.innerWidth + 400), opacity, duration: dur, delay: startDelay, ease: 'none',
+      onComplete: () => {
+        p.style.top = (Math.random() * 100) + '%';
+        animateParticle(p);
+      }
+    });
+}
+
+/* ============================================================
+   LEADER LINES (card → bike anchor point)
+   Coordinates resolved in HERO local space.
+   ============================================================ */
+function updateLeaders() {
+  if (window.innerWidth < 768) return; // hidden on phones
+  const hero = document.getElementById('hero');
+  if (!hero) return;
+  const hr = hero.getBoundingClientRect();
+  const wrap = bikeWrap.getBoundingClientRect();
+
+  const cardKeys = ['engine', 'power', 'mileage'];
+  cardKeys.forEach(key => {
+    const card = document.getElementById(`spec-${key}`);
+    const path = document.getElementById(`leader-${key}`);
+    const dot  = document.getElementById(`leader-${key}-dot`);
+    if (!card || !path) return;
+
+    const cr = card.getBoundingClientRect();
+    const [ax, ay] = (card.dataset.anchor || '0.5,0.5').split(',').map(Number);
+
+    // bike anchor point in hero-local coords
+    const bikeAx = wrap.left - hr.left + ax * wrap.width;
+    const bikeAy = wrap.top  - hr.top  + ay * wrap.height;
+
+    // card edge nearest the bike (left card → exit right edge, right card → exit left)
+    const cardCx = (cr.left + cr.right) / 2 - hr.left;
+    const onLeft = cardCx < (hr.width / 2);
+    const startX = onLeft ? (cr.right - hr.left) : (cr.left - hr.left);
+    const startY = (cr.top + cr.bottom) / 2 - hr.top;
+
+    // Two-segment polyline
+    const midX = onLeft ? Math.min(startX + 60, bikeAx - 40) : Math.max(startX - 60, bikeAx + 40);
+    const midY = startY;
+
+    path.setAttribute('points', `${startX},${startY} ${midX},${midY} ${bikeAx},${bikeAy}`);
+    dot.setAttribute('cx', bikeAx);
+    dot.setAttribute('cy', bikeAy);
+  });
+}
+
+window.addEventListener('resize', updateLeaders);
+
+/* ============================================================
+   ENTRANCE SEQUENCE
+   ============================================================ */
+function runEntrance() {
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce) {
+    document.getElementById('scrollCue').style.opacity = 1;
+    redHalo.style.opacity = 0.45;
+    document.getElementById('bikeShadow').style.opacity = 0.7;
+    document.getElementById('eyebrow').classList.add('lit');
+    document.getElementById('nav').classList.add('lit');
+    document.getElementById('nav').style.opacity = 1;
+    document.getElementById('heroHeadline').classList.add('lit');
+    document.getElementById('heroHeadline').style.opacity = 1;
+    const hlMega = document.getElementById('hlMega');
+    if (hlMega) { hlMega.style.opacity = 1; hlMega.style.transform = 'none'; }
+    const hlEd = document.getElementById('hlEditorial');
+    if (hlEd) { hlEd.style.opacity = 1; hlEd.style.transform = 'none'; }
+    document.querySelectorAll('#hlEditorial .hl-line').forEach(el => { el.style.opacity = 1; el.style.transform = 'none'; });
+    const lockup = document.getElementById('brandLockup');
+    if (lockup) { lockup.style.opacity = 1; lockup.style.transform = 'none'; }
+    countUpStats();
+    return;
+  }
+
+  const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+
+  // 0–400ms: slashes draw down
+  tl.to('.slash-1', { scaleY: 1, duration: 0.9, ease: 'power4.out' }, 0)
+    .to('.slash-2', { scaleY: 1, duration: 1.0, ease: 'power4.out' }, 0.08)
+    .to('.slash-3', { scaleY: 1, duration: 1.1, ease: 'power4.out' }, 0.16)
+    .to('.slash-4', { scaleY: 1, duration: 1.2, ease: 'power4.out' }, 0.24);
+
+  // 100ms: nav + headline rule fade in early so frame is set before bike enters
+  tl.to('#nav', { opacity: 1, y: 0, duration: 0.6 }, 0.1)
+    .add(() => document.getElementById('nav').classList.add('lit'), 0.1);
+
+  // 300ms: eyebrow + corner mark fade in
+  tl.to('#eyebrow', { opacity: 1, duration: 0.5 }, 0.3)
+    .add(() => document.getElementById('eyebrow').classList.add('lit'), 0.4);
+
+  // 0.45s: MEGA outline word reveals BEHIND the bike — early so bike rides over it
+  tl.add(() => document.getElementById('heroHeadline').classList.add('lit'), 0.45);
+  tl.fromTo('#hlMega',
+    { opacity: 0, y: 30, scale: 0.94 },
+    { opacity: 1, y: 0, scale: 1, duration: 1.1, ease: 'power3.out' },
+    0.4);
+  // Editorial line slides in slightly later, on TOP of bike
+  tl.fromTo('#hlEditorial',
+    { opacity: 0, y: 14 },
+    { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out' },
+    0.65);
+  tl.fromTo('#hlEditorial .hl-line',
+    { y: 14, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.5, stagger: 0.08, ease: 'power3.out' },
+    0.7);
+
+  // 1.2s: BRAND LOCKUP slides DOWN from top-left — owns the brand statement
+  tl.fromTo('#brandLockup',
+    { opacity: 0, x: -16, y: -8 },
+    { opacity: 1, x: 0, y: 0, duration: 0.8, ease: 'power3.out' },
+    1.2);
+
+  // 600ms: bike entrance — slides in from right with 30° Z-rotation (wheelie)
+  tl.fromTo('#bikeWrap',
+    { x: 280, y: 40, opacity: 0, rotation: 30, transformOrigin: '20% 80%' },
+    { x: 0, y: 0, opacity: 1, rotation: 0, duration: 1.4, ease: 'power4.out' },
+    0.6);
+
+  // Halo blooms outward
+  tl.fromTo(redHalo,
+    { opacity: 0, scale: 0.6 },
+    { opacity: 0.45, scale: 1, duration: 1.4, ease: 'power3.out' },
+    0.7);
+
+  // Spotlight beam sweep
+  tl.fromTo('#beam',
+    { scaleX: 0 },
+    { scaleX: 1, duration: 0.7, ease: 'power3.inOut' },
+    1.1)
+    .to('#beam', { opacity: 0, duration: 0.6 }, 1.85);
+
+  // Bike shadow
+  tl.to('#bikeShadow', { opacity: 0.7, duration: 0.6 }, 1.7);
+
+  // 1.6s: spec cards float in + leader lines draw + counters tick up
+  tl.add(() => updateLeaders(), 1.55);
+
+  tl.fromTo('.spec-card',
+    { y: 8, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.5, stagger: 0.12, ease: 'power3.out' },
+    1.6);
+
+  // Leader lines fade in (after positions computed)
+  tl.to(['#leader-engine', '#leader-engine-dot'],  { opacity: 0.55, duration: 0.5 }, 1.7);
+  tl.to(['#leader-power', '#leader-power-dot'],    { opacity: 0.55, duration: 0.5 }, 1.85);
+  tl.to(['#leader-mileage', '#leader-mileage-dot'],{ opacity: 0.55, duration: 0.5 }, 2.0);
+
+  tl.add(() => countUpStats(), 1.8);
+
+  // 2.0s: bike id + ctas + thumbs
+  tl.fromTo('#bikeId', { y: 16, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6 }, 2.0);
+  tl.fromTo('#ctas .btn',
+    { scale: 0.95, opacity: 0, y: 10 },
+    { scale: 1, opacity: 1, y: 0, duration: 0.5, stagger: 0.08, ease: 'back.out(1.4)' },
+    2.1);
+  tl.fromTo('#thumbWrap', { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.5 }, 2.2);
+
+  // Scroll cue
+  tl.to('#scrollCue', { opacity: 1, duration: 0.5 }, 2.6);
+
+  // Auto-advance kicks in
+  tl.add(() => startAutoAdvance(), 2.8);
+}
+
+/* ============================================================
+   STAT COUNTERS (handles decimals)
+   ============================================================ */
+function countUpStats() {
+  document.querySelectorAll('.spec-card .num').forEach(el => {
+    const target = parseFloat(el.dataset.target);
+    const decimals = parseInt(el.dataset.decimals || '0', 10);
+    const obj = { v: 0 };
+    gsap.killTweensOf(obj);
+    gsap.to(obj, {
+      v: target,
+      duration: 0.8,
+      ease: 'power2.out',
+      onUpdate: () => {
+        el.textContent = decimals ? obj.v.toFixed(decimals) : Math.round(obj.v);
+      }
+    });
+  });
+}
+
+/* ============================================================
+   SCROLL PARALLAX
+   ============================================================ */
+const hero = document.getElementById('hero');
+let ticking = false;
+function onScroll() {
+  if (ticking) return;
+  ticking = true;
+  requestAnimationFrame(() => {
+    const y = window.scrollY;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!reduce && y < window.innerHeight) {
+      hero.style.transform = `translateY(${-y * 0.4}px)`;
+      const scale = 1 + Math.min(y / window.innerHeight, 1) * 0.05;
+      bikeWrap.style.transform = `scale(${scale})`;
+      const haloOpacity = Math.max(0, 0.45 - (y / window.innerHeight) * 0.45);
+      redHalo.style.opacity = haloOpacity;
+    }
+    ticking = false;
+  });
+}
+window.addEventListener('scroll', onScroll, { passive: true });
+
+/* ============================================================
+   CTA HANDLERS
+   ============================================================ */
+document.getElementById('btn-primary').addEventListener('click', () => {
+  console.log('[CTA] Explore Lineup → /bikes');
+});
+document.getElementById('btn-secondary').addEventListener('click', () => {
+  console.log('[CTA] Book Test Ride → /test-ride');
+});
+
+/* ============================================================
+   LOGO KNOCKOUT — strip the gridded white-ish background from
+   the supplied Suzuki logo PNG so we can place it on dark UI.
+   Sets the watermark + nav-logo backgrounds.
+   ============================================================ */
+async function prepareLogo() {
+  // Knock out the off-white grid background. Tolerance higher because the grid
+  // image has slight tonal variation between cells and lines.
+  const knocked = await knockoutWhite('assets/logo/suzuki-logo.png', 60);
+  document.getElementById('watermark').style.backgroundImage = `url(${knocked})`;
+  // Brand lockup mark — same source
+  const blMark = document.getElementById('blMark');
+  if (blMark) blMark.style.backgroundImage = `url(${knocked})`;
+  const fb = document.querySelector('.watermark-fallback');
+  if (fb) fb.style.display = 'none';
+}
+
+/* ============================================================
+   BOOT
+   ============================================================ */
+function withTimeout(promise, ms, label) {
+  return Promise.race([
+    promise,
+    new Promise((resolve) => setTimeout(() => {
+      console.warn(`[boot] ${label} timed out after ${ms}ms — continuing without`);
+      resolve();
+    }, ms))
+  ]);
+}
+
+window.addEventListener('load', async () => {
+  spawnParticles();
+  // Run knockouts in parallel BUT with a timeout so a hung image-decode never
+  // blocks the entrance animation. Original (non-trimmed) URLs are already
+  // wired into the markup so bikes still render even if knockout fails.
+  try {
+    await withTimeout(
+      Promise.all([preprocessKnockouts(), prepareLogo()]),
+      4000,
+      'image preprocessing'
+    );
+  } catch (err) {
+    console.warn('[boot] image preprocessing threw:', err);
+  }
+  // Set the initial main bike image to the (possibly) knocked-out URL + scale
+  bikeImg.src = BIKES[0].img;
+  bikeImg.style.setProperty('--bike-scale', BIKES[0].scale ?? 1);
+  try { renderThumbs(); } catch (err) { console.warn('[boot] renderThumbs threw:', err); }
+  // Wire keyboard nav now that thumbs exist
+  thumbStrip.addEventListener('keydown', (e) => {
+    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+    e.preventDefault();
+    const dir = e.key === 'ArrowRight' ? 1 : -1;
+    const next = (activeIdx + dir + BIKES.length) % BIKES.length;
+    selectBike(next, true);
+    thumbStrip.children[next].focus();
+  });
+  // ENTRANCE — never let this fail silently. If the timeline throws,
+  // fall back to "everything visible" so the page is at least usable.
+  try {
+    runEntrance();
+  } catch (err) {
+    console.error('[boot] runEntrance threw, forcing visible fallback:', err);
+    forceVisibleFallback();
+  }
+});
+
+/* If the entrance timeline barfs, just pin everything visible. */
+function forceVisibleFallback() {
+  const ids = ['nav', 'eyebrow', 'heroHeadline', 'hlMega', 'hlEditorial', 'brandLockup', 'bikeId', 'ctas', 'thumbWrap', 'redHalo', 'bikeShadow'];
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.style.opacity = '1'; el.style.transform = ''; }
+  });
+  document.querySelectorAll('.spec-card').forEach(el => {
+    el.style.opacity = '1';
+    el.style.transform = 'none';
+  });
+  document.querySelectorAll('.slash').forEach(el => { el.style.transform = 'scaleY(1)'; });
+  document.getElementById('eyebrow')?.classList.add('lit');
+  document.getElementById('nav')?.classList.add('lit');
+  document.getElementById('heroHeadline')?.classList.add('lit');
+  countUpStats();
+  updateLeaders();
+}
+</script>
+
+</body>
+</html>

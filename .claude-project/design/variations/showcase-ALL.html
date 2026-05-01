@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Design Variation Showcase | Suzuki Bangladesh</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0F1216; color: white;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  .container { max-width: 1440px; margin: 0 auto; padding: 0 32px; }
+
+  header.showcase-hero { padding: 80px 0 48px;
+    background: linear-gradient(180deg, #0F1216 0%, #1A1F26 100%); }
+  .showcase-eyebrow { font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: rgba(255,255,255,0.5); margin-bottom: 16px; }
+  .showcase-title { font-family: 'Inter', sans-serif; font-size: clamp(36px, 5vw, 56px);
+    font-weight: 800; letter-spacing: -0.02em; line-height: 1.1;
+    margin-bottom: 16px; max-width: 22ch; }
+  .showcase-sub { font-size: 18px; color: rgba(255,255,255,0.7);
+    max-width: 60ch; line-height: 1.6; }
+
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+    padding: 48px 0 80px; }
+  @media (max-width: 1024px) { .grid { grid-template-columns: 1fr; } }
+
+  .variation-card { background: #1A1F26; border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px; overflow: hidden; display: flex; flex-direction: column;
+    transition: all 380ms ease-out; }
+  .variation-card:hover { transform: translateY(-4px);
+    border-color: rgba(255,255,255,0.16); }
+  .variation-preview { aspect-ratio: 16/10; padding: 24px; position: relative;
+    overflow: hidden; }
+  .variation-preview iframe { position: absolute; inset: 24px;
+    width: calc(100% - 48px); height: calc(100% - 48px);
+    border: 1px solid rgba(255,255,255,0.06); border-radius: 8px;
+    background: #0F1216; }
+  .variation-tag { position: absolute; top: 12px; left: 12px;
+    padding: 6px 12px; border-radius: 8px;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.2em; text-transform: uppercase; font-weight: 700;
+    z-index: 2; }
+  .variation-tag.A { background: #0033A0; color: white; }
+  .variation-tag.B { background: #FF6B1A; color: #0F0F12; }
+  .variation-tag.C { background: #F4DD80; color: #1F1614; }
+
+  .variation-meta { padding: 24px; border-top: 1px solid rgba(255,255,255,0.06); }
+  .variation-name { font-size: 22px; font-weight: 700; margin-bottom: 8px;
+    letter-spacing: -0.01em; }
+  .variation-name span { font-size: 13px; font-weight: 500;
+    color: rgba(255,255,255,0.5); margin-left: 8px; }
+  .variation-desc { font-size: 14px; color: rgba(255,255,255,0.7);
+    margin-bottom: 16px; line-height: 1.55; }
+  .variation-traits { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 20px; }
+  .trait { padding: 4px 10px; background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1); border-radius: 999px;
+    font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.85); }
+  .variation-actions { display: flex; gap: 8px; }
+  .btn { padding: 10px 16px; border-radius: 8px; font-size: 13px; font-weight: 600;
+    text-decoration: none; transition: all 220ms ease-out; flex: 1; text-align: center; }
+  .btn-primary { background: #0033A0; color: white; }
+  .btn-primary:hover { background: #1A4DC9; }
+  .btn-ghost { background: transparent; color: white;
+    border: 1px solid rgba(255,255,255,0.2); }
+  .btn-ghost:hover { background: rgba(255,255,255,0.06); }
+
+  /* Selection panel */
+  .selection-panel { background: #1A1F26; border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px; padding: 32px; margin: 0 0 80px; }
+  .selection-panel h2 { font-size: 24px; font-weight: 700; margin-bottom: 16px;
+    letter-spacing: -0.01em; }
+  .selection-panel p { font-size: 15px; color: rgba(255,255,255,0.7); margin-bottom: 20px;
+    line-height: 1.6; }
+  pre.selection-yaml { background: #0F1216; border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 8px; padding: 20px; font-family: 'JetBrains Mono', monospace;
+    font-size: 13px; line-height: 1.6; color: #B0B0B0; overflow-x: auto; }
+  pre.selection-yaml .key { color: #F4DD80; }
+  pre.selection-yaml .val { color: #22D3EE; }
+  pre.selection-yaml .com { color: #5A4D44; font-style: italic; }
+
+  /* Compact comparison row */
+  .compare { padding: 0 0 80px; }
+  .compare h2 { font-size: 24px; font-weight: 700; margin-bottom: 24px;
+    letter-spacing: -0.01em; }
+  .compare-table { width: 100%; border-collapse: collapse;
+    border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; overflow: hidden; }
+  .compare-table th { background: #1A1F26; text-align: left; padding: 14px 18px;
+    font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase;
+    font-weight: 700; color: rgba(255,255,255,0.85);
+    border-bottom: 1px solid rgba(255,255,255,0.08); }
+  .compare-table td { padding: 14px 18px; font-size: 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: top;
+    color: rgba(255,255,255,0.85); }
+  .compare-table tr:last-child td { border-bottom: none; }
+  .compare-table th.A { color: #3D6FFF; }
+  .compare-table th.B { color: #FF6B1A; }
+  .compare-table th.C { color: #F4DD80; }
+
+  footer.showcase-footer { padding: 48px 0;
+    border-top: 1px solid rgba(255,255,255,0.06); }
+  .footer-text { font-size: 13px; color: rgba(255,255,255,0.5);
+    text-align: center; }
+</style>
+</head>
+<body>
+
+<header class="showcase-hero">
+  <div class="container">
+    <div class="showcase-eyebrow">P3-DESIGN · STEP P3D · CLIENT REVIEW</div>
+    <h1 class="showcase-title">Three design directions.<br/>One Suzuki.</h1>
+    <p class="showcase-sub">Each variation interprets the same PRD differently — same content structure (11 homepage sections, 6 technology activations, 8 engine reveals), different brand voice, color palette, and motion language. Click into any preview, then return here and confirm the variation that best matches the client's vision.</p>
+  </div>
+</header>
+
+<main class="container">
+
+  <div class="grid">
+    <article class="variation-card">
+      <div class="variation-preview">
+        <span class="variation-tag A">VARIATION A</span>
+        <iframe src="A-home.html" loading="lazy" title="Variation A preview"></iframe>
+      </div>
+      <div class="variation-meta">
+        <h2 class="variation-name">Premium Clean <span>Tesla-leaning</span></h2>
+        <p class="variation-desc">Confident minimalism. Heavy whitespace, restrained palette, type as architecture. Motion is slow, weighted, expensive. The bike does the talking.</p>
+        <div class="variation-traits">
+          <span class="trait">Matte black + Suzuki blue</span>
+          <span class="trait">Söhne Bold typography</span>
+          <span class="trait">Sharp 0px corners</span>
+          <span class="trait">SVG scroll-driven Tech</span>
+          <span class="trait">No bouncy motion</span>
+        </div>
+        <div class="variation-actions">
+          <a href="A-home.html" class="btn btn-primary" data-testid="open-A">Open Full Preview</a>
+          <a href="../DESIGN_SYSTEM_A.md" class="btn btn-ghost" data-testid="open-A-system">Design System</a>
+        </div>
+      </div>
+    </article>
+
+    <article class="variation-card">
+      <div class="variation-preview">
+        <span class="variation-tag B">VARIATION B</span>
+        <iframe src="B-home.html" loading="lazy" title="Variation B preview"></iframe>
+      </div>
+      <div class="variation-meta">
+        <h2 class="variation-name">MotoGP Aggressive <span>Ultraviolette-leaning</span></h2>
+        <p class="variation-desc">Cinematic darkness. Racing-line motifs, heat-amber against pure black, scroll-pinned environment cycles. Sound-design ready. Champion's energy.</p>
+        <div class="variation-traits">
+          <span class="trait">True black + heat amber + electric blue</span>
+          <span class="trait">Druk Wide compressed display</span>
+          <span class="trait">Asymmetric grid</span>
+          <span class="trait">Environment-cycling Tech section</span>
+          <span class="trait">RPM/MotoGP DNA accents</span>
+        </div>
+        <div class="variation-actions">
+          <a href="B-home.html" class="btn btn-primary" data-testid="open-B">Open Full Preview</a>
+          <a href="../DESIGN_SYSTEM_B.md" class="btn btn-ghost" data-testid="open-B-system">Design System</a>
+        </div>
+      </div>
+    </article>
+
+    <article class="variation-card">
+      <div class="variation-preview">
+        <span class="variation-tag C">VARIATION C</span>
+        <iframe src="C-home.html" loading="lazy" title="Variation C preview"></iframe>
+      </div>
+      <div class="variation-meta">
+        <h2 class="variation-name">Local Warm <span>Yamaha BD-leaning</span></h2>
+        <p class="variation-desc">Premium with warmth. Cream sections break the dark cinematic flow. Trust signals foregrounded. BD-rooted accents (jasmine, river-teal, harvest-amber). Editorial pacing.</p>
+        <div class="variation-traits">
+          <span class="trait">Dark blue-black + cream + jasmine</span>
+          <span class="trait">Hanken Grotesk + Source Serif italic</span>
+          <span class="trait">Rounded 8-16px corners</span>
+          <span class="trait">Editorial Tech section</span>
+          <span class="trait">Hotline 16638 prominent</span>
+        </div>
+        <div class="variation-actions">
+          <a href="C-home.html" class="btn btn-primary" data-testid="open-C">Open Full Preview</a>
+          <a href="../DESIGN_SYSTEM_C.md" class="btn btn-ghost" data-testid="open-C-system">Design System</a>
+        </div>
+      </div>
+    </article>
+  </div>
+
+  <section class="compare">
+    <h2>Quick comparison</h2>
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Dimension</th>
+          <th class="A">A · Premium Clean</th>
+          <th class="B">B · MotoGP Aggressive</th>
+          <th class="C">C · Local Warm</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Brand voice</td><td>Tesla-confident, restrained</td><td>Ultraviolette-cinematic, racing</td><td>Yamaha BD-rooted, editorial</td></tr>
+        <tr><td>Hero feel</td><td>Spotlight on bike, slow drift</td><td>Pinned, environment cycles, racing-line shimmer</td><td>Trust badges + warm gradient + hotline CTA</td></tr>
+        <tr><td>Section 4 (Technology)</td><td>Pure black, single-tone bike, hairline callouts</td><td>4 environments cycling (Dhaka/Monsoon/Highway/Foggy), kinetic markers</td><td>Editorial 2-column reveal, less cinematic, more grounded</td></tr>
+        <tr><td>Section 5 (Engine)</td><td>Black panel, exploded diagram, side callout</td><td>Heat-glow filter, choreographed re-merger, RPM bounce</td><td>Cream-section break, italic editorial captions</td></tr>
+        <tr><td>Typography</td><td>Söhne Bold (1 family)</td><td>Druk Wide + Inter (2 families)</td><td>Hanken Grotesk + Inter + Source Serif italic (3 families)</td></tr>
+        <tr><td>Borders / corners</td><td>0px (sharp)</td><td>2-4px (slight)</td><td>8-16px (rounded, friendly)</td></tr>
+        <tr><td>Best for</td><td>When the bike is the hero. Aspirational youth.</td><td>When you need the loudest premium voice. Performance audience.</td><td>When trust + commuter + existing-owner is the priority.</td></tr>
+        <tr><td>Risks</td><td>May feel cold to commuter audience</td><td>May feel too aggressive for daily commuters / older riders</td><td>May feel less "extraordinary" than the brief asked for</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="selection-panel">
+    <h2>How to confirm your selection</h2>
+    <p>To advance P3, the orchestrator needs <code>approved: true</code> recorded in <code>DESIGN_STATUS.md</code>. Tell the orchestrator your pick (A, B, C, or a Mix specifying which elements from each), and it will write the file and continue P3e (full 8-page generation).</p>
+    <p>Example structure that will be written to <code>.claude-project/design/DESIGN_STATUS.md</code>:</p>
+    <pre class="selection-yaml"><span class="com"># DESIGN_STATUS.md (P3d output)</span>
+<span class="key">selected_variation:</span> <span class="val">B</span>          <span class="com"># A | B | C | Mix</span>
+<span class="key">approved:</span> <span class="val">true</span>
+<span class="key">approved_at:</span> <span class="val">"2026-04-30T..."</span>
+<span class="key">approved_by:</span> <span class="val">"Sajarun Sadia (PM)"</span>
+<span class="key">notes:</span> <span class="val">|</span>
+  <span class="val">Client confirmed Variation B during review meeting.</span>
+  <span class="val">Mix overrides: keep B's hero + Section 4 environment cycling,</span>
+  <span class="val">but adopt C's cream-section break for Bangladesh Pride.</span></pre>
+  </section>
+
+</main>
+
+<footer class="showcase-footer">
+  <div class="container">
+    <p class="footer-text">P3-design · suzuki-bangladesh · 3 variations generated 2026-04-30</p>
+  </div>
+</footer>
+
+</body>
+</html>

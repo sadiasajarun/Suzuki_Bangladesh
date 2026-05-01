@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+  // Apply the saved theme before first paint to avoid a flash.
+  (function () {
+    try {
+      var t = localStorage.getItem('suzuki-theme');
+      if (t === 'light') document.documentElement.setAttribute('data-theme', 'light');
+    } catch (_) { /* localStorage blocked — default dark */ }
+  })();
+</script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#0A0A0A" />
+
+<title>Limited Offers — Suzuki Bangladesh</title>
+<meta name="description" content="Limited-time offers on Suzuki motorcycles — save up to BDT 8,000 on Gixxer, Gixxer Monotone, and Gixxer Classic Matt. Shop direct from Rancon Motor Bikes Ltd." />
+
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Limited Offers — Suzuki Bangladesh" />
+<meta property="og:description" content="Save up to BDT 8,000. Three active deals." />
+<meta property="og:image" content="assets/images/og-cover.jpg" />
+
+<link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet" />
+
+<link rel="stylesheet" href="css/tokens.css" />
+<link rel="stylesheet" href="css/base.css" />
+<link rel="stylesheet" href="css/components.css" />
+<link rel="stylesheet" href="css/sections/navbar.css" />
+<link rel="stylesheet" href="css/sections/footer.css" />
+<link rel="stylesheet" href="css/pages/offers.css" />
+<link rel="stylesheet" href="css/widgets.css" />
+<link rel="stylesheet" href="css/theme-light.css" />
+
+<script defer src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+<script defer src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+<script defer src="js/lenis-init.js"></script>
+<script defer src="js/nav.js"></script>
+<script defer src="js/main.js"></script>
+<script defer src="js/sections/hero.js"></script>          <!-- prepareLogo() for navbar .bl-mark -->
+<script defer src="js/pages/offers.js"></script>
+<script defer src="js/widgets/chat.js"></script>
+<script defer src="js/widgets/cookies.js"></script>
+<script defer src="js/widgets/scroll-top.js"></script>
+<script defer src="js/widgets/theme-toggle.js"></script>
+
+</head>
+<body data-page="offers" id="top">
+
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<!-- ============================================================
+     NAVBAR — Offers is the active page
+     ============================================================ -->
+<header class="nav" data-testid="navbar" role="banner">
+  <div class="container nav__inner">
+    <a href="index.html" class="nav__brand" aria-label="Suzuki Bangladesh — home">
+      <div class="brand-lockup" id="hero-brandLockup" aria-hidden="true">
+        <span class="bl-mark" id="hero-blMark"></span>
+        <div class="bl-text">
+          <span class="bl-suzuki">SUZUKI</span>
+          <span class="bl-tag">Bangladesh</span>
+          <span class="bl-meta">EST. 1909 · MOTOGP HERITAGE</span>
+        </div>
+      </div>
+    </a>
+
+    <nav class="nav__links" aria-label="Primary navigation">
+      <a href="bikes.html" class="nav__link" data-testid="nav-bikes" data-nav-trigger="mega" aria-haspopup="true" aria-expanded="false" aria-controls="nav-mega-bikes">
+        Bikes
+        <i data-lucide="chevron-down" class="nav__chevron" aria-hidden="true"></i>
+      </a>
+      <a href="technology.html" class="nav__link">Technology</a>
+      <a href="service.html" class="nav__link">Service</a>
+      <a href="shop.html" class="nav__link">Shop</a>
+      <a href="dealers.html" class="nav__link">Dealers</a>
+      <a href="offers.html" class="nav__link is-active" aria-current="page">Offers</a>
+    </nav>
+
+    <div class="nav__actions">
+      <a href="tel:16638" class="nav__hotline" aria-label="Call hotline 16638">
+        <i data-lucide="phone" class="icon" aria-hidden="true"></i>
+        <span class="nav__hotline-num">16638</span>
+      </a>
+      <a href="test-ride.html" class="btn btn-primary btn-sm nav__cta-desktop">Book Test Ride</a>
+      <button type="button" class="nav__mobile-toggle" data-nav-trigger="mobile" aria-label="Open menu" aria-expanded="false" aria-controls="nav-mobile-overlay">
+        <i data-lucide="menu" class="icon" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mega menu (Bikes) -->
+  <div class="nav__mega" id="nav-mega-bikes" role="region" aria-label="Bike lineup">
+    <div class="container">
+      <p class="nav__mega-eyebrow">› EXPLORE THE LINEUP · 10 MODELS</p>
+      <div class="nav__mega-filters" role="tablist" aria-label="Filter bikes by category">
+        <button type="button" class="nav__mega-filter" data-filter="all" aria-pressed="true">All</button>
+        <button type="button" class="nav__mega-filter" data-filter="scooter" aria-pressed="false">Scooter</button>
+        <button type="button" class="nav__mega-filter" data-filter="commuter" aria-pressed="false">Commuter</button>
+        <button type="button" class="nav__mega-filter" data-filter="sports" aria-pressed="false">Sports</button>
+        <button type="button" class="nav__mega-filter" data-filter="super-sports" aria-pressed="false">Super Sports</button>
+        <button type="button" class="nav__mega-filter" data-filter="performance-sports" aria-pressed="false">Performance Sports</button>
+      </div>
+      <div class="nav__mega-grid">
+        <a href="bikes/gixxer-sf-250.html" class="nav__mega-card" data-category="super-sports"><div class="nav__mega-card-image" aria-hidden="true"><img src="assets/images/bikes/gixxer-sf-250.webp" alt="Gixxer SF 250" loading="lazy" /></div><span class="nav__mega-card-cat">Super Sports · Hero</span><div class="nav__mega-card-name">Gixxer SF 250</div><div class="nav__mega-card-price">From BDT 429,950</div></a>
+        <a href="bikes/gsx-r150.html" class="nav__mega-card" data-category="performance-sports"><div class="nav__mega-card-image" aria-hidden="true"><img src="assets/images/bikes/gsx-r150.webp" alt="GSX-R150" loading="lazy" /></div><span class="nav__mega-card-cat">Performance Sports</span><div class="nav__mega-card-name">GSX-R150</div><div class="nav__mega-card-price">From BDT 524,950</div></a>
+        <a href="bikes/gixxer-250.html" class="nav__mega-card" data-category="sports"><div class="nav__mega-card-image" aria-hidden="true"><img src="assets/images/bikes/gixxer-250.webp" alt="Gixxer 250" loading="lazy" /></div><span class="nav__mega-card-cat">Sports</span><div class="nav__mega-card-name">Gixxer 250</div><div class="nav__mega-card-price">From BDT 379,950</div></a>
+        <a href="bikes/gixxer-sf.html" class="nav__mega-card" data-category="sports"><div class="nav__mega-card-image" aria-hidden="true"><img src="assets/images/bikes/gixxer-sf.webp" alt="Gixxer SF" loading="lazy" /></div><span class="nav__mega-card-cat">Sports</span><div class="nav__mega-card-name">Gixxer SF</div><div class="nav__mega-card-price">From BDT 329,950</div></a>
+        <a href="bikes/gixxer.html" class="nav__mega-card" data-category="commuter"><div class="nav__mega-card-image" aria-hidden="true"><img src="assets/images/bikes/gixxer.webp" alt="Gixxer" loading="lazy" /></div><span class="nav__mega-card-cat">Commuter</span><div class="nav__mega-card-name">Gixxer</div><div class="nav__mega-card-price">From BDT 229,950</div></a>
+        <a href="bikes/gixxer-classic-matt.html" class="nav__mega-card" data-category="commuter"><div class="nav__mega-card-image" aria-hidden="true"><img src="assets/images/bikes/gixxer-classic-matt.webp" alt="Gixxer Classic Matt" loading="lazy" /></div><span class="nav__mega-card-cat">Commuter</span><div class="nav__mega-card-name">Gixxer Classic Matt</div><div class="nav__mega-card-price">From BDT 202,950</div></a>
+        <a href="bikes/gixxer-monotone.html" class="nav__mega-card" data-category="commuter"><div class="nav__mega-card-image" aria-hidden="true"><img src="assets/images/bikes/gixxer-monotone.webp" alt="Gixxer Monotone" loading="lazy" /></div><span class="nav__mega-card-cat">Commuter</span><div class="nav__mega-card-name">Gixxer Monotone</div><div class="nav__mega-card-price">From BDT 199,950</div></a>
+        <a href="bikes/access-125.html" class="nav__mega-card" data-category="scooter"><div class="nav__mega-card-image" aria-hidden="true"><img src="assets/images/bikes/access-125.webp" alt="Access 125" loading="lazy" /></div><span class="nav__mega-card-cat">Scooter</span><div class="nav__mega-card-name">Access 125</div><div class="nav__mega-card-price">From BDT 215,000</div></a>
+        <a href="bikes/gsx-125.html" class="nav__mega-card" data-category="commuter"><div class="nav__mega-card-image" aria-hidden="true"><img src="assets/images/bikes/gsx-125.webp" alt="GSX 125" loading="lazy" /></div><span class="nav__mega-card-cat">Commuter</span><div class="nav__mega-card-name">GSX 125</div><div class="nav__mega-card-price">From BDT 141,950</div></a>
+        <a href="bikes/hayate-ep.html" class="nav__mega-card" data-category="commuter"><div class="nav__mega-card-image" aria-hidden="true"><img src="assets/images/bikes/hayate-ep.webp" alt="Hayate EP" loading="lazy" /></div><span class="nav__mega-card-cat">Commuter</span><div class="nav__mega-card-name">Hayate EP</div><div class="nav__mega-card-price">From BDT 118,000</div></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav__mobile-overlay" id="nav-mobile-overlay" role="dialog" aria-modal="true" aria-labelledby="nav-mobile-title" hidden>
+    <div class="nav__mobile-header">
+      <a href="index.html" class="nav__brand" id="nav-mobile-title" aria-label="Suzuki Bangladesh — home">
+        <div class="brand-lockup" aria-hidden="true">
+          <span class="bl-mark"></span>
+          <div class="bl-text"><span class="bl-suzuki">SUZUKI</span><span class="bl-tag">Bangladesh</span></div>
+        </div>
+      </a>
+      <button type="button" class="nav__mobile-close" data-nav-trigger="mobile-close" aria-label="Close menu">
+        <i data-lucide="x" class="icon" aria-hidden="true"></i>
+      </button>
+    </div>
+    <div class="nav__mobile-body">
+      <a href="bikes.html" class="nav__mobile-link">Bikes</a>
+      <a href="technology.html" class="nav__mobile-link">Technology</a>
+      <a href="service.html" class="nav__mobile-link">Service</a>
+      <a href="shop.html" class="nav__mobile-link">Shop</a>
+      <a href="dealers.html" class="nav__mobile-link">Dealers</a>
+      <a href="offers.html" class="nav__mobile-link" aria-current="page">Offers</a>
+    </div>
+    <div class="nav__mobile-footer">
+      <a href="test-ride.html" class="btn btn-primary btn-lg">Book Test Ride</a>
+      <a href="tel:16638" class="btn btn-secondary btn-lg">
+        <i data-lucide="phone" class="icon" aria-hidden="true"></i>
+        Call Hotline 16638
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- ============================================================
+     MAIN
+     ============================================================ -->
+<main id="main" role="main">
+
+  <!-- ============================================================
+       1. PAGE HEADER
+       ============================================================ -->
+  <section class="of-pageheader" aria-labelledby="of-page-title">
+    <div>
+      <p class="of-pageheader-eyebrow">Limited offers · This month</p>
+      <h1 id="of-page-title" class="of-pageheader-title">
+        The <em>Suzuki</em> you want. For <em>less.</em>
+      </h1>
+      <p class="of-pageheader-sub">
+        Direct-from-distributor pricing on three Gixxer models — backed by genuine warranty, free first service, and our 16638 hotline.
+      </p>
+      <div class="of-pageheader-stats">
+        <div class="of-pageheader-stat">
+          <span class="of-pageheader-stat-num">3</span>
+          <span class="of-pageheader-stat-label">Active offers</span>
+        </div>
+        <div class="of-pageheader-stat">
+          <span class="of-pageheader-stat-num">8,000</span>
+          <span class="of-pageheader-stat-label">Max BDT savings</span>
+        </div>
+        <div class="of-pageheader-stat">
+          <span class="of-pageheader-stat-num">500+</span>
+          <span class="of-pageheader-stat-label">Dealers honour them</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       2. CONTROLS — sticky filter + sort row
+       ============================================================ -->
+  <div class="of-controls" role="region" aria-label="Filter and sort offers">
+    <div class="of-controls-row">
+      <div class="of-filters" role="group" aria-label="Filter offers by category">
+        <button type="button" class="of-filter" data-of-filter="all"      aria-pressed="true">All Offers</button>
+        <button type="button" class="of-filter" data-of-filter="commuter" aria-pressed="false">Commuter</button>
+        <button type="button" class="of-filter" data-of-filter="sports"   aria-pressed="false">Sports</button>
+        <button type="button" class="of-filter" data-of-filter="scooter"  aria-pressed="false">Scooter</button>
+      </div>
+      <div class="of-sort-wrap">
+        <span class="of-sort-label">Sort by</span>
+        <select class="of-sort" data-of-sort aria-label="Sort offers">
+          <option value="savings">Biggest Saving</option>
+          <option value="price-asc">Price · Low to High</option>
+          <option value="price-desc">Price · High to Low</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       3. ACTIVE OFFERS GRID — 3 real offers from suzuki.com.bd
+       ============================================================ -->
+  <section class="of-section" aria-labelledby="of-active-title">
+    <div class="of-section-container">
+      <header class="of-section-heading">
+        <h2 id="of-active-title" class="of-section-title">Active <em>offers</em></h2>
+        <p class="of-section-count" data-offer-count><strong>3</strong> active offers</p>
+      </header>
+
+      <div class="of-grid" data-offer-grid>
+
+        <!-- Offer 1 — Gixxer (biggest saving: BDT 8,000) -->
+        <article class="of-card" data-offer-card="gixxer" data-category="commuter" data-price="229950" data-save="8000">
+          <span class="of-card-badge">BDT 8,000 OFF</span>
+          <span class="of-card-urgency">Limited Time</span>
+          <div class="of-card-image">
+            <img src="assets/images/bikes/gixxer.webp" alt="Suzuki Gixxer" loading="lazy" />
+          </div>
+          <div class="of-card-body">
+            <span class="of-card-cat">Commuter · 155 cc</span>
+            <h3 class="of-card-name">Gixxer</h3>
+            <p class="of-card-pitch">Naked muscle. Real-world ergonomics. The classic Gixxer at its lowest price of the year.</p>
+            <div class="of-card-colors" aria-label="3 colours available">
+              <span class="of-card-colors-label">Colours</span>
+              <span class="of-card-color-dot" style="background:#111"></span>
+              <span class="of-card-color-dot" style="background:#9B1B22"></span>
+              <span class="of-card-color-dot" style="background:#1F4FB4"></span>
+              <strong>3</strong>
+            </div>
+            <div class="of-card-pricing">
+              <span class="of-card-price-now"><small>BDT</small>2,29,950</span>
+              <span class="of-card-price-was">BDT 2,37,950</span>
+              <span class="of-card-price-save">Save 8,000</span>
+            </div>
+            <p class="of-card-emi">EMI from <strong>BDT 5,490 / month</strong> · 0% interest</p>
+          </div>
+          <div class="of-card-actions">
+            <a href="bikes/gixxer.html" class="of-card-btn of-card-btn--primary">View Details</a>
+            <button type="button" class="of-card-btn of-card-btn--ghost of-card-btn--icon" data-of-save aria-pressed="false" aria-label="Save for later" title="Save for later">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+              </svg>
+            </button>
+          </div>
+        </article>
+
+        <!-- Offer 2 — Gixxer Monotone -->
+        <article class="of-card" data-offer-card="gixxer-monotone" data-category="commuter" data-price="199950" data-save="6000">
+          <span class="of-card-badge">BDT 6,000 OFF</span>
+          <span class="of-card-urgency">Limited Time</span>
+          <div class="of-card-image">
+            <img src="assets/images/bikes/gixxer-monotone.webp" alt="Suzuki Gixxer Monotone" loading="lazy" />
+          </div>
+          <div class="of-card-body">
+            <span class="of-card-cat">Commuter · 155 cc</span>
+            <h3 class="of-card-name">Gixxer Monotone</h3>
+            <p class="of-card-pitch">Stealth monotone finish. Pure Gixxer ride. The sub-2-lakh entry into the Suzuki sport family.</p>
+            <div class="of-card-colors" aria-label="7 colours available">
+              <span class="of-card-colors-label">Colours</span>
+              <span class="of-card-color-dot" style="background:#0F0F0F"></span>
+              <span class="of-card-color-dot" style="background:#9B1B22"></span>
+              <span class="of-card-color-dot" style="background:#1F4FB4"></span>
+              <span class="of-card-color-dot" style="background:#F5F5F5"></span>
+              <strong>7</strong>
+            </div>
+            <div class="of-card-pricing">
+              <span class="of-card-price-now"><small>BDT</small>1,99,950</span>
+              <span class="of-card-price-was">BDT 2,05,950</span>
+              <span class="of-card-price-save">Save 6,000</span>
+            </div>
+            <p class="of-card-emi">EMI from <strong>BDT 4,790 / month</strong> · 0% interest</p>
+          </div>
+          <div class="of-card-actions">
+            <a href="bikes/gixxer-monotone.html" class="of-card-btn of-card-btn--primary">View Details</a>
+            <button type="button" class="of-card-btn of-card-btn--ghost of-card-btn--icon" data-of-save aria-pressed="false" aria-label="Save for later" title="Save for later">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            </button>
+          </div>
+        </article>
+
+        <!-- Offer 3 — Gixxer Classic Matt -->
+        <article class="of-card" data-offer-card="gixxer-classic-matt" data-category="commuter" data-price="202950" data-save="6000">
+          <span class="of-card-badge">BDT 6,000 OFF</span>
+          <span class="of-card-urgency">Limited Time</span>
+          <div class="of-card-image">
+            <img src="assets/images/bikes/gixxer-classic-matt.webp" alt="Suzuki Gixxer Classic Matt" loading="lazy" />
+          </div>
+          <div class="of-card-body">
+            <span class="of-card-cat">Commuter · 155 cc</span>
+            <h3 class="of-card-name">Gixxer Classic Matt</h3>
+            <p class="of-card-pitch">Matt-classic finish. Same Gixxer DNA. A retro-modern statement in two distinctive matte tones.</p>
+            <div class="of-card-colors" aria-label="2 colours available">
+              <span class="of-card-colors-label">Colours</span>
+              <span class="of-card-color-dot" style="background:#3A3A3A"></span>
+              <span class="of-card-color-dot" style="background:#5C4A3A"></span>
+              <strong>2</strong>
+            </div>
+            <div class="of-card-pricing">
+              <span class="of-card-price-now"><small>BDT</small>2,02,950</span>
+              <span class="of-card-price-was">BDT 2,08,950</span>
+              <span class="of-card-price-save">Save 6,000</span>
+            </div>
+            <p class="of-card-emi">EMI from <strong>BDT 4,860 / month</strong> · 0% interest</p>
+          </div>
+          <div class="of-card-actions">
+            <a href="bikes/gixxer-classic-matt.html" class="of-card-btn of-card-btn--primary">View Details</a>
+            <button type="button" class="of-card-btn of-card-btn--ghost of-card-btn--icon" data-of-save aria-pressed="false" aria-label="Save for later" title="Save for later">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            </button>
+          </div>
+        </article>
+
+        <!-- Empty state — only shown when no cards match -->
+        <div class="of-empty" data-of-empty hidden>
+          <p>No offers in this category right now.</p>
+          <button type="button" data-of-reset>Show all offers</button>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       4. OFFER TYPES — 4 quick tiles
+       ============================================================ -->
+  <section class="of-types" aria-labelledby="of-types-title">
+    <div class="of-section-container">
+      <header class="of-section-heading">
+        <h2 id="of-types-title" class="of-section-title">More <em>ways</em> to save.</h2>
+      </header>
+    </div>
+    <div class="of-types-grid">
+
+      <a href="tel:16638" class="of-type">
+        <span class="of-type-icon">
+          <svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="14" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="7" y1="14" x2="9" y2="14"/></svg>
+        </span>
+        <h3 class="of-type-name">EMI Plans</h3>
+        <p class="of-type-desc">0% interest financing through partner banks — split your Suzuki across 12 / 24 / 36 months.</p>
+        <span class="of-type-link">Talk to us</span>
+      </a>
+
+      <a href="dealers.html" class="of-type">
+        <span class="of-type-icon">
+          <svg viewBox="0 0 24 24"><path d="M3 6l9-3 9 3v12l-9 3-9-3z"/><line x1="12" y1="3" x2="12" y2="21"/><line x1="3" y1="12" x2="21" y2="12"/></svg>
+        </span>
+        <h3 class="of-type-name">Trade-In</h3>
+        <p class="of-type-desc">Bring your old motorcycle (any brand) and apply its value toward a new Suzuki at any dealer.</p>
+        <span class="of-type-link">Find dealer</span>
+      </a>
+
+      <a href="tel:16638" class="of-type">
+        <span class="of-type-icon">
+          <svg viewBox="0 0 24 24"><circle cx="9" cy="9" r="6"/><circle cx="15" cy="15" r="6"/></svg>
+        </span>
+        <h3 class="of-type-name">Bulk &amp; Trade</h3>
+        <p class="of-type-desc">Fleet pricing for delivery services, ride-share companies, and bulk corporate orders. Custom quote in 24h.</p>
+        <span class="of-type-link">Get a quote</span>
+      </a>
+
+      <a href="test-ride.html" class="of-type">
+        <span class="of-type-icon">
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15 9 22 9 17 14 19 22 12 17 5 22 7 14 2 9 9 9"/></svg>
+        </span>
+        <h3 class="of-type-name">First-time Rider</h3>
+        <p class="of-type-desc">Free helmet and a 6-month service package on your first Suzuki. Available at every dealer.</p>
+        <span class="of-type-link">Book test ride</span>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- ============================================================
+       5. ALERTS — email signup
+       ============================================================ -->
+  <section class="of-alerts" aria-label="Subscribe to offer alerts">
+    <div class="of-alerts-card">
+      <div class="of-alerts-text">
+        <p class="of-alerts-eyebrow">Don't miss the next drop</p>
+        <h2 class="of-alerts-title">Get offers <em>before</em> they're gone.</h2>
+        <p class="of-alerts-body">We launch new model offers, EMI campaigns, and dealer-exclusive deals every month. Be the first to know.</p>
+      </div>
+      <form class="of-alerts-form" data-of-alerts-form novalidate>
+        <input class="of-alerts-input" type="email" name="email" placeholder="your@email.com" required autocomplete="email" aria-label="Your email" />
+        <button type="submit" class="of-alerts-btn">Subscribe</button>
+      </form>
+      <p class="of-alerts-status" data-of-alerts-status role="status" aria-live="polite"></p>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       6. TRUST STRIP
+       ============================================================ -->
+  <section class="of-trust" aria-label="Why shop with Suzuki Bangladesh">
+    <div class="of-trust-grid">
+
+      <div class="of-trust-item">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 2l8 4v6c0 5-3.5 9-8 10-4.5-1-8-5-8-10V6z"/>
+          <polyline points="9 12 11 14 15 10"/>
+        </svg>
+        <div class="of-trust-item-text">
+          <strong>Honoured at every dealer</strong>
+          <span>500+ authorised showrooms · Bangladesh-wide</span>
+        </div>
+      </div>
+
+      <div class="of-trust-item">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="2" y="6" width="20" height="14" rx="2"/>
+          <line x1="2" y1="10" x2="22" y2="10"/>
+        </svg>
+        <div class="of-trust-item-text">
+          <strong>Genuine warranty</strong>
+          <span>2-year / 30,000 km factory warranty included</span>
+        </div>
+      </div>
+
+      <div class="of-trust-item">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="9"/>
+          <polyline points="12 7 12 12 15 14"/>
+        </svg>
+        <div class="of-trust-item-text">
+          <strong>Same-day delivery</strong>
+          <span>In-stock models · Dhaka &amp; Chattogram metro</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<!-- ============================================================
+     FOOTER
+     ============================================================ -->
+<footer class="ft-section" role="contentinfo" data-testid="footer">
+  <div class="ft-container">
+
+    <div class="ft-top">
+      <div class="ft-brand">
+        <a class="brand-lockup" href="index.html" aria-label="Suzuki Bangladesh — home">
+          <span class="bl-mark" aria-hidden="true"></span>
+          <span class="bl-text"><span class="bl-name">SUZUKI</span><span class="bl-sub">Bangladesh</span></span>
+        </a>
+        <p class="ft-blurb">Suzuki Bangladesh, operated by Rancon Motor Bikes Ltd, brings MotoGP-bred engineering and Japanese craftsmanship to riders across the country — built for the road you ride every day.</p>
+      </div>
+      <div class="ft-aside">
+        <p class="ft-operator">Operated by <strong>Rancon Motor Bikes Ltd</strong></p>
+        <ul class="ft-socials" aria-label="Follow Suzuki Bangladesh">
+          <li><a class="ft-social" href="https://www.facebook.com/SuzukiBangladeshOfficial" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.7-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.7l-.4 2.9h-2.3v7A10 10 0 0 0 22 12z"/></svg></a></li>
+          <li><a class="ft-social" href="https://www.instagram.com/suzukibangladeshofficial" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.2c3.2 0 3.6 0 4.8.1 1.2 0 1.8.3 2.2.4.6.2 1 .5 1.4.9.4.4.7.8.9 1.4.2.4.4 1 .4 2.2 0 1.2.1 1.6.1 4.8s0 3.6-.1 4.8c0 1.2-.3 1.8-.4 2.2-.2.6-.5 1-.9 1.4-.4.4-.8.7-1.4.9-.4.2-1 .4-2.2.4-1.2 0-1.6.1-4.8.1s-3.6 0-4.8-.1c-1.2 0-1.8-.3-2.2-.4-.6-.2-1-.5-1.4-.9-.4-.4-.7-.8-.9-1.4-.2-.4-.4-1-.4-2.2 0-1.2-.1-1.6-.1-4.8s0-3.6.1-4.8c0-1.2.3-1.8.4-2.2.2-.6.5-1 .9-1.4.4-.4.8-.7 1.4-.9.4-.2 1-.4 2.2-.4C8.4 2.2 8.8 2.2 12 2.2zm0 1.8c-3.2 0-3.5 0-4.7.1-.9 0-1.4.2-1.7.3-.4.2-.7.4-1 .7-.3.3-.5.6-.7 1-.1.3-.3.8-.3 1.7C3.5 8.5 3.5 8.8 3.5 12s0 3.5.1 4.7c0 .9.2 1.4.3 1.7.2.4.4.7.7 1 .3.3.6.5 1 .7.3.1.8.3 1.7.3 1.2 0 1.5.1 4.7.1s3.5 0 4.7-.1c.9 0 1.4-.2 1.7-.3.4-.2.7-.4 1-.7.3-.3.5-.6.7-1 .1-.3.3-.8.3-1.7 0-1.2.1-1.5.1-4.7s0-3.5-.1-4.7c0-.9-.2-1.4-.3-1.7-.2-.4-.4-.7-.7-1-.3-.3-.6-.5-1-.7-.3-.1-.8-.3-1.7-.3-1.2-.1-1.5-.1-4.7-.1zm0 3.2a4.8 4.8 0 1 1 0 9.6 4.8 4.8 0 0 1 0-9.6zm0 1.8a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm5-2.1a1.1 1.1 0 1 1 0 2.2 1.1 1.1 0 0 1 0-2.2z"/></svg></a></li>
+          <li><a class="ft-social" href="https://www.youtube.com/@suzukimotorcyclebangladesh" aria-label="YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.6 3.6 12 3.6 12 3.6s-7.6 0-9.4.5A3 3 0 0 0 .5 6.2C0 8 0 12 0 12s0 4 .5 5.8a3 3 0 0 0 2.1 2.1c1.8.5 9.4.5 9.4.5s7.6 0 9.4-.5a3 3 0 0 0 2.1-2.1C24 16 24 12 24 12s0-4-.5-5.8zM9.6 15.6V8.4l6.3 3.6-6.3 3.6z"/></svg></a></li>
+          <li><a class="ft-social" href="https://www.linkedin.com/company/rancon-motor-bikes-ltd" aria-label="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 2h-17A1.5 1.5 0 0 0 2 3.5v17A1.5 1.5 0 0 0 3.5 22h17a1.5 1.5 0 0 0 1.5-1.5v-17A1.5 1.5 0 0 0 20.5 2zM8 19H5V9h3v10zM6.5 7.7a1.7 1.7 0 1 1 0-3.4 1.7 1.7 0 0 1 0 3.4zM19 19h-3v-5.5c0-1.3 0-3-1.8-3s-2.2 1.4-2.2 2.9V19h-3V9h2.9v1.4h.04c.4-.7 1.4-1.6 2.9-1.6 3.1 0 3.6 2 3.6 4.7V19z"/></svg></a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="ft-grid">
+      <div><h3 class="ft-col-title">Bikes</h3><ul class="ft-list"><li><a href="bikes.html#commuter">Commuter</a></li><li><a href="bikes.html#sports">Sports</a></li><li><a href="bikes.html#performance">Performance Sports</a></li><li><a href="bikes.html#super-sports">Super Sports</a></li><li><a href="bikes.html#scooter">Scooters</a></li><li><a href="bikes.html">View All Bikes</a></li></ul></div>
+      <div><h3 class="ft-col-title">Shop</h3><ul class="ft-list"><li><a href="shop.html#parts">Genuine Parts</a></li><li><a href="shop.html#oils">Engine Oils</a></li><li><a href="shop.html#accessories">Accessories</a></li><li><a href="offers.html" aria-current="page">Offers</a></li><li><a href="tel:16638">Bulk &amp; Trade</a></li></ul></div>
+      <div><h3 class="ft-col-title">Service &amp; Support</h3><ul class="ft-list"><li><a href="service.html">Service Packages</a></li><li><a href="dealers.html">Find a Dealer</a></li><li><a href="test-ride.html">Book a Test Ride</a></li><li><a href="tel:16638">Hotline 16638</a></li></ul></div>
+      <div>
+        <h3 class="ft-col-title">Get in Touch</h3>
+        <ul class="ft-contact">
+          <li class="ft-contact-row"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg><div><strong>24/7 Hotline</strong><a class="ft-hotline" href="tel:16638">16638 <span>Toll-Free</span></a></div></li>
+          <li class="ft-contact-row"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg><div><strong>Customer Care</strong><a href="mailto:info@suzuki.com.bd">info@suzuki.com.bd</a></div></li>
+          <li class="ft-contact-row"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><div><strong>Head Office</strong>Rangs Babylonia, Plot 246, Bir Uttam Mir Showkat Sarak,<br />Tejgaon I/A, Dhaka 1208, Bangladesh</div></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="ft-bottom">
+      <p>&copy; 2009&ndash;2026 Rancon Motor Bikes Ltd. All rights reserved.</p>
+      <ul class="ft-legal" aria-label="Legal"><li><a href="legal/privacy.html">Privacy Policy</a></li><li><a href="legal/terms.html">Terms of Use</a></li><li><a href="legal/cookies.html">Cookies</a></li><li><a href="sitemap.html">Sitemap</a></li></ul>
+      <a href="#top" class="ft-totop" aria-label="Back to top">Back to Top</a>
+    </div>
+
+  </div>
+</footer>
+
+</body>
+</html>

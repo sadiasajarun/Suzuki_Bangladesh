@@ -1,0 +1,1056 @@
+/* ============================================================
+   technology.html — engineering whitepaper page
+   ============================================================
+   Section prefixes:
+     .tk-hero        — full-viewport opening hero
+     .tk-stage       — 2-column container (sticky index + content)
+     .tk-index       — left rail vertical scroll-spy navigation
+     .tk-content     — right column, holds the 6 technology articles
+     .tk-tech        — individual technology section (consistent shape)
+     .tk-grid        — bike-grid (Section 9, Phase 3)
+     .tk-cta         — final CTA banner (Section 10, Phase 3)
+
+   Inherits tokens.css. Black + white + red only — no other colours.
+   ============================================================ */
+
+/* ============================================================
+   PAGE-LEVEL DEFAULTS
+   ============================================================ */
+.tk-page {
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+}
+
+/* Visually-hidden utility (for screen-reader-only labels) */
+.tk-page .visually-hidden {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Reusable label primitives */
+.tk-eyebrow {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--color-suzuki-red);
+  margin: 0;
+}
+.tk-eyebrow strong {
+  color: var(--color-text-primary);
+  font-weight: 700;
+}
+
+/* ============================================================
+   1. HERO — full-viewport opening
+   ============================================================
+   Subtle drifting schematic SVG lines @ 8% opacity behind the
+   headline. Eyebrow / Headline / Sub stack centered. Scroll cue
+   pinned to the bottom.
+   ============================================================ */
+.tk-hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-bg-primary);
+  overflow: hidden;
+  isolation: isolate;
+  padding-block: clamp(7rem, 12vw, 10rem) clamp(4rem, 8vw, 6rem);
+}
+
+/* Schematic backdrop — animated SVG lines drift horizontally */
+.tk-hero-schematic {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  opacity: 0.08;
+  pointer-events: none;
+  overflow: hidden;
+}
+.tk-hero-schematic svg {
+  width: 200%;
+  height: 100%;
+  display: block;
+  animation: tk-schematic-drift 60s linear infinite;
+}
+@keyframes tk-schematic-drift {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* Subtle red wash so the schematic + black don't feel flat */
+.tk-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(ellipse 70% 60% at 50% 50%,
+      rgba(228, 5, 33, 0.08) 0%,
+      transparent 65%);
+}
+
+.tk-hero-container {
+  position: relative;
+  width: 100%;
+  max-width: var(--content-max-width);
+  margin-inline: auto;
+  padding-inline: var(--section-padding-x);
+  text-align: center;
+  z-index: 1;
+}
+
+.tk-hero-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--color-suzuki-red);
+  margin: 0 0 var(--space-lg);
+}
+
+.tk-hero-headline {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(2rem, 5vw, 4.4rem);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+  text-transform: none;
+  color: var(--color-text-primary);
+  margin: 0 0 var(--space-lg);
+  max-width: 22ch;
+  margin-inline: auto;
+}
+.tk-hero-headline em {
+  font-style: italic;
+  color: var(--color-suzuki-red);
+}
+
+.tk-hero-sub {
+  font-size: clamp(1rem, 1.3vw, 1.2rem);
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+  margin: 0 auto;
+  max-width: 56ch;
+}
+
+.tk-hero-cue {
+  position: absolute;
+  bottom: clamp(1.5rem, 3vw, 2.5rem);
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  pointer-events: none;
+}
+.tk-hero-cue-line {
+  width: 1px;
+  height: 32px;
+  background: linear-gradient(180deg,
+    var(--color-suzuki-red) 0%,
+    transparent 100%);
+  animation: tk-cue-pulse 2s ease-in-out infinite;
+}
+@keyframes tk-cue-pulse {
+  0%, 100% { transform: scaleY(0.4); transform-origin: top; opacity: 0.4; }
+  50%      { transform: scaleY(1);   transform-origin: top; opacity: 1; }
+}
+
+/* ============================================================
+   2. STAGE — 2-column sticky index + scrolling content
+   ============================================================ */
+.tk-stage {
+  position: relative;
+  background: var(--color-bg-primary);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+.tk-stage-grid {
+  max-width: var(--content-max-width);
+  margin-inline: auto;
+  padding-inline: var(--section-padding-x);
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) minmax(0, 3fr);
+  gap: clamp(2rem, 4vw, 4rem);
+  align-items: start;
+}
+@media (max-width: 1024px) {
+  .tk-stage-grid { grid-template-columns: 1fr; gap: 0; }
+}
+
+/* ============================================================
+   2a. INDEX — sticky left rail (desktop)
+   ============================================================ */
+.tk-index {
+  position: sticky;
+  top: calc(var(--nav-height) + 2rem);
+  align-self: start;
+  padding-block: clamp(3rem, 6vw, 5rem) 0;
+  z-index: 5;
+}
+.tk-index-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin: 0 0 var(--space-md);
+  padding-bottom: var(--space-sm);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.tk-index-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+.tk-index-link {
+  display: flex;
+  align-items: baseline;
+  gap: 0.85rem;
+  padding: 0.7rem 0.85rem;
+  border-left: 2px solid transparent;
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: color var(--duration-fast) var(--ease-out-cinematic),
+              border-color var(--duration-fast) var(--ease-out-cinematic),
+              background var(--duration-fast) var(--ease-out-cinematic),
+              transform var(--duration-fast) var(--ease-out-cinematic);
+}
+.tk-index-link:hover {
+  color: var(--color-text-primary);
+  background: rgba(255, 255, 255, 0.02);
+}
+.tk-index-link.is-active {
+  color: var(--color-suzuki-red);
+  border-left-color: var(--color-suzuki-red);
+  background: rgba(228, 5, 33, 0.05);
+  transform: scale(1.05);
+  transform-origin: left center;
+}
+.tk-index-num {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+  min-width: 1.5em;
+}
+.tk-index-link.is-active .tk-index-num {
+  color: var(--color-suzuki-red);
+}
+
+/* Mobile: collapsible "Jump to technology" dropdown
+   (hidden on desktop, shown <1024px) */
+.tk-index-mobile {
+  display: none;
+}
+@media (max-width: 1024px) {
+  .tk-index { display: none; }
+  .tk-index-mobile {
+    display: block;
+    position: sticky;
+    top: var(--nav-height);
+    z-index: 50;
+    background: rgba(20, 20, 20, 0.92);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 0.5rem var(--section-padding-x);
+  }
+  .tk-index-mobile select {
+    width: 100%;
+    padding: 0.7rem 2.4rem 0.7rem 0.85rem;
+    background: var(--color-bg-secondary);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: var(--radius-sm);
+    color: var(--color-text-primary);
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 0.8rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23E40521' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.85rem center;
+    background-size: 14px 14px;
+  }
+}
+
+/* ============================================================
+   2b. CONTENT — right column with the technology articles
+   ============================================================ */
+.tk-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding-block: clamp(3rem, 6vw, 5rem) clamp(4rem, 8vw, 7rem);
+}
+
+/* ============================================================
+   3. INDIVIDUAL TECHNOLOGY SECTION (.tk-tech)
+   ============================================================
+   Consistent shape across all 6 sections:
+     - eyebrow ("01 / SOCS")
+     - headline
+     - visual area (custom per section)
+     - 3-paragraph body
+     - spec strip
+   The whole section is one .tk-tech article with reveal-on-scroll
+   stagger driven by IntersectionObserver in technology.js.
+   ============================================================ */
+.tk-tech {
+  position: relative;
+  padding-block: clamp(4rem, 7vw, 6rem);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  scroll-margin-top: calc(var(--nav-height) + 1rem);
+}
+.tk-tech:last-of-type { border-bottom: none; }
+
+/* SOCS gets emphasised — slightly more padding + a top accent line */
+.tk-tech--hero {
+  padding-block: clamp(5rem, 9vw, 8rem);
+}
+.tk-tech--hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 64px;
+  height: 2px;
+  background: var(--color-suzuki-red);
+}
+
+/* Reveal stagger — JS adds .is-revealed when section enters viewport */
+.tk-tech-eyebrow,
+.tk-tech-headline,
+.tk-tech-visual,
+.tk-tech-body,
+.tk-tech-specs {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 700ms var(--ease-out-cinematic),
+              transform 700ms var(--ease-out-cinematic);
+}
+.tk-tech.is-revealed .tk-tech-eyebrow  { transition-delay: 0ms;   opacity: 1; transform: translateY(0); }
+.tk-tech.is-revealed .tk-tech-headline { transition-delay: 100ms; opacity: 1; transform: translateY(0); }
+.tk-tech.is-revealed .tk-tech-visual   { transition-delay: 220ms; opacity: 1; transform: translateY(0); }
+.tk-tech.is-revealed .tk-tech-body     { transition-delay: 340ms; opacity: 1; transform: translateY(0); }
+.tk-tech.is-revealed .tk-tech-specs    { transition-delay: 460ms; opacity: 1; transform: translateY(0); }
+@media (prefers-reduced-motion: reduce) {
+  .tk-tech-eyebrow,
+  .tk-tech-headline,
+  .tk-tech-visual,
+  .tk-tech-body,
+  .tk-tech-specs {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+.tk-tech-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--color-suzuki-red);
+  margin: 0 0 var(--space-md);
+}
+.tk-tech-eyebrow strong {
+  color: var(--color-text-primary);
+  font-weight: 700;
+}
+
+.tk-tech-headline {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(1.6rem, 3.2vw, 2.6rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  text-transform: none;
+  color: var(--color-text-primary);
+  margin: 0 0 var(--space-xl);
+  max-width: 22ch;
+}
+.tk-tech-headline em { font-style: italic; color: var(--color-suzuki-red); }
+
+/* Hero technology gets a slightly larger headline */
+.tk-tech--hero .tk-tech-headline {
+  font-size: clamp(1.85rem, 3.6vw, 3rem);
+}
+
+/* ============================================================
+   3a. VISUAL AREA — generic shell, technology-specific SVG inside
+   ============================================================ */
+.tk-tech-visual {
+  position: relative;
+  background: var(--color-bg-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  isolation: isolate;
+  margin-bottom: var(--space-xl);
+  aspect-ratio: 16 / 9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.tk-tech-visual::before {
+  /* Subtle red glow inside the visual frame */
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 60%; aspect-ratio: 1/1;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(228, 5, 33, 0.10) 0%, transparent 65%);
+  z-index: -1;
+}
+.tk-tech-visual svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* ============================================================
+   3b. SOCS-SPECIFIC SVG ANIMATION
+   ============================================================
+   The SOCS visual shows a stylised engine cross-section with
+   amber oil particles flowing through internal channels.
+   Scroll-progress drives flow speed via custom property
+   `--socs-flow` (set by technology.js on scroll inside the
+   section).
+   ============================================================ */
+.socs-svg {
+  width: 100%;
+  height: 100%;
+  background: var(--color-bg-secondary);
+  --socs-flow: 1;            /* JS modulates 0.5–2.0 by scroll progress */
+}
+/* Static structural lines */
+.socs-svg .socs-engine {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.45);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.socs-svg .socs-cylinder {
+  fill: rgba(255, 255, 255, 0.04);
+  stroke: rgba(255, 255, 255, 0.55);
+  stroke-width: 1.6;
+}
+.socs-svg .socs-piston {
+  fill: rgba(255, 255, 255, 0.08);
+  stroke: rgba(255, 255, 255, 0.7);
+  stroke-width: 1.6;
+}
+.socs-svg .socs-channel {
+  fill: none;
+  stroke: rgba(228, 5, 33, 0.2);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: 2 4;
+}
+/* Oil-jet hot-spots — pulse near the channels' targets */
+.socs-svg .socs-jet {
+  fill: var(--color-heat-amber);
+  filter: drop-shadow(0 0 6px rgba(255, 167, 38, 0.7));
+  animation: socs-jet-pulse calc(2.4s / var(--socs-flow)) ease-in-out infinite;
+}
+.socs-svg .socs-jet:nth-of-type(2) { animation-delay: 0.4s; }
+.socs-svg .socs-jet:nth-of-type(3) { animation-delay: 0.8s; }
+@keyframes socs-jet-pulse {
+  0%, 100% { opacity: 0.3; transform: scale(0.7); }
+  50%      { opacity: 1;   transform: scale(1.3); }
+}
+.socs-svg .socs-jet { transform-origin: center; transform-box: fill-box; }
+
+/* Particles flowing along channels */
+.socs-svg .socs-particle {
+  fill: var(--color-heat-amber);
+  filter: drop-shadow(0 0 4px rgba(255, 167, 38, 0.8));
+  animation: socs-particle-flow calc(3.2s / var(--socs-flow)) linear infinite;
+}
+.socs-svg .socs-particle:nth-of-type(2) { animation-delay: -0.6s; }
+.socs-svg .socs-particle:nth-of-type(3) { animation-delay: -1.2s; }
+.socs-svg .socs-particle:nth-of-type(4) { animation-delay: -1.8s; }
+.socs-svg .socs-particle:nth-of-type(5) { animation-delay: -2.4s; }
+@keyframes socs-particle-flow {
+  0%   { offset-distance: 0%;   opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { offset-distance: 100%; opacity: 0; }
+}
+
+/* Heat lines — wavy red strokes radiating off the cylinder head */
+.socs-svg .socs-heat {
+  stroke: rgba(228, 5, 33, 0.5);
+  stroke-width: 1.4;
+  fill: none;
+  stroke-linecap: round;
+  animation: socs-heat-shimmer calc(2.8s / var(--socs-flow)) ease-in-out infinite;
+  transform-origin: bottom;
+}
+.socs-svg .socs-heat:nth-of-type(2) { animation-delay: 0.5s; }
+.socs-svg .socs-heat:nth-of-type(3) { animation-delay: 1s; }
+@keyframes socs-heat-shimmer {
+  0%, 100% { opacity: 0.3; transform: translateY(0); }
+  50%      { opacity: 1;   transform: translateY(-3px); }
+}
+
+/* Reduce motion — freeze the SOCS animation */
+@media (prefers-reduced-motion: reduce) {
+  .socs-svg .socs-jet,
+  .socs-svg .socs-particle,
+  .socs-svg .socs-heat { animation: none !important; }
+}
+
+/* ============================================================
+   FI — carburetor (chaotic red spray) vs FI (precise white cone)
+   ============================================================ */
+.fi-svg .fi-frame {
+  fill: rgba(255, 255, 255, 0.04);
+  stroke: rgba(255, 255, 255, 0.45);
+  stroke-width: 1.4;
+}
+.fi-svg .fi-cylinder {
+  fill: rgba(255, 255, 255, 0.06);
+  stroke: rgba(255, 255, 255, 0.55);
+  stroke-width: 1.6;
+}
+.fi-svg .fi-piston {
+  fill: rgba(255, 255, 255, 0.08);
+  stroke: rgba(255, 255, 255, 0.7);
+  stroke-width: 1.4;
+}
+.fi-svg .fi-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+}
+.fi-svg .fi-label--carb { fill: var(--color-suzuki-red); }
+.fi-svg .fi-label--fi   { fill: var(--color-text-primary); }
+
+/* Carburetor side — chaotic red particles scattering wide */
+.fi-svg .fi-spray-carb {
+  fill: var(--color-suzuki-red);
+  opacity: 0.7;
+  filter: drop-shadow(0 0 3px rgba(228, 5, 33, 0.7));
+  animation: fi-carb-chaos 1.6s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.fi-svg .fi-spray-carb:nth-of-type(2) { animation-delay: 0.15s; }
+.fi-svg .fi-spray-carb:nth-of-type(3) { animation-delay: 0.30s; }
+.fi-svg .fi-spray-carb:nth-of-type(4) { animation-delay: 0.45s; }
+.fi-svg .fi-spray-carb:nth-of-type(5) { animation-delay: 0.60s; }
+.fi-svg .fi-spray-carb:nth-of-type(6) { animation-delay: 0.75s; }
+.fi-svg .fi-spray-carb:nth-of-type(7) { animation-delay: 0.90s; }
+.fi-svg .fi-spray-carb:nth-of-type(8) { animation-delay: 1.05s; }
+@keyframes fi-carb-chaos {
+  0%   { opacity: 0; transform: translate(0, 0) scale(0.4); }
+  20%  { opacity: 0.85; }
+  100% { opacity: 0; transform: translate(var(--fi-dx, 0), var(--fi-dy, 60px)) scale(1.4); }
+}
+
+/* FI side — precise white cone, straight column of fast particles */
+.fi-svg .fi-cone {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.4);
+  stroke-width: 1;
+  stroke-dasharray: 2 4;
+}
+.fi-svg .fi-spray-fi {
+  fill: #FFFFFF;
+  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.85));
+  animation: fi-fi-precise 1.1s linear infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.fi-svg .fi-spray-fi:nth-of-type(2) { animation-delay: 0.18s; }
+.fi-svg .fi-spray-fi:nth-of-type(3) { animation-delay: 0.36s; }
+.fi-svg .fi-spray-fi:nth-of-type(4) { animation-delay: 0.54s; }
+.fi-svg .fi-spray-fi:nth-of-type(5) { animation-delay: 0.72s; }
+.fi-svg .fi-spray-fi:nth-of-type(6) { animation-delay: 0.90s; }
+@keyframes fi-fi-precise {
+  0%   { opacity: 0; transform: translateY(0); }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { opacity: 0; transform: translateY(60px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fi-svg .fi-spray-carb,
+  .fi-svg .fi-spray-fi { animation: none !important; }
+}
+
+/* ============================================================
+   ABS — clean stop (top) vs lock-up slide (bottom)
+   ============================================================ */
+.abs-svg .abs-bike   {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.7);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.abs-svg .abs-wheel  {
+  fill: rgba(255, 255, 255, 0.04);
+  stroke: rgba(255, 255, 255, 0.7);
+  stroke-width: 1.6;
+}
+.abs-svg .abs-spoke {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.35);
+  stroke-width: 1;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+.abs-svg .abs-road {
+  stroke: rgba(255, 255, 255, 0.3);
+  stroke-width: 1;
+  stroke-dasharray: 6 6;
+}
+.abs-svg .abs-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  fill: var(--color-text-secondary);
+}
+.abs-svg .abs-label--good { fill: var(--color-text-primary); }
+.abs-svg .abs-label--bad  { fill: var(--color-suzuki-red); }
+
+/* ABS side — wheels keep rolling smoothly, brake-pulse dots flicker */
+.abs-svg .abs-spoke--good { animation: abs-wheel-roll 1.6s linear infinite; }
+@keyframes abs-wheel-roll {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+.abs-svg .abs-pulse {
+  fill: var(--color-text-primary);
+  filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.85));
+  animation: abs-brake-pulse 0.4s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+@keyframes abs-brake-pulse {
+  0%, 100% { opacity: 0.4; transform: scale(0.6); }
+  50%      { opacity: 1;   transform: scale(1.2); }
+}
+
+/* No-ABS side — wheel locked, growing skid streak */
+.abs-svg .abs-skid {
+  stroke: var(--color-suzuki-red);
+  stroke-width: 3;
+  stroke-linecap: round;
+  fill: none;
+  filter: drop-shadow(0 0 6px rgba(228, 5, 33, 0.5));
+  stroke-dasharray: 280;
+  stroke-dashoffset: 280;
+  animation: abs-skid-grow 2.4s ease-in-out infinite;
+}
+@keyframes abs-skid-grow {
+  0%   { stroke-dashoffset: 280; opacity: 0.2; }
+  40%  { stroke-dashoffset: 0;   opacity: 1; }
+  60%  { stroke-dashoffset: 0;   opacity: 1; }
+  100% { stroke-dashoffset: 0;   opacity: 0; }
+}
+.abs-svg .abs-bike--bad {
+  animation: abs-bike-tilt 2.4s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center bottom;
+}
+@keyframes abs-bike-tilt {
+  0%, 100% { transform: rotate(0deg); }
+  60%      { transform: rotate(-6deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .abs-svg .abs-spoke--good,
+  .abs-svg .abs-pulse,
+  .abs-svg .abs-skid,
+  .abs-svg .abs-bike--bad { animation: none !important; }
+}
+
+/* ============================================================
+   GEARBOX — 6 gears engaging in sequence + speed mapping
+   ============================================================ */
+.gx-svg .gx-housing {
+  fill: rgba(255, 255, 255, 0.03);
+  stroke: rgba(255, 255, 255, 0.4);
+  stroke-width: 1.2;
+}
+.gx-svg .gx-gear {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.55);
+  stroke-width: 1.6;
+}
+.gx-svg .gx-teeth {
+  stroke: rgba(255, 255, 255, 0.4);
+  stroke-width: 1;
+}
+.gx-svg .gx-num {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 18px;
+  fill: var(--color-text-secondary);
+}
+.gx-svg .gx-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  fill: var(--color-text-muted);
+}
+/* Sequential engagement — each gear lights up red in turn */
+.gx-svg .gx-active {
+  animation: gx-engage 6s ease-in-out infinite;
+}
+.gx-svg .gx-gear--1 .gx-active { animation-delay: 0s;   }
+.gx-svg .gx-gear--2 .gx-active { animation-delay: 1s;   }
+.gx-svg .gx-gear--3 .gx-active { animation-delay: 2s;   }
+.gx-svg .gx-gear--4 .gx-active { animation-delay: 3s;   }
+.gx-svg .gx-gear--5 .gx-active { animation-delay: 4s;   }
+.gx-svg .gx-gear--6 .gx-active { animation-delay: 5s;   }
+@keyframes gx-engage {
+  0%, 14%, 100% { stroke: rgba(255, 255, 255, 0.55); filter: none; }
+  /* Each gear is "active" for ~16% of the loop = 1s of 6s */
+  3%, 13%       { stroke: var(--color-suzuki-red); filter: drop-shadow(0 0 6px rgba(228, 5, 33, 0.7)); }
+}
+/* Speed range bar — 6 segments, sequentially highlighted */
+.gx-svg .gx-bar-seg {
+  fill: rgba(255, 255, 255, 0.06);
+  stroke: rgba(255, 255, 255, 0.18);
+  stroke-width: 1;
+  animation: gx-bar-fill 6s ease-in-out infinite;
+}
+.gx-svg .gx-bar-seg--1 { animation-delay: 0s; }
+.gx-svg .gx-bar-seg--2 { animation-delay: 1s; }
+.gx-svg .gx-bar-seg--3 { animation-delay: 2s; }
+.gx-svg .gx-bar-seg--4 { animation-delay: 3s; }
+.gx-svg .gx-bar-seg--5 { animation-delay: 4s; }
+.gx-svg .gx-bar-seg--6 { animation-delay: 5s; }
+@keyframes gx-bar-fill {
+  0%, 14%, 100% { fill: rgba(255, 255, 255, 0.06); }
+  3%, 13%       { fill: var(--color-suzuki-red); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gx-svg .gx-active,
+  .gx-svg .gx-bar-seg { animation: none !important; }
+}
+
+/* ============================================================
+   SEP — piston cycle + reduced-friction zones + mileage counter
+   ============================================================ */
+.sep-svg .sep-frame {
+  fill: rgba(255, 255, 255, 0.03);
+  stroke: rgba(255, 255, 255, 0.4);
+  stroke-width: 1.2;
+}
+.sep-svg .sep-cylinder {
+  fill: rgba(255, 255, 255, 0.04);
+  stroke: rgba(255, 255, 255, 0.55);
+  stroke-width: 1.6;
+}
+.sep-svg .sep-piston {
+  fill: rgba(255, 255, 255, 0.08);
+  stroke: rgba(255, 255, 255, 0.75);
+  stroke-width: 1.6;
+  animation: sep-piston-cycle 1.4s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+@keyframes sep-piston-cycle {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(50px); }
+}
+.sep-svg .sep-rod {
+  stroke: rgba(255, 255, 255, 0.6);
+  stroke-width: 1.5;
+  fill: none;
+  animation: sep-rod-cycle 1.4s ease-in-out infinite;
+}
+@keyframes sep-rod-cycle {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(50px); }
+}
+/* Reduced-friction zones — pulsing red rings around piston rings */
+.sep-svg .sep-friction {
+  fill: none;
+  stroke: var(--color-suzuki-red);
+  stroke-width: 1.8;
+  filter: drop-shadow(0 0 5px rgba(228, 5, 33, 0.6));
+  animation: sep-friction-glow 2s ease-in-out infinite, sep-piston-cycle 1.4s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.sep-svg .sep-friction:nth-of-type(2) { animation-delay: 0s, 0s; }
+@keyframes sep-friction-glow {
+  0%, 100% { opacity: 0.4; }
+  50%      { opacity: 1; }
+}
+/* Mileage counter — ticks up with monotone rhythm */
+.sep-svg .sep-counter {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 36px;
+  fill: var(--color-text-primary);
+  font-variant-numeric: tabular-nums;
+}
+.sep-svg .sep-counter-unit {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  fill: var(--color-suzuki-red);
+}
+.sep-svg .sep-counter-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  fill: var(--color-text-muted);
+}
+@media (prefers-reduced-motion: reduce) {
+  .sep-svg .sep-piston,
+  .sep-svg .sep-rod,
+  .sep-svg .sep-friction { animation: none !important; }
+}
+
+/* ============================================================
+   MOTOGP DNA — split-screen GSX-RR ↔ Gixxer SF 250
+   ============================================================ */
+.mg-svg .mg-bike {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.7);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.mg-svg .mg-bike--race {
+  stroke: var(--color-suzuki-red);
+  filter: drop-shadow(0 0 8px rgba(228, 5, 33, 0.4));
+}
+.mg-svg .mg-wheel {
+  fill: rgba(255, 255, 255, 0.04);
+  stroke: rgba(255, 255, 255, 0.7);
+  stroke-width: 1.6;
+}
+.mg-svg .mg-wheel--race { stroke: var(--color-suzuki-red); }
+.mg-svg .mg-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  fill: var(--color-text-muted);
+}
+.mg-svg .mg-label--strong { fill: var(--color-text-primary); font-weight: 700; }
+.mg-svg .mg-callout {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  fill: var(--color-suzuki-red);
+}
+.mg-svg .mg-link {
+  stroke: var(--color-suzuki-red);
+  stroke-width: 1.4;
+  stroke-dasharray: 3 4;
+  fill: none;
+  opacity: 0.6;
+  stroke-dashoffset: 0;
+  animation: mg-link-flow 3.5s linear infinite;
+}
+@keyframes mg-link-flow {
+  from { stroke-dashoffset: 0; }
+  to   { stroke-dashoffset: -28; }
+}
+.mg-svg .mg-link-end {
+  fill: var(--color-suzuki-red);
+  filter: drop-shadow(0 0 5px rgba(228, 5, 33, 0.7));
+  animation: mg-end-pulse 2s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+@keyframes mg-end-pulse {
+  0%, 100% { opacity: 0.5; transform: scale(0.8); }
+  50%      { opacity: 1;   transform: scale(1.2); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mg-svg .mg-link,
+  .mg-svg .mg-link-end { animation: none !important; }
+}
+
+/* Visual caption / legend (small text below SVG) */
+.tk-tech-visual-caption {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.7rem;
+  background: rgba(10, 10, 10, 0.7);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+}
+.tk-tech-visual-caption::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-heat-amber);
+}
+
+/* ============================================================
+   3c. BODY — 3-paragraph deep dive with subhead for each
+   ============================================================ */
+.tk-tech-body {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 2vw, 2rem);
+  margin-bottom: var(--space-xl);
+}
+@media (max-width: 768px) {
+  .tk-tech-body { grid-template-columns: 1fr; }
+}
+.tk-tech-paragraph {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.tk-tech-paragraph h3 {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-suzuki-red);
+  margin: 0;
+}
+.tk-tech-paragraph p {
+  font-size: clamp(0.92rem, 1.05vw, 1rem);
+  line-height: 1.65;
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+/* ============================================================
+   3d. SPEC STRIP — 3 hard numbers + one tag
+   ============================================================ */
+.tk-tech-specs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) auto;
+  gap: clamp(1rem, 2vw, 2rem);
+  align-items: center;
+  padding: var(--space-md) clamp(1rem, 2vw, 1.5rem);
+  background: var(--color-bg-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-md);
+}
+@media (max-width: 768px) {
+  .tk-tech-specs { grid-template-columns: 1fr 1fr; }
+  .tk-tech-spec--tag { grid-column: 1 / -1; }
+}
+.tk-tech-spec {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+.tk-tech-spec-num {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(1.4rem, 2.4vw, 2rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--color-text-primary);
+  font-variant-numeric: tabular-nums;
+}
+.tk-tech-spec-num em {
+  font-style: normal;
+  color: var(--color-suzuki-red);
+  font-size: 0.65em;
+  margin-left: 0.15em;
+}
+.tk-tech-spec-label {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+.tk-tech-spec--tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.85rem;
+  background: rgba(228, 5, 33, 0.12);
+  border: 1px solid rgba(228, 5, 33, 0.4);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-suzuki-red);
+  white-space: nowrap;
+}
+.tk-tech-spec--tag::before {
+  content: '';
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--color-suzuki-red);
+  box-shadow: 0 0 8px rgba(228, 5, 33, 0.7);
+}
+
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .tk-hero-schematic svg,
+  .tk-hero-cue-line { animation: none !important; }
+  .tk-index-link { transition: none !important; }
+}

@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+  // Apply the saved theme before first paint to avoid a flash.
+  (function () {
+    try {
+      var t = localStorage.getItem('suzuki-theme');
+      if (t === 'light') document.documentElement.setAttribute('data-theme', 'light');
+    } catch (_) { /* localStorage blocked — default dark */ }
+  })();
+</script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#0A0A0A" />
+
+<title>Book a Test Ride — Suzuki Bangladesh</title>
+<meta name="description" content="Book a free test ride at any Suzuki Bangladesh dealer. Pick your bike, your dealer, and your date — we'll call you within 24 hours to confirm." />
+
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Book a Test Ride — Suzuki Bangladesh" />
+<meta property="og:description" content="No commitment. No hidden fees. Just you and a Suzuki on the road." />
+<meta property="og:image" content="assets/images/og-cover.jpg" />
+
+<link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet" />
+
+<link rel="stylesheet" href="css/tokens.css" />
+<link rel="stylesheet" href="css/base.css" />
+<link rel="stylesheet" href="css/components.css" />
+<link rel="stylesheet" href="css/sections/navbar.css" />
+<link rel="stylesheet" href="css/sections/footer.css" />
+<link rel="stylesheet" href="css/pages/test-ride.css" />
+<link rel="stylesheet" href="css/widgets.css" />
+<link rel="stylesheet" href="css/theme-light.css" />
+
+<script defer src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+<script defer src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+<script defer src="js/lenis-init.js"></script>
+<script defer src="js/nav.js"></script>
+<script defer src="js/main.js"></script>
+<script defer src="js/sections/hero.js"></script>          <!-- prepareLogo() for navbar .bl-mark -->
+<script defer src="js/pages/test-ride.js"></script>
+<script defer src="js/widgets/chat.js"></script>
+<script defer src="js/widgets/cookies.js"></script>
+<script defer src="js/widgets/scroll-top.js"></script>
+<script defer src="js/widgets/theme-toggle.js"></script>
+
+</head>
+<body data-page="test-ride" id="top">
+
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<!-- ============================================================
+     NAVBAR
+     ============================================================ -->
+<header class="nav" data-testid="navbar" role="banner">
+  <div class="container nav__inner">
+    <a href="index.html" class="nav__brand" aria-label="Suzuki Bangladesh — home">
+      <div class="brand-lockup" id="hero-brandLockup" aria-hidden="true">
+        <span class="bl-mark" id="hero-blMark"></span>
+        <div class="bl-text">
+          <span class="bl-suzuki">SUZUKI</span>
+          <span class="bl-tag">Bangladesh</span>
+          <span class="bl-meta">EST. 1909 · MOTOGP HERITAGE</span>
+        </div>
+      </div>
+    </a>
+
+    <nav class="nav__links" aria-label="Primary navigation">
+      <a href="bikes.html" class="nav__link" data-testid="nav-bikes" data-nav-trigger="mega" aria-haspopup="true" aria-expanded="false" aria-controls="nav-mega-bikes">
+        Bikes
+        <i data-lucide="chevron-down" class="nav__chevron" aria-hidden="true"></i>
+      </a>
+      <a href="technology.html" class="nav__link">Technology</a>
+      <a href="service.html" class="nav__link">Service</a>
+      <a href="shop.html" class="nav__link">Shop</a>
+      <a href="dealers.html" class="nav__link">Dealers</a>
+      <a href="offers.html" class="nav__link">Offers</a>
+    </nav>
+
+    <div class="nav__actions">
+      <a href="tel:16638" class="nav__hotline" aria-label="Call hotline 16638">
+        <i data-lucide="phone" class="icon" aria-hidden="true"></i>
+        <span class="nav__hotline-num">16638</span>
+      </a>
+      <a href="test-ride.html" class="btn btn-primary btn-sm nav__cta-desktop is-active" aria-current="page">Book Test Ride</a>
+      <button type="button" class="nav__mobile-toggle" data-nav-trigger="mobile" aria-label="Open menu" aria-expanded="false" aria-controls="nav-mobile-overlay">
+        <i data-lucide="menu" class="icon" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mega menu (Bikes) -->
+  <div class="nav__mega" id="nav-mega-bikes" role="region" aria-label="Bike lineup">
+    <div class="container">
+      <p class="nav__mega-eyebrow">› EXPLORE THE LINEUP · 10 MODELS</p>
+      <div class="nav__mega-filters" role="tablist" aria-label="Filter bikes by category">
+        <button type="button" class="nav__mega-filter" data-filter="all" aria-pressed="true">All</button>
+        <button type="button" class="nav__mega-filter" data-filter="scooter" aria-pressed="false">Scooter</button>
+        <button type="button" class="nav__mega-filter" data-filter="commuter" aria-pressed="false">Commuter</button>
+        <button type="button" class="nav__mega-filter" data-filter="sports" aria-pressed="false">Sports</button>
+        <button type="button" class="nav__mega-filter" data-filter="super-sports" aria-pressed="false">Super Sports</button>
+        <button type="button" class="nav__mega-filter" data-filter="performance-sports" aria-pressed="false">Performance Sports</button>
+      </div>
+      <div class="nav__mega-grid">
+        <a href="bikes/gixxer-sf-250.html" class="nav__mega-card" data-category="super-sports">
+          <div class="nav__mega-card-image" aria-hidden="true"><img src="assets/images/bikes/gixxer-sf-250.webp" alt="Gixxer SF 250" loading="lazy" /></div>
+          <span class="nav__mega-card-cat">Super Sports · Hero</span>
+          <div class="nav__mega-card-name">Gixxer SF 250</div>
+          <div class="nav__mega-card-price">From BDT 429,950</div>
+        </a>
+        <a href="bikes/gsx-r150.html" class="nav__mega-card" data-category="performance-sports">
+          <div class="nav__mega-card-image" aria-hidden="true"><img src="assets/images/bikes/gsx-r150.webp" alt="GSX-R150" loading="lazy" /></div>
+          <span class="nav__mega-card-cat">Performance Sports</span>
+          <div class="nav__mega-card-name">GSX-R150</div>
+          <div class="nav__mega-card-price">From BDT 524,950</div>
+        </a>
+        <a href="bikes/gixxer-250.html" class="nav__mega-card" data-category="sports">
+          <div class="nav__mega-card-image" aria-hidden="true"><img src="assets/images/bikes/gixxer-250.webp" alt="Gixxer 250" loading="lazy" /></div>
+          <span class="nav__mega-card-cat">Sports</span>
+          <div class="nav__mega-card-name">Gixxer 250</div>
+          <div class="nav__mega-card-price">From BDT 379,950</div>
+        </a>
+        <a href="bikes/gixxer-sf.html" class="nav__mega-card" data-category="sports">
+          <div class="nav__mega-card-image" aria-hidden="true"><img src="assets/images/bikes/gixxer-sf.webp" alt="Gixxer SF" loading="lazy" /></div>
+          <span class="nav__mega-card-cat">Sports</span>
+          <div class="nav__mega-card-name">Gixxer SF</div>
+          <div class="nav__mega-card-price">From BDT 329,950</div>
+        </a>
+        <a href="bikes/gixxer.html" class="nav__mega-card" data-category="commuter">
+          <div class="nav__mega-card-image" aria-hidden="true"><img src="assets/images/bikes/gixxer.webp" alt="Gixxer" loading="lazy" /></div>
+          <span class="nav__mega-card-cat">Commuter</span>
+          <div class="nav__mega-card-name">Gixxer</div>
+          <div class="nav__mega-card-price">From BDT 229,950</div>
+        </a>
+        <a href="bikes/gixxer-classic-matt.html" class="nav__mega-card" data-category="commuter">
+          <div class="nav__mega-card-image" aria-hidden="true"><img src="assets/images/bikes/gixxer-classic-matt.webp" alt="Gixxer Classic Matt" loading="lazy" /></div>
+          <span class="nav__mega-card-cat">Commuter</span>
+          <div class="nav__mega-card-name">Gixxer Classic Matt</div>
+          <div class="nav__mega-card-price">From BDT 202,950</div>
+        </a>
+        <a href="bikes/gixxer-monotone.html" class="nav__mega-card" data-category="commuter">
+          <div class="nav__mega-card-image" aria-hidden="true"><img src="assets/images/bikes/gixxer-monotone.webp" alt="Gixxer Monotone" loading="lazy" /></div>
+          <span class="nav__mega-card-cat">Commuter</span>
+          <div class="nav__mega-card-name">Gixxer Monotone</div>
+          <div class="nav__mega-card-price">From BDT 199,950</div>
+        </a>
+        <a href="bikes/access-125.html" class="nav__mega-card" data-category="scooter">
+          <div class="nav__mega-card-image" aria-hidden="true"><img src="assets/images/bikes/access-125.webp" alt="Access 125" loading="lazy" /></div>
+          <span class="nav__mega-card-cat">Scooter</span>
+          <div class="nav__mega-card-name">Access 125</div>
+          <div class="nav__mega-card-price">From BDT 215,000</div>
+        </a>
+        <a href="bikes/gsx-125.html" class="nav__mega-card" data-category="commuter">
+          <div class="nav__mega-card-image" aria-hidden="true"><img src="assets/images/bikes/gsx-125.webp" alt="GSX 125" loading="lazy" /></div>
+          <span class="nav__mega-card-cat">Commuter</span>
+          <div class="nav__mega-card-name">GSX 125</div>
+          <div class="nav__mega-card-price">From BDT 141,950</div>
+        </a>
+        <a href="bikes/hayate-ep.html" class="nav__mega-card" data-category="commuter">
+          <div class="nav__mega-card-image" aria-hidden="true"><img src="assets/images/bikes/hayate-ep.webp" alt="Hayate EP" loading="lazy" /></div>
+          <span class="nav__mega-card-cat">Commuter</span>
+          <div class="nav__mega-card-name">Hayate EP</div>
+          <div class="nav__mega-card-price">From BDT 118,000</div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile overlay -->
+  <div class="nav__mobile-overlay" id="nav-mobile-overlay" role="dialog" aria-modal="true" aria-labelledby="nav-mobile-title" hidden>
+    <div class="nav__mobile-header">
+      <a href="index.html" class="nav__brand" id="nav-mobile-title" aria-label="Suzuki Bangladesh — home">
+        <div class="brand-lockup" aria-hidden="true">
+          <span class="bl-mark"></span>
+          <div class="bl-text"><span class="bl-suzuki">SUZUKI</span><span class="bl-tag">Bangladesh</span></div>
+        </div>
+      </a>
+      <button type="button" class="nav__mobile-close" data-nav-trigger="mobile-close" aria-label="Close menu">
+        <i data-lucide="x" class="icon" aria-hidden="true"></i>
+      </button>
+    </div>
+    <div class="nav__mobile-body">
+      <a href="bikes.html" class="nav__mobile-link">Bikes</a>
+      <a href="technology.html" class="nav__mobile-link">Technology</a>
+      <a href="service.html" class="nav__mobile-link">Service</a>
+      <a href="shop.html" class="nav__mobile-link">Shop</a>
+      <a href="dealers.html" class="nav__mobile-link">Dealers</a>
+      <a href="offers.html" class="nav__mobile-link">Offers</a>
+    </div>
+    <div class="nav__mobile-footer">
+      <a href="test-ride.html" class="btn btn-primary btn-lg" aria-current="page">Book Test Ride</a>
+      <a href="tel:16638" class="btn btn-secondary btn-lg">
+        <i data-lucide="phone" class="icon" aria-hidden="true"></i>
+        Call Hotline 16638
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- ============================================================
+     MAIN
+     ============================================================ -->
+<main id="main" role="main">
+
+  <!-- ============================================================
+       1. HERO — bike-themed dramatic stage
+       ============================================================ -->
+  <section class="tr-hero" aria-labelledby="tr-page-title">
+    <div class="tr-hero-bg" aria-hidden="true">
+      <img src="assets/images/bikes/gsx-rider.jpg" alt="" loading="eager" />
+    </div>
+
+    <div class="tr-hero-container">
+      <div class="tr-hero-text">
+        <p class="tr-hero-eyebrow">Take it for a spin</p>
+        <h1 id="tr-page-title" class="tr-hero-title">
+          Book your <em>test</em> ride.
+        </h1>
+        <p class="tr-hero-sub">
+          No commitment. No hidden fees. Just you and a Suzuki on the road for 30 minutes — at any of our 500+ dealers across Bangladesh.
+        </p>
+        <ul class="tr-hero-checks">
+          <li>Free, anywhere in the country</li>
+          <li>Pick your bike, your dealer, your time</li>
+          <li>We confirm by phone within 24 hours</li>
+        </ul>
+      </div>
+
+      <div class="tr-hero-cue">
+        <article class="tr-hero-cue-card">
+          <p class="tr-hero-cue-eyebrow">In 4 steps</p>
+          <h2 class="tr-hero-cue-title">From <em>here</em> to your first throttle.</h2>
+          <ol class="tr-hero-cue-list">
+            <li>Pick the Suzuki you want to ride</li>
+            <li>Choose a nearby authorised dealer</li>
+            <li>Set a date and a 2-hour time slot</li>
+            <li>Tell us how to reach you — that's it</li>
+          </ol>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       2. FORM STAGE
+       ============================================================ -->
+  <section class="tr-form" aria-label="Test ride booking form">
+    <div class="tr-form-container">
+
+      <!-- The form (stage = visible by default; success card replaces it on submit) -->
+      <form data-test-ride-form data-form-stage novalidate>
+
+        <!-- ===== Step 01 — Pick your bike ===== -->
+        <div class="tr-step">
+          <header class="tr-step-head">
+            <span class="tr-step-num">Step 01</span>
+            <h2 class="tr-step-title">Pick your <em>bike</em>.</h2>
+          </header>
+
+          <div class="tr-bikepick-wrap">
+            <input type="hidden" name="bike" value="" />
+            <div class="tr-bikepick" role="radiogroup" aria-label="Choose a bike">
+
+              <button type="button" class="tr-tile" data-bike-tile="gixxer-sf-250" aria-pressed="false">
+                <div class="tr-tile-image"><img src="assets/images/bikes/gixxer-sf-250.webp" alt="Gixxer SF 250" loading="lazy" /></div>
+                <div class="tr-tile-body"><span class="tr-tile-cat">Super Sports</span><h3 class="tr-tile-name">Gixxer SF 250</h3></div>
+              </button>
+
+              <button type="button" class="tr-tile" data-bike-tile="gsx-r150" aria-pressed="false">
+                <div class="tr-tile-image"><img src="assets/images/bikes/gsx-r150.webp" alt="GSX-R150" loading="lazy" /></div>
+                <div class="tr-tile-body"><span class="tr-tile-cat">Performance</span><h3 class="tr-tile-name">GSX-R150</h3></div>
+              </button>
+
+              <button type="button" class="tr-tile" data-bike-tile="gixxer-250" aria-pressed="false">
+                <div class="tr-tile-image"><img src="assets/images/bikes/gixxer-250.webp" alt="Gixxer 250" loading="lazy" /></div>
+                <div class="tr-tile-body"><span class="tr-tile-cat">Sports</span><h3 class="tr-tile-name">Gixxer 250</h3></div>
+              </button>
+
+              <button type="button" class="tr-tile" data-bike-tile="gixxer-sf" aria-pressed="false">
+                <div class="tr-tile-image"><img src="assets/images/bikes/gixxer-sf.webp" alt="Gixxer SF" loading="lazy" /></div>
+                <div class="tr-tile-body"><span class="tr-tile-cat">Sports</span><h3 class="tr-tile-name">Gixxer SF</h3></div>
+              </button>
+
+              <button type="button" class="tr-tile" data-bike-tile="gixxer" aria-pressed="false">
+                <div class="tr-tile-image"><img src="assets/images/bikes/gixxer.webp" alt="Gixxer" loading="lazy" /></div>
+                <div class="tr-tile-body"><span class="tr-tile-cat">Commuter</span><h3 class="tr-tile-name">Gixxer</h3></div>
+              </button>
+
+              <button type="button" class="tr-tile" data-bike-tile="gixxer-classic-matt" aria-pressed="false">
+                <div class="tr-tile-image"><img src="assets/images/bikes/gixxer-classic-matt.webp" alt="Gixxer Classic Matt" loading="lazy" /></div>
+                <div class="tr-tile-body"><span class="tr-tile-cat">Commuter</span><h3 class="tr-tile-name">Gixxer Classic Matt</h3></div>
+              </button>
+
+              <button type="button" class="tr-tile" data-bike-tile="gixxer-monotone" aria-pressed="false">
+                <div class="tr-tile-image"><img src="assets/images/bikes/gixxer-monotone.webp" alt="Gixxer Monotone" loading="lazy" /></div>
+                <div class="tr-tile-body"><span class="tr-tile-cat">Commuter</span><h3 class="tr-tile-name">Gixxer Monotone</h3></div>
+              </button>
+
+              <button type="button" class="tr-tile" data-bike-tile="access-125" aria-pressed="false">
+                <div class="tr-tile-image"><img src="assets/images/bikes/access-125.webp" alt="Access 125" loading="lazy" /></div>
+                <div class="tr-tile-body"><span class="tr-tile-cat">Scooter</span><h3 class="tr-tile-name">Access 125</h3></div>
+              </button>
+
+              <button type="button" class="tr-tile" data-bike-tile="gsx-125" aria-pressed="false">
+                <div class="tr-tile-image"><img src="assets/images/bikes/gsx-125.webp" alt="GSX 125" loading="lazy" /></div>
+                <div class="tr-tile-body"><span class="tr-tile-cat">Commuter</span><h3 class="tr-tile-name">GSX 125</h3></div>
+              </button>
+
+              <button type="button" class="tr-tile" data-bike-tile="hayate-ep" aria-pressed="false">
+                <div class="tr-tile-image"><img src="assets/images/bikes/hayate-ep.webp" alt="Hayate EP" loading="lazy" /></div>
+                <div class="tr-tile-body"><span class="tr-tile-cat">Commuter</span><h3 class="tr-tile-name">Hayate EP</h3></div>
+              </button>
+
+            </div>
+            <span class="tr-bike-badge" data-bike-badge></span>
+          </div>
+        </div>
+
+        <!-- ===== Step 02 — Pick a dealer ===== -->
+        <div class="tr-step">
+          <header class="tr-step-head">
+            <span class="tr-step-num">Step 02</span>
+            <h2 class="tr-step-title">Pick a <em>dealer</em>.</h2>
+          </header>
+
+          <div class="tr-row tr-row--3">
+            <div class="tr-field">
+              <label class="tr-label" for="tr-division">Division <span class="req">*</span></label>
+              <select class="tr-select" id="tr-division" name="division" required>
+                <option value="">Select division</option>
+                <option>Dhaka</option>
+                <option>Chattogram</option>
+                <option>Khulna</option>
+                <option>Rajshahi</option>
+                <option>Sylhet</option>
+                <option>Barisal</option>
+                <option>Rangpur</option>
+                <option>Mymensingh</option>
+              </select>
+            </div>
+            <div class="tr-field">
+              <label class="tr-label" for="tr-district">District</label>
+              <select class="tr-select" id="tr-district" name="district" disabled>
+                <option value="">Select district</option>
+              </select>
+            </div>
+            <div class="tr-field">
+              <label class="tr-label" for="tr-dealer">Dealer <span class="req">*</span></label>
+              <select class="tr-select" id="tr-dealer" name="dealer" disabled required>
+                <option value="">Select dealer</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== Step 03 — Date + time slot ===== -->
+        <div class="tr-step">
+          <header class="tr-step-head">
+            <span class="tr-step-num">Step 03</span>
+            <h2 class="tr-step-title"><em>When</em> would you like to ride?</h2>
+          </header>
+
+          <div class="tr-row tr-row--2">
+            <div class="tr-field">
+              <label class="tr-label" for="tr-date">Preferred date <span class="req">*</span></label>
+              <input class="tr-input" type="date" id="tr-date" name="date" required />
+            </div>
+            <div class="tr-field">
+              <label class="tr-label" id="tr-slot-label">Time slot <span class="req">*</span></label>
+              <input type="hidden" name="slot" value="" />
+              <div class="tr-slots" role="radiogroup" aria-labelledby="tr-slot-label">
+                <button type="button" class="tr-slot" data-slot="10:00 AM" aria-pressed="false">10:00 AM</button>
+                <button type="button" class="tr-slot" data-slot="12:00 PM" aria-pressed="false">12:00 PM</button>
+                <button type="button" class="tr-slot" data-slot="02:00 PM" aria-pressed="false">02:00 PM</button>
+                <button type="button" class="tr-slot" data-slot="04:00 PM" aria-pressed="false">04:00 PM</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== Step 04 — Your details ===== -->
+        <div class="tr-step">
+          <header class="tr-step-head">
+            <span class="tr-step-num">Step 04</span>
+            <h2 class="tr-step-title">Your <em>details</em>.</h2>
+          </header>
+
+          <div class="tr-row tr-row--2">
+            <div class="tr-field">
+              <label class="tr-label" for="tr-fullname">Full name <span class="req">*</span></label>
+              <input class="tr-input" type="text" id="tr-fullname" name="fullname" placeholder="As on your driving licence" autocomplete="name" required />
+            </div>
+            <div class="tr-field">
+              <label class="tr-label" for="tr-phone">Phone <span class="req">*</span></label>
+              <input class="tr-input" type="tel" id="tr-phone" name="phone" placeholder="+880 17xx-xxxxxx" autocomplete="tel" required />
+            </div>
+          </div>
+          <div class="tr-row tr-row--2" style="margin-top: 1rem;">
+            <div class="tr-field">
+              <label class="tr-label" for="tr-email">Email</label>
+              <input class="tr-input" type="email" id="tr-email" name="email" placeholder="you@example.com" autocomplete="email" />
+            </div>
+            <div class="tr-field">
+              <label class="tr-label" for="tr-notes">Anything we should know?</label>
+              <input class="tr-input" type="text" id="tr-notes" name="notes" placeholder="Optional — rider experience, accessibility needs, etc." />
+            </div>
+          </div>
+        </div>
+
+        <!-- License acknowledgment -->
+        <label class="tr-check">
+          <input type="checkbox" name="licenseAck" required />
+          <span class="tr-check-text">
+            <strong>I confirm I have a valid Bangladesh driving licence</strong> and am at least 18 years old. I'll bring my licence + a national ID to the dealer.
+          </span>
+        </label>
+
+        <!-- Error box (filled by JS on validation failures) -->
+        <div class="tr-errors" data-form-errors role="alert" hidden></div>
+
+        <!-- Submit row -->
+        <div class="tr-submit-row">
+          <button type="submit" class="tr-submit">Book My Test Ride</button>
+          <span style="font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--color-text-muted);">
+            We'll confirm by phone within 24 h.
+          </span>
+        </div>
+
+      </form>
+
+      <!-- Success state — replaces the form on submit -->
+      <article class="tr-success" data-form-success hidden role="status" aria-live="polite">
+        <div class="tr-success-icon" aria-hidden="true">✓</div>
+        <h2 class="tr-success-title">You're <em>booked.</em></h2>
+        <p class="tr-success-sub">
+          Your test ride request is in the queue. A team member from your chosen Suzuki dealer will call you within 24 hours to confirm the date and walk you through what to bring.
+        </p>
+
+        <ul class="tr-success-summary">
+          <li><span>Name</span><strong data-sum-name>—</strong></li>
+          <li><span>Bike</span><strong data-sum-bike>—</strong></li>
+          <li><span>Dealer</span><strong data-sum-dealer>—</strong></li>
+          <li><span>When</span><strong data-sum-when>—</strong></li>
+          <li><span>We'll call</span><strong data-sum-phone>—</strong></li>
+          <li><span>Reference</span><strong>SBD-<span style="font-variant-numeric: tabular-nums;">000142</span></strong></li>
+        </ul>
+
+        <div class="tr-success-actions">
+          <a href="bikes.html" class="tr-success-cta tr-success-cta--primary">Browse the lineup</a>
+          <button type="button" class="tr-success-cta tr-success-cta--secondary" data-form-reset>Book another</button>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ============================================================
+       3. WHAT HAPPENS NEXT — 3-step explainer
+       ============================================================ -->
+  <section class="tr-steps" aria-labelledby="tr-steps-title">
+    <div class="tr-steps-container">
+      <header class="tr-steps-heading">
+        <p class="tr-steps-eyebrow">What happens next</p>
+        <h2 id="tr-steps-title" class="tr-steps-title">From booked to <em>riding.</em></h2>
+      </header>
+
+      <div class="tr-steps-grid">
+        <article class="tr-step-card">
+          <span class="tr-step-card-num">01</span>
+          <h3 class="tr-step-card-title">We'll call you</h3>
+          <p class="tr-step-card-body">Within 24 hours, your chosen dealer rings to confirm the time slot and let you know what to bring.</p>
+        </article>
+        <article class="tr-step-card">
+          <span class="tr-step-card-num">02</span>
+          <h3 class="tr-step-card-title">Show up. Sign in.</h3>
+          <p class="tr-step-card-body">Walk into the dealer with your driving licence and a national ID. We'll have your Suzuki ready and warm.</p>
+        </article>
+        <article class="tr-step-card">
+          <span class="tr-step-card-num">03</span>
+          <h3 class="tr-step-card-title">Ride for 30 minutes</h3>
+          <p class="tr-step-card-body">Take the bike on a guided route. Feel the engine, the brakes, the seat. No commitment — just you and the road.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       4. FAQ
+       ============================================================ -->
+  <section class="tr-faq" aria-labelledby="tr-faq-title">
+    <div class="tr-faq-container">
+      <header class="tr-faq-heading">
+        <p class="tr-steps-eyebrow">Common questions</p>
+        <h2 id="tr-faq-title" class="tr-steps-title">Before you <em>twist</em> the throttle.</h2>
+      </header>
+
+      <div class="tr-faq-list">
+
+        <details class="tr-faq-item">
+          <summary class="tr-faq-summary">Is the test ride free?</summary>
+          <div class="tr-faq-body">Yes — every test ride at an authorised Suzuki Bangladesh dealer is free of charge, with no obligation to buy.</div>
+        </details>
+
+        <details class="tr-faq-item">
+          <summary class="tr-faq-summary">What do I need to bring?</summary>
+          <div class="tr-faq-body">A valid Bangladesh driving licence (motorcycle category), one national ID document (NID, passport, or driving licence is fine), and ideally closed-toe shoes. The dealer will provide a helmet and gloves.</div>
+        </details>
+
+        <details class="tr-faq-item">
+          <summary class="tr-faq-summary">Can I bring a pillion?</summary>
+          <div class="tr-faq-body">For the test ride itself, no — for safety and insurance reasons we keep the test rider solo. Your pillion is welcome at the dealer to inspect the bike with you before and after the ride.</div>
+        </details>
+
+        <details class="tr-faq-item">
+          <summary class="tr-faq-summary">What if I love the bike?</summary>
+          <div class="tr-faq-body">The dealer can guide you through paperwork, financing options, and on-the-road delivery the same day for in-stock models. There's no pressure — many of our riders book two or three test rides before deciding.</div>
+        </details>
+
+        <details class="tr-faq-item">
+          <summary class="tr-faq-summary">What if I'm late?</summary>
+          <div class="tr-faq-body">No problem — give the dealer a call (their direct number will be in your confirmation) and we'll do our best to slot you in. Try to give us at least 30 minutes' notice if possible.</div>
+        </details>
+
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============================================================
+     FOOTER
+     ============================================================ -->
+<footer class="ft-section" role="contentinfo" data-testid="footer">
+  <div class="ft-container">
+
+    <div class="ft-top">
+      <div class="ft-brand">
+        <a class="brand-lockup" href="index.html" aria-label="Suzuki Bangladesh — home">
+          <span class="bl-mark" aria-hidden="true"></span>
+          <span class="bl-text"><span class="bl-name">SUZUKI</span><span class="bl-sub">Bangladesh</span></span>
+        </a>
+        <p class="ft-blurb">
+          Suzuki Bangladesh, operated by Rancon Motor Bikes Ltd, brings MotoGP-bred engineering and Japanese craftsmanship to riders across the country — built for the road you ride every day.
+        </p>
+      </div>
+      <div class="ft-aside">
+        <p class="ft-operator">Operated by <strong>Rancon Motor Bikes Ltd</strong></p>
+        <ul class="ft-socials" aria-label="Follow Suzuki Bangladesh">
+          <li><a class="ft-social" href="https://www.facebook.com/SuzukiBangladeshOfficial" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.7-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.7l-.4 2.9h-2.3v7A10 10 0 0 0 22 12z"/></svg></a></li>
+          <li><a class="ft-social" href="https://www.instagram.com/suzukibangladeshofficial" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.2c3.2 0 3.6 0 4.8.1 1.2 0 1.8.3 2.2.4.6.2 1 .5 1.4.9.4.4.7.8.9 1.4.2.4.4 1 .4 2.2 0 1.2.1 1.6.1 4.8s0 3.6-.1 4.8c0 1.2-.3 1.8-.4 2.2-.2.6-.5 1-.9 1.4-.4.4-.8.7-1.4.9-.4.2-1 .4-2.2.4-1.2 0-1.6.1-4.8.1s-3.6 0-4.8-.1c-1.2 0-1.8-.3-2.2-.4-.6-.2-1-.5-1.4-.9-.4-.4-.7-.8-.9-1.4-.2-.4-.4-1-.4-2.2 0-1.2-.1-1.6-.1-4.8s0-3.6.1-4.8c0-1.2.3-1.8.4-2.2.2-.6.5-1 .9-1.4.4-.4.8-.7 1.4-.9.4-.2 1-.4 2.2-.4C8.4 2.2 8.8 2.2 12 2.2zm0 1.8c-3.2 0-3.5 0-4.7.1-.9 0-1.4.2-1.7.3-.4.2-.7.4-1 .7-.3.3-.5.6-.7 1-.1.3-.3.8-.3 1.7C3.5 8.5 3.5 8.8 3.5 12s0 3.5.1 4.7c0 .9.2 1.4.3 1.7.2.4.4.7.7 1 .3.3.6.5 1 .7.3.1.8.3 1.7.3 1.2 0 1.5.1 4.7.1s3.5 0 4.7-.1c.9 0 1.4-.2 1.7-.3.4-.2.7-.4 1-.7.3-.3.5-.6.7-1 .1-.3.3-.8.3-1.7 0-1.2.1-1.5.1-4.7s0-3.5-.1-4.7c0-.9-.2-1.4-.3-1.7-.2-.4-.4-.7-.7-1-.3-.3-.6-.5-1-.7-.3-.1-.8-.3-1.7-.3-1.2-.1-1.5-.1-4.7-.1zm0 3.2a4.8 4.8 0 1 1 0 9.6 4.8 4.8 0 0 1 0-9.6zm0 1.8a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm5-2.1a1.1 1.1 0 1 1 0 2.2 1.1 1.1 0 0 1 0-2.2z"/></svg></a></li>
+          <li><a class="ft-social" href="https://www.youtube.com/@suzukimotorcyclebangladesh" aria-label="YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.6 3.6 12 3.6 12 3.6s-7.6 0-9.4.5A3 3 0 0 0 .5 6.2C0 8 0 12 0 12s0 4 .5 5.8a3 3 0 0 0 2.1 2.1c1.8.5 9.4.5 9.4.5s7.6 0 9.4-.5a3 3 0 0 0 2.1-2.1C24 16 24 12 24 12s0-4-.5-5.8zM9.6 15.6V8.4l6.3 3.6-6.3 3.6z"/></svg></a></li>
+          <li><a class="ft-social" href="https://www.linkedin.com/company/rancon-motor-bikes-ltd" aria-label="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 2h-17A1.5 1.5 0 0 0 2 3.5v17A1.5 1.5 0 0 0 3.5 22h17a1.5 1.5 0 0 0 1.5-1.5v-17A1.5 1.5 0 0 0 20.5 2zM8 19H5V9h3v10zM6.5 7.7a1.7 1.7 0 1 1 0-3.4 1.7 1.7 0 0 1 0 3.4zM19 19h-3v-5.5c0-1.3 0-3-1.8-3s-2.2 1.4-2.2 2.9V19h-3V9h2.9v1.4h.04c.4-.7 1.4-1.6 2.9-1.6 3.1 0 3.6 2 3.6 4.7V19z"/></svg></a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="ft-grid">
+      <div>
+        <h3 class="ft-col-title">Bikes</h3>
+        <ul class="ft-list">
+          <li><a href="bikes.html#commuter">Commuter</a></li>
+          <li><a href="bikes.html#sports">Sports</a></li>
+          <li><a href="bikes.html#performance">Performance Sports</a></li>
+          <li><a href="bikes.html#super-sports">Super Sports</a></li>
+          <li><a href="bikes.html#scooter">Scooters</a></li>
+          <li><a href="bikes.html">View All Bikes</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="ft-col-title">Shop</h3>
+        <ul class="ft-list">
+          <li><a href="shop.html#parts">Genuine Parts</a></li>
+          <li><a href="shop.html#oils">Engine Oils</a></li>
+          <li><a href="shop.html#accessories">Accessories</a></li>
+          <li><a href="service.html">Book a Service</a></li>
+          <li><a href="tel:16638">Bulk &amp; Trade Orders</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="ft-col-title">Company</h3>
+        <ul class="ft-list">
+          <li><a href="test-ride.html" aria-current="page">Book a Test Ride</a></li>
+          <li><a href="dealers.html">Find a Dealer</a></li>
+          <li><a href="about.html">About Suzuki BD</a></li>
+          <li><a href="careers.html">Careers</a></li>
+          <li><a href="press.html">Press &amp; Media</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="ft-col-title">Get in Touch</h3>
+        <ul class="ft-contact">
+          <li class="ft-contact-row">
+            <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            <div><strong>24/7 Hotline</strong><a class="ft-hotline" href="tel:16638">16638 <span>Toll-Free</span></a></div>
+          </li>
+          <li class="ft-contact-row">
+            <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>
+            <div><strong>Customer Care</strong><a href="mailto:info@suzuki.com.bd">info@suzuki.com.bd</a></div>
+          </li>
+          <li class="ft-contact-row">
+            <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <div><strong>Head Office</strong>Rangs Babylonia, Plot 246, Bir Uttam Mir Showkat Sarak,<br />Tejgaon I/A, Dhaka 1208, Bangladesh</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="ft-bottom">
+      <p>&copy; 2009&ndash;2026 Rancon Motor Bikes Ltd. All rights reserved.</p>
+      <ul class="ft-legal" aria-label="Legal">
+        <li><a href="legal/privacy.html">Privacy Policy</a></li>
+        <li><a href="legal/terms.html">Terms of Use</a></li>
+        <li><a href="legal/cookies.html">Cookies</a></li>
+        <li><a href="sitemap.html">Sitemap</a></li>
+      </ul>
+      <a href="#top" class="ft-totop" aria-label="Back to top">Back to Top</a>
+    </div>
+
+  </div>
+</footer>
+
+</body>
+</html>

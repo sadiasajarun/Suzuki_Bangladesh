@@ -1,0 +1,551 @@
+/* ============================================================
+   SECTION 2 — Why Suzuki Is Different
+   ============================================================
+   Scroll-pinned vertical timeline experience. The user scrolls
+   through 4 viewport heights of "history" while the section pins
+   to the viewport. Behind everything: 12 hand-drawn engineering
+   sketches fade in progressively, like an engineer's archive
+   bleeding through a darkroom.
+
+   Phase 2A builds: structure, blueprint background, timeline
+   rail, year indicator (static), pin behaviour, scroll progress.
+   Phase 2B will add: heading entrance animation, 4 point reveals,
+   year flip, visual cues per point.
+   Phase 2C will add: 104 climax, mobile carousel, reduced-motion
+   fallback, polish.
+   ============================================================ */
+
+.ws-section {
+  /* Section-scoped tokens */
+  --ws-blueprint-line:   rgba(255, 255, 255, 0.08);   /* faint sketch lines */
+  --ws-blueprint-accent: rgba(228, 5, 33, 0.18);      /* faint red accent (matches site red E40521) */
+  --ws-rail-width:       14%;
+  --ws-year-width:       14%;
+  --ws-content-pad:      clamp(1rem, 3vw, 3rem);
+
+  position: relative;
+  height: 100vh;          /* during pin: stays at viewport height; spacer after handles scroll length */
+  width: 100%;
+  overflow: hidden;
+  background: var(--color-bg-primary);
+  isolation: isolate;
+  color: var(--color-text-primary);
+}
+
+/* ============================================================
+   TOP RED LINE — entrance hook (Phase 2B will animate the draw;
+   Phase 2A leaves it static for a clean structural baseline)
+   ============================================================ */
+.ws-top-line {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    var(--color-suzuki-red) 8%,
+    var(--color-suzuki-red-glow) 50%,
+    var(--color-suzuki-red) 92%,
+    transparent 100%);
+  z-index: 6;
+  opacity: 0.85;
+  /* Subtle shimmer as a continuous idle micro-animation */
+  background-size: 200% 100%;
+  background-position: 0% 0%;
+  animation: ws-top-shimmer 6s linear infinite;
+}
+@keyframes ws-top-shimmer {
+  0%   { background-position: -100% 0%; }
+  100% { background-position:  100% 0%; }
+}
+
+/* ============================================================
+   BLUEPRINT BACKGROUND — 12 SVG sketches, full-bleed layer
+   ============================================================ */
+.ws-blueprints {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.ws-sketch {
+  position: absolute;
+  color: var(--ws-blueprint-line);    /* drives currentColor on inner SVG strokes */
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 800ms var(--ease-out-cinematic),
+    transform 800ms var(--ease-out-cinematic);
+  pointer-events: none;
+}
+.ws-sketch.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.ws-sketch svg {
+  width: 100%;
+  height: 100%;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+.ws-sketch svg .accent {
+  stroke: var(--ws-blueprint-accent);
+}
+.ws-sketch svg .accent-fill {
+  fill: var(--ws-blueprint-accent);
+  stroke: none;
+}
+.ws-sketch svg text {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 4px;
+  fill: currentColor;
+  stroke: none;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* Drift keyframes — three slow, organic loops (60s) so the canvas
+   feels alive without being noisy. Each sketch picks one. */
+@keyframes ws-drift-a {
+  0%, 100% { translate: 0 0; }
+  33%      { translate: 4px -3px; }
+  66%      { translate: -3px 4px; }
+}
+@keyframes ws-drift-b {
+  0%, 100% { translate: 0 0; }
+  50%      { translate: -5px 5px; }
+}
+@keyframes ws-drift-c {
+  0%, 100% { translate: 0 0; }
+  40%      { translate: 6px 4px; }
+  80%      { translate: -2px -5px; }
+}
+.ws-sketch.is-visible.drift-a { animation: ws-drift-a 62s ease-in-out infinite; }
+.ws-sketch.is-visible.drift-b { animation: ws-drift-b 71s ease-in-out infinite; }
+.ws-sketch.is-visible.drift-c { animation: ws-drift-c 58s ease-in-out infinite; }
+
+/* Sketch positions — distributed organically (NOT a grid).
+   Sizes vary so the wall feels like a designer's pinboard. */
+.ws-sketch--engine        { top: 12%;  left: 4%;   width: 14vw; aspect-ratio: 1/1; }
+.ws-sketch--piston        { top: 26%;  right: 8%;  width: 9vw;  aspect-ratio: 1/1.4; }
+.ws-sketch--crankshaft    { top: 6%;   left: 38%;  width: 16vw; aspect-ratio: 2/1; }
+.ws-sketch--gear-cluster  { bottom: 22%; left: 10%; width: 13vw; aspect-ratio: 1/1; }
+.ws-sketch--brake-disc    { top: 52%;  right: 5%;  width: 11vw; aspect-ratio: 1/1; }
+.ws-sketch--bike-profile  { bottom: 8%;  right: 12%; width: 22vw; aspect-ratio: 2.4/1; }
+.ws-sketch--motogp-line   { top: 60%;  left: 26%;  width: 22vw; aspect-ratio: 2/1; }
+.ws-sketch--wheel         { bottom: 40%; right: 30%; width: 9vw;  aspect-ratio: 1/1; }
+.ws-sketch--spark-plug    { top: 18%;  left: 56%;  width: 5vw;  aspect-ratio: 1/2.4; }
+.ws-sketch--exploded      { bottom: 4%;  left: 4%;  width: 17vw; aspect-ratio: 1.4/1; }
+.ws-sketch--logo-s        { top: 64%;  right: 26%; width: 11vw; aspect-ratio: 1/1; }
+.ws-sketch--carb-fi       { top: 38%;  left: 50%;  width: 14vw; aspect-ratio: 1.8/1; }
+
+@media (max-width: 1024px) {
+  .ws-sketch { transform: translateY(14px) scale(0.92); }
+  .ws-sketch.is-visible { transform: translateY(0) scale(0.92); }
+}
+@media (max-width: 767px) {
+  /* Reduce density on mobile per brief — Phase 2C handles full mobile.
+     For Phase 2A we just hide some so the canvas isn't overcrowded. */
+  .ws-sketch--crankshaft, .ws-sketch--motogp-line,
+  .ws-sketch--exploded, .ws-sketch--carb-fi,
+  .ws-sketch--spark-plug, .ws-sketch--wheel, .ws-sketch--logo-s {
+    display: none;
+  }
+}
+
+/* ============================================================
+   STAGE — three-column grid (rail / content / year)
+   ============================================================ */
+.ws-stage {
+  position: relative;
+  z-index: 4;
+  display: grid;
+  grid-template-columns: var(--ws-rail-width) 1fr var(--ws-year-width);
+  height: 100%;
+  width: 100%;
+  align-items: stretch;
+}
+@media (max-width: 1023px) {
+  .ws-section { --ws-rail-width: 10%; --ws-year-width: 10%; }
+}
+@media (max-width: 767px) {
+  /* Single column on mobile — Phase 2C will flesh this out */
+  .ws-stage { grid-template-columns: 1fr; }
+}
+
+/* ============================================================
+   LEFT — TIMELINE RAIL
+   ============================================================ */
+.ws-timeline {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-block: clamp(2rem, 6vh, 5rem);
+}
+@media (max-width: 767px) { .ws-timeline { display: none; } }
+
+.ws-rail-line {
+  position: absolute;
+  top: clamp(2rem, 6vh, 5rem);
+  bottom: clamp(2rem, 6vh, 5rem);
+  left: 50%;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.18);
+  transform: translateX(-50%);
+}
+
+.ws-rail-markers {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  width: 100%;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.ws-rail-markers li {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+.ws-rail-markers li::before {
+  content: '';
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--color-bg-primary);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 0 0 4px var(--color-bg-primary);
+  position: relative;
+  z-index: 2;
+}
+.ws-rail-markers li span {
+  position: absolute;
+  left: calc(50% + 14px);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+
+/* The traveling red dot — initially at top, JS scrubs y position */
+.ws-rail-dot {
+  position: absolute;
+  top: clamp(2rem, 6vh, 5rem);
+  left: 50%;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: var(--color-suzuki-red);
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 12px var(--color-suzuki-red-glow), 0 0 24px rgba(228,5,33,0.4);
+  z-index: 3;
+  /* Subtle pulse — idle micro-animation */
+  animation: ws-rail-pulse 2.4s ease-in-out infinite;
+  will-change: top;
+}
+@keyframes ws-rail-pulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50%      { transform: translate(-50%, -50%) scale(0.92); }
+}
+
+/* ============================================================
+   CENTER — CONTENT STAGE
+   ============================================================ */
+.ws-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-inline: var(--ws-content-pad);
+  padding-block: clamp(3rem, 8vh, 6rem);
+  min-width: 0;
+}
+@media (max-width: 767px) {
+  .ws-content { padding-inline: var(--section-padding-x); }
+}
+
+/* Heading block — visible at section entry */
+.ws-heading {
+  max-width: 56ch;
+}
+.ws-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-suzuki-red);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0 0 var(--space-lg);
+}
+.ws-eyebrow::before {
+  content: '';
+  width: 28px;
+  height: 1px;
+  background: currentColor;
+  display: inline-block;
+}
+.ws-title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(2.2rem, 5vw, 4.4rem);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  margin: 0 0 var(--space-lg);
+  color: var(--color-text-primary);
+}
+.ws-sub {
+  font-size: clamp(1rem, 1.2vw, 1.15rem);
+  line-height: 1.65;
+  color: var(--color-text-secondary);
+  max-width: 60ch;
+  margin: 0;
+}
+
+/* Points stack — 4 cards layered absolutely, only one active at a time.
+   Phase 2A leaves them all opacity:0; Phase 2B will animate them in. */
+.ws-points-stack {
+  position: relative;
+  margin-top: clamp(2rem, 5vh, 4rem);
+  /* Reserve a min-height so the layout doesn't jump when points appear */
+  min-height: clamp(18rem, 36vh, 26rem);
+}
+.ws-point {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 400ms var(--ease-out-cinematic);
+}
+.ws-point.is-active {
+  opacity: 1;
+  visibility: visible;
+}
+.ws-point-num {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(4rem, 12vw, 10rem);
+  line-height: 0.85;
+  letter-spacing: -0.04em;
+  /* Outline-only — Phase 2B fills with white over 600ms */
+  color: transparent;
+  -webkit-text-stroke: 1px var(--color-text-primary);
+  margin: 0 0 var(--space-md);
+}
+.ws-point-year {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-suzuki-red);
+}
+.ws-point-headline {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(1.8rem, 3.6vw, 3rem);
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  text-transform: uppercase;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+.ws-point-body {
+  font-size: clamp(1rem, 1.2vw, 1.15rem);
+  line-height: 1.5;
+  color: var(--color-text-primary);
+  margin: 0;
+  font-weight: 600;
+}
+.ws-point-subbody {
+  font-size: clamp(0.9rem, 1vw, 1rem);
+  line-height: 1.65;
+  color: var(--color-text-secondary);
+  max-width: 56ch;
+  margin: 0;
+}
+
+/* Visual cue area — Phase 2B fills these with per-point SVG choreography */
+.ws-point-cue {
+  margin-top: var(--space-md);
+  height: clamp(3rem, 8vh, 6rem);
+  position: relative;
+  pointer-events: none;
+}
+
+/* Climax block — hidden until 85% scroll; Phase 2C animates it in */
+.ws-climax {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-lg);
+  text-align: center;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  z-index: 5;
+  background: linear-gradient(180deg, transparent 0%, rgba(10,10,10,0.6) 50%, transparent 100%);
+}
+.ws-climax.is-active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+.ws-climax-num {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(8rem, 28vw, 24rem);
+  line-height: 0.9;
+  letter-spacing: -0.05em;
+  color: var(--color-text-primary);
+  text-shadow: 0 0 80px rgba(228,5,33,0.4), 0 0 160px rgba(228,5,33,0.2);
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+.ws-climax-label {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(1.4rem, 2.6vw, 2.2rem);
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--color-suzuki-red);
+  margin: 0;
+}
+.ws-climax-tag {
+  font-size: clamp(1rem, 1.4vw, 1.25rem);
+  color: var(--color-text-secondary);
+  max-width: 50ch;
+  margin: 0;
+}
+.ws-climax-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-top: var(--space-md);
+  padding: 1rem 2rem;
+  background: var(--color-suzuki-red);
+  color: var(--color-text-primary);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: 2px;
+  transition: all var(--duration-base) var(--ease-out-cinematic);
+}
+.ws-climax-cta:hover {
+  background: var(--color-suzuki-red-glow);
+  box-shadow: 0 0 40px rgba(228,5,33,0.5);
+  transform: translateX(4px);
+}
+.ws-climax-cta::after { content: '→'; transition: transform 200ms; }
+.ws-climax-cta:hover::after { transform: translateX(4px); }
+
+/* ============================================================
+   RIGHT — YEAR INDICATOR
+   ============================================================ */
+.ws-year {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding-inline: clamp(0.5rem, 1.5vw, 1.5rem);
+}
+@media (max-width: 767px) { .ws-year { display: none; } }
+
+.ws-year-num {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(2.5rem, 8vw, 7rem);
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  color: var(--color-text-secondary);
+  font-variant-numeric: tabular-nums;
+  /* Subtle bob — idle micro-animation */
+  animation: ws-year-bob 4s ease-in-out infinite;
+  will-change: transform;
+  /* For year flip animation in Phase 2B */
+  display: inline-block;
+}
+@keyframes ws-year-bob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-1px); }
+}
+.ws-year-label {
+  font-family: var(--font-mono);
+  font-size: clamp(0.55rem, 0.7vw, 0.7rem);
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin-top: var(--space-sm);
+  max-width: 12ch;
+  line-height: 1.4;
+}
+
+/* ============================================================
+   RIGHT EDGE — SCROLL PROGRESS INDICATOR
+   ============================================================ */
+.ws-progress {
+  position: absolute;
+  top: 12%;
+  bottom: 12%;
+  right: 12px;
+  width: 2px;
+  background: rgba(255,255,255,0.08);
+  z-index: 7;
+  pointer-events: none;
+}
+.ws-progress-bar {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 0%;
+  background: linear-gradient(180deg, var(--color-suzuki-red) 0%, var(--color-suzuki-red-glow) 100%);
+  box-shadow: 0 0 8px rgba(228,5,33,0.5);
+  will-change: height;
+  transition: height 80ms linear;
+}
+@media (max-width: 1023px) { .ws-progress { right: 6px; } }
+@media (max-width: 767px)  { .ws-progress { display: none; } }
+
+/* ============================================================
+   REDUCED MOTION — basic in 2A, full fallback in 2C
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .ws-top-line,
+  .ws-rail-dot,
+  .ws-year-num,
+  .ws-sketch.is-visible.drift-a,
+  .ws-sketch.is-visible.drift-b,
+  .ws-sketch.is-visible.drift-c {
+    animation: none !important;
+  }
+  .ws-sketch {
+    transition: none !important;
+  }
+  .ws-sketch.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+}

@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#0A0A0A" />
+
+<!-- ===== SEO ===== -->
+<title>Suzuki GSX-R150 — The Mighty Beast | Suzuki Bangladesh</title>
+<meta name="description" content="Suzuki GSX-R150 — track-bred 147.3 cc DOHC supersport with Dual Channel ABS. 19.2 PS, 6-speed, race-bred LED design. From BDT 5,24,950." />
+
+<meta property="og:type" content="product" />
+<meta property="og:title" content="Suzuki GSX-R150 — The Mighty Beast" />
+<meta property="og:description" content="Best power-to-weight ratio in the 147 cc class. Race-bred. Built for the track." />
+<meta property="og:image" content="../assets/images/bikes/gsx-r150.webp" />
+
+<link rel="icon" type="image/svg+xml" href="../assets/images/favicon.svg" />
+
+<!-- ===== Fonts ===== -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet" />
+
+<!-- ===== Stylesheets — all paths use ../ since this page lives in /bikes/ ===== -->
+<link rel="stylesheet" href="../css/tokens.css" />
+<link rel="stylesheet" href="../css/base.css" />
+<link rel="stylesheet" href="../css/components.css" />
+<link rel="stylesheet" href="../css/sections/navbar.css" />
+<link rel="stylesheet" href="../css/sections/footer.css" />
+<!-- Page-specific styles (load bikes.css too — .bg-card is reused for related-bikes) -->
+<link rel="stylesheet" href="../css/pages/bikes.css" />
+<link rel="stylesheet" href="../css/pages/bike-detail.css" />
+<link rel="stylesheet" href="../css/widgets.css" />
+
+<!-- ===== Animation libs ===== -->
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script defer src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+<script defer src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+<!-- ===== App scripts ===== -->
+<script defer src="../js/lenis-init.js"></script>
+<script defer src="../js/nav.js"></script>
+<script defer src="../js/main.js"></script>
+<script defer src="../js/sections/hero.js"></script>          <!-- prepareLogo() for navbar .bl-mark -->
+<script defer src="../js/pages/bike-detail.js"></script>
+<script defer src="../js/widgets/chat.js"></script>
+<script defer src="../js/widgets/cookies.js"></script>
+
+</head>
+<body data-page="bike-detail" data-bike="gsx-r150" id="top">
+
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<!-- ============================================================
+     NAVBAR — duplicated from index.html, but with ../ paths
+     because this page lives at /bikes/<slug>.html.
+     ============================================================ -->
+<header class="nav" data-testid="navbar" role="banner">
+  <div class="container nav__inner">
+    <a href="../index.html" class="nav__brand" data-testid="nav-brand" aria-label="Suzuki Bangladesh — home">
+      <div class="brand-lockup" id="hero-brandLockup" aria-hidden="true">
+        <span class="bl-mark" id="hero-blMark"></span>
+        <div class="bl-text">
+          <span class="bl-suzuki">SUZUKI</span>
+          <span class="bl-tag">Bangladesh</span>
+          <span class="bl-meta">EST. 1909 · MOTOGP HERITAGE</span>
+        </div>
+      </div>
+    </a>
+
+    <nav class="nav__links" aria-label="Primary navigation">
+      <a href="../bikes.html" class="nav__link is-active" data-testid="nav-bikes" data-nav-trigger="mega"
+         aria-haspopup="true" aria-expanded="false" aria-controls="nav-mega-bikes" aria-current="page">
+        Bikes
+        <i data-lucide="chevron-down" class="nav__chevron" aria-hidden="true"></i>
+      </a>
+      <a href="../technology.html" class="nav__link">Technology</a>
+      <a href="../service.html" class="nav__link">Service</a>
+      <a href="../shop.html" class="nav__link">Shop</a>
+      <a href="../dealers.html" class="nav__link">Dealers</a>
+      <a href="../offers.html" class="nav__link">Offers</a>
+    </nav>
+
+    <div class="nav__actions">
+      <a href="tel:16638" class="nav__hotline" aria-label="Call hotline 16638">
+        <i data-lucide="phone" class="icon" aria-hidden="true"></i>
+        <span class="nav__hotline-num">16638</span>
+      </a>
+      <a href="../test-ride.html?bike=gsx-r150" class="btn btn-primary btn-sm nav__cta-desktop">Book Test Ride</a>
+      <button type="button" class="nav__mobile-toggle" data-nav-trigger="mobile"
+              aria-label="Open menu" aria-expanded="false" aria-controls="nav-mobile-overlay">
+        <i data-lucide="menu" class="icon" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mega menu (Bikes) — same as homepage but with ../ paths -->
+  <div class="nav__mega" id="nav-mega-bikes" role="region" aria-label="Bike lineup">
+    <div class="container">
+      <p class="nav__mega-eyebrow">› EXPLORE THE LINEUP · 10 MODELS</p>
+
+      <div class="nav__mega-filters" role="tablist" aria-label="Filter bikes by category">
+        <button type="button" class="nav__mega-filter" data-filter="all" aria-pressed="true">All</button>
+        <button type="button" class="nav__mega-filter" data-filter="scooter" aria-pressed="false">Scooter</button>
+        <button type="button" class="nav__mega-filter" data-filter="commuter" aria-pressed="false">Commuter</button>
+        <button type="button" class="nav__mega-filter" data-filter="sports" aria-pressed="false">Sports</button>
+        <button type="button" class="nav__mega-filter" data-filter="super-sports" aria-pressed="false">Super Sports</button>
+        <button type="button" class="nav__mega-filter" data-filter="performance-sports" aria-pressed="false">Performance Sports</button>
+      </div>
+
+      <div class="nav__mega-grid">
+        <a href="gixxer-sf-250.html" class="nav__mega-card" data-category="super-sports">
+          <div class="nav__mega-card-image" aria-hidden="true"><img src="../assets/images/bikes/gixxer-sf-250.webp" alt="Gixxer SF 250" loading="lazy" /></div>
+          <span class="nav__mega-card-cat">Super Sports · Hero</span>
+          <div class="nav__mega-card-name">Gixxer SF 250</div>
+          <div class="nav__mega-card-price">From BDT 429,950</div>
+        </a>
+        <a href="gsx-r150.html" class="nav__mega-card" data-category="performance-sports" aria-current="page">
+          <div class="nav__mega-card-image" aria-hidden="true"><img src="../assets/images/bikes/gsx-r150.webp" alt="GSX-R150" loading="lazy" /></div>
+          <span class="nav__mega-card-cat">Performance Sports</span>
+          <div class="nav__mega-card-name">GSX-R150</div>
+          <div class="nav__mega-card-price">From BDT 524,950</div>
+        </a>
+        <a href="gixxer-250.html" class="nav__mega-card" data-category="sports">
+          <div class="nav__mega-card-image" aria-hidden="true"><img src="../assets/images/bikes/gixxer-250.webp" alt="Gixxer 250" loading="lazy" /></div>
+          <span class="nav__mega-card-cat">Sports</span>
+          <div class="nav__mega-card-name">Gixxer 250</div>
+          <div class="nav__mega-card-price">From BDT 379,950</div>
+        </a>
+        <a href="gixxer-sf.html" class="nav__mega-card" data-category="sports">
+          <div class="nav__mega-card-image" aria-hidden="true"><img src="../assets/images/bikes/gixxer-sf.webp" alt="Gixxer SF" loading="lazy" /></div>
+          <span class="nav__mega-card-cat">Sports</span>
+          <div class="nav__mega-card-name">Gixxer SF</div>
+          <div class="nav__mega-card-price">From BDT 329,950</div>
+        </a>
+        <a href="gixxer.html" class="nav__mega-card" data-category="commuter">
+          <div class="nav__mega-card-image" aria-hidden="true"><img src="../assets/images/bikes/gixxer.webp" alt="Gixxer" loading="lazy" /></div>
+          <span class="nav__mega-card-cat">Commuter</span>
+          <div class="nav__mega-card-name">Gixxer</div>
+          <div class="nav__mega-card-price">From BDT 229,950</div>
+        </a>
+        <a href="gixxer-classic-matt.html" class="nav__mega-card" data-category="commuter">
+          <div class="nav__mega-card-image" aria-hidden="true"><img src="../assets/images/bikes/gixxer-classic-matt.webp" alt="Gixxer Classic Matt" loading="lazy" /></div>
+          <span class="nav__mega-card-cat">Commuter</span>
+          <div class="nav__mega-card-name">Gixxer Classic Matt</div>
+          <div class="nav__mega-card-price">From BDT 202,950</div>
+        </a>
+        <a href="gixxer-monotone.html" class="nav__mega-card" data-category="commuter">
+          <div class="nav__mega-card-image" aria-hidden="true"><img src="../assets/images/bikes/gixxer-monotone.webp" alt="Gixxer Monotone" loading="lazy" /></div>
+          <span class="nav__mega-card-cat">Commuter</span>
+          <div class="nav__mega-card-name">Gixxer Monotone</div>
+          <div class="nav__mega-card-price">From BDT 199,950</div>
+        </a>
+        <a href="access-125.html" class="nav__mega-card" data-category="scooter">
+          <div class="nav__mega-card-image" aria-hidden="true"><img src="../assets/images/bikes/access-125.webp" alt="Access 125" loading="lazy" /></div>
+          <span class="nav__mega-card-cat">Scooter</span>
+          <div class="nav__mega-card-name">Access 125</div>
+          <div class="nav__mega-card-price">From BDT 215,000</div>
+        </a>
+        <a href="gsx-125.html" class="nav__mega-card" data-category="commuter">
+          <div class="nav__mega-card-image" aria-hidden="true"><img src="../assets/images/bikes/gsx-125.webp" alt="GSX 125" loading="lazy" /></div>
+          <span class="nav__mega-card-cat">Commuter</span>
+          <div class="nav__mega-card-name">GSX 125</div>
+          <div class="nav__mega-card-price">From BDT 141,950</div>
+        </a>
+        <a href="hayate-ep.html" class="nav__mega-card" data-category="commuter">
+          <div class="nav__mega-card-image" aria-hidden="true"><img src="../assets/images/bikes/hayate-ep.webp" alt="Hayate EP" loading="lazy" /></div>
+          <span class="nav__mega-card-cat">Commuter</span>
+          <div class="nav__mega-card-name">Hayate EP</div>
+          <div class="nav__mega-card-price">From BDT 118,000</div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile overlay -->
+  <div class="nav__mobile-overlay" id="nav-mobile-overlay" role="dialog" aria-modal="true" aria-labelledby="nav-mobile-title" hidden>
+    <div class="nav__mobile-header">
+      <a href="../index.html" class="nav__brand" id="nav-mobile-title" aria-label="Suzuki Bangladesh — home">
+        <div class="brand-lockup" aria-hidden="true">
+          <span class="bl-mark"></span>
+          <div class="bl-text">
+            <span class="bl-suzuki">SUZUKI</span>
+            <span class="bl-tag">Bangladesh</span>
+          </div>
+        </div>
+      </a>
+      <button type="button" class="nav__mobile-close" data-nav-trigger="mobile-close" aria-label="Close menu">
+        <i data-lucide="x" class="icon" aria-hidden="true"></i>
+      </button>
+    </div>
+    <div class="nav__mobile-body">
+      <a href="../bikes.html" class="nav__mobile-link" aria-current="page">Bikes</a>
+      <a href="../technology.html" class="nav__mobile-link">Technology</a>
+      <a href="../service.html" class="nav__mobile-link">Service</a>
+      <a href="../shop.html" class="nav__mobile-link">Shop</a>
+      <a href="../dealers.html" class="nav__mobile-link">Dealers</a>
+      <a href="../offers.html" class="nav__mobile-link">Offers</a>
+    </div>
+    <div class="nav__mobile-footer">
+      <a href="../test-ride.html?bike=gsx-r150" class="btn btn-primary btn-lg">Book Test Ride</a>
+      <a href="tel:16638" class="btn btn-secondary btn-lg">
+        <i data-lucide="phone" class="icon" aria-hidden="true"></i>
+        Call Hotline 16638
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- ============================================================
+     MAIN
+     ============================================================ -->
+<main id="main" role="main">
+
+  <!-- ============================================================
+       1. BREADCRUMB
+       ============================================================ -->
+  <nav class="bd-breadcrumb" aria-label="Breadcrumb" data-testid="breadcrumb">
+    <ol class="bd-breadcrumb-list">
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="../bikes.html">Bikes</a></li>
+      <li><a href="../bikes.html#configurator">Performance Sports</a></li>
+      <li aria-current="page">GSX-R150</li>
+    </ol>
+  </nav>
+
+  <!-- ============================================================
+       2. HERO STAGE
+       ============================================================
+       Left: name + tagline + 3 highlights + colour picker + price + CTAs
+       Right: bike photo with red ambient halo + rotating ring
+       ============================================================ -->
+  <section class="bd-hero" aria-labelledby="bike-name" data-testid="bike-hero">
+    <div class="bd-hero-container">
+
+      <!-- Left text column -->
+      <div class="bd-hero-text">
+        <p class="bd-hero-eyebrow">› <strong>Performance Sports</strong> · 147.3 cc DOHC</p>
+        <h1 id="bike-name" class="bd-hero-name">GSX-R150</h1>
+        <p class="bd-hero-tagline">The <em>Mighty</em> Beast.</p>
+        <p class="bd-hero-desc">
+          Race-bred performance from Suzuki's GSX-R Dual ABS line — a heritage that has defined sportbike performance for over 30 years. Best power-to-weight ratio in the 147 cm³ class, nimble handling, and a fully-faired aerodynamic shell built for track-day riders who refuse to compromise on the daily commute.
+        </p>
+
+        <!-- 3 highlight stats — pulled live from API attributes -->
+        <ul class="bd-hero-highlights">
+          <li>
+            <span class="h-num">19.2 <em>PS</em></span>
+            <span class="h-label">Max Power</span>
+          </li>
+          <li>
+            <span class="h-num">147.3 <em>cc</em></span>
+            <span class="h-label">Displacement</span>
+          </li>
+          <li>
+            <span class="h-num">45 <em>km/L</em></span>
+            <span class="h-label">Mileage</span>
+          </li>
+        </ul>
+
+        <!-- Colour picker -->
+        <div class="bd-hero-colors">
+          <div class="bd-hero-colors-label">
+            <small>Colour</small>
+            <strong data-bd-color-name>Yellow / Black</strong>
+          </div>
+          <div class="bd-hero-swatches" role="group" aria-label="Pick a colour">
+            <button type="button"
+                    class="bd-swatch is-active"
+                    style="background:#f8e71c;"
+                    data-bd-swatch
+                    data-name="Yellow / Black"
+                    data-image="../assets/images/bikes/gsx-r150/color-1.webp"
+                    aria-label="Yellow / Black"
+                    aria-pressed="true"
+                    title="Yellow / Black"></button>
+            <button type="button"
+                    class="bd-swatch"
+                    style="background:#d0021b;"
+                    data-bd-swatch
+                    data-name="Red / Black"
+                    data-image="../assets/images/bikes/gsx-r150/color-2.webp"
+                    aria-label="Red / Black"
+                    aria-pressed="false"
+                    title="Red / Black"></button>
+          </div>
+        </div>
+
+        <!-- Price + CTA pair -->
+        <div class="bd-hero-actions">
+          <div class="bd-hero-price">
+            <small>Starts at</small>
+            <span class="bd-hero-price-value">BDT 5,24,950</span>
+          </div>
+          <div class="bd-hero-cta-row">
+            <a class="bd-hero-cta bd-hero-cta--primary" href="../test-ride.html?bike=gsx-r150" data-testid="hero-cta-test-ride">
+              Book Test Ride
+            </a>
+            <a class="bd-hero-cta bd-hero-cta--secondary" href="../dealers.html" data-testid="hero-cta-dealer">
+              Find a Dealer
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right photo column -->
+      <div class="bd-hero-photo">
+        <img
+          src="../assets/images/bikes/gsx-r150.webp"
+          alt="Suzuki GSX-R150 in Yellow / Black"
+          fetchpriority="high"
+          decoding="async"
+          data-bd-hero-photo
+        />
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================
+       3. MARQUEE — running model-name strip
+       ============================================================ -->
+  <div class="bd-marquee" aria-hidden="true">
+    <div class="bd-marquee-track">
+      <span class="bd-marquee-text">GSX-R150 · <em>The Mighty Beast</em></span>
+      <span class="bd-marquee-dot"></span>
+      <span class="bd-marquee-text">Race-Bred · Track-Tested</span>
+      <span class="bd-marquee-dot"></span>
+      <span class="bd-marquee-text">DUAL CHANNEL ABS · <em>Liquid-Cooled</em></span>
+      <span class="bd-marquee-dot"></span>
+      <!-- duplicate set for seamless loop -->
+      <span class="bd-marquee-text">GSX-R150 · <em>The Mighty Beast</em></span>
+      <span class="bd-marquee-dot"></span>
+      <span class="bd-marquee-text">Race-Bred · Track-Tested</span>
+      <span class="bd-marquee-dot"></span>
+      <span class="bd-marquee-text">DUAL CHANNEL ABS · <em>Liquid-Cooled</em></span>
+      <span class="bd-marquee-dot"></span>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       4. STATS — 4 oversized highlight numbers
+       ============================================================ -->
+  <section class="bd-stats" aria-label="Headline performance">
+    <div class="bd-stats-grid">
+      <div class="bd-stat">
+        <span class="bd-stat-num">147.3 <em>cc</em></span>
+        <p class="bd-stat-label">Engine</p>
+        <p class="bd-stat-sub">Liquid-cooled, 4-stroke, 1-cylinder.</p>
+      </div>
+      <div class="bd-stat">
+        <span class="bd-stat-num">19.2 <em>PS</em></span>
+        <p class="bd-stat-label">Max Power</p>
+        <p class="bd-stat-sub">@ 10,500 rpm — top of the 150 cc class.</p>
+      </div>
+      <div class="bd-stat">
+        <span class="bd-stat-num">14.0 <em>Nm</em></span>
+        <p class="bd-stat-label">Max Torque</p>
+        <p class="bd-stat-sub">@ 9,000 rpm — confident mid-range pull.</p>
+      </div>
+      <div class="bd-stat">
+        <span class="bd-stat-num">45 <em>km/L</em></span>
+        <p class="bd-stat-label">Mileage</p>
+        <p class="bd-stat-sub">Fuel-injected efficiency without the trade-off.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       5. OVERVIEW — long-form description
+       ============================================================ -->
+  <section class="bd-overview" aria-labelledby="bd-overview-title">
+    <div class="bd-overview-container">
+      <div>
+        <p class="bd-overview-eyebrow">Built to win.</p>
+        <h2 id="bd-overview-title" class="bd-overview-title">
+          A million sold. <em>One philosophy.</em>
+        </h2>
+      </div>
+      <div class="bd-overview-body">
+        <p>
+          The Suzuki GSX-R Dual ABS line has defined sportbike performance for over 30 years, with more than a million sold worldwide. The dedicated engineers who have devoted their lives to the GSX-R take their responsibilities very seriously: every GSX-R is designed to be the lightest and best-performing motorcycle in its class, in an unbeatable package.
+        </p>
+        <p>
+          Meet the revolutionary Suzuki GSX-R150 Dual ABS — the best power-to-weight ratio and acceleration in the 147.3 cm³ class, nimble handling, and great fuel economy. Race-bred geometry. Petal-disc brakes with dual-channel ABS. A 6-speed return transmission that lets you find the right gear for any corner, any straight, any morning.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       6. FEATURES — 8 spotlight cards (all 8 from suzuki.com.bd)
+       ============================================================ -->
+  <section class="bd-features" aria-labelledby="bd-features-title">
+    <div class="bd-features-container">
+
+      <header class="bd-features-heading">
+        <p class="bd-overview-eyebrow">Inside the GSX-R150</p>
+        <h2 id="bd-features-title" class="bd-overview-title">Eight reasons it&apos;s the <em>mighty</em> beast.</h2>
+      </header>
+
+      <div class="bd-features-grid">
+
+        <article class="bd-feature">
+          <div class="bd-feature-image">
+            <span class="bd-feature-num">01</span>
+            <img src="../assets/images/bikes/gsx-r150/features/led-headlamp.webp" alt="Suzuki GSX-R150 LED headlamp detail" loading="lazy" />
+          </div>
+          <div class="bd-feature-body">
+            <h3 class="bd-feature-title">LED Headlamp</h3>
+            <p class="bd-feature-desc">Futuristic design that marks a strong, aggressive impression. The compact, thin headlamp unit complements the streetsport silhouette while throwing a long, wide field of view at night.</p>
+          </div>
+        </article>
+
+        <article class="bd-feature">
+          <div class="bd-feature-image">
+            <span class="bd-feature-num">02</span>
+            <img src="../assets/images/bikes/gsx-r150/features/petal-brake.webp" alt="GSX-R150 petal brake disc and cast aluminium wheel" loading="lazy" />
+          </div>
+          <div class="bd-feature-body">
+            <h3 class="bd-feature-title">Petal Brake Disc</h3>
+            <p class="bd-feature-desc">Sport petal-disc brakes paired with sporty cast-aluminium wheels — track-grade stopping power, every time you grab the lever.</p>
+          </div>
+        </article>
+
+        <article class="bd-feature">
+          <div class="bd-feature-image">
+            <span class="bd-feature-num">03</span>
+            <img src="../assets/images/bikes/gsx-r150/features/exhaust.webp" alt="GSX-R150 high-performance exhaust system" loading="lazy" />
+          </div>
+          <div class="bd-feature-body">
+            <h3 class="bd-feature-title">High-Performance Exhaust</h3>
+            <p class="bd-feature-desc">A high-performance exhaust system tuned for low-end response and a sharper top-end note. Sound, performance, and emissions in one balanced package.</p>
+          </div>
+        </article>
+
+        <article class="bd-feature">
+          <div class="bd-feature-image">
+            <span class="bd-feature-num">04</span>
+            <img src="../assets/images/bikes/gsx-r150/features/rear-suspension.webp" alt="GSX-R150 adjustable rear suspension" loading="lazy" />
+          </div>
+          <div class="bd-feature-body">
+            <h3 class="bd-feature-title">Adjustable Rear Suspension</h3>
+            <p class="bd-feature-desc">Link-type rear monoshock with rider preload adjustability — set it firm for the track, soft for the city. Your bike, your rules.</p>
+          </div>
+        </article>
+
+        <article class="bd-feature">
+          <div class="bd-feature-image">
+            <span class="bd-feature-num">05</span>
+            <img src="../assets/images/bikes/gsx-r150/features/6-speed-gearbox.webp" alt="GSX-R150 6-speed gearbox cutaway" loading="lazy" />
+          </div>
+          <div class="bd-feature-body">
+            <h3 class="bd-feature-title">6-Speed Gearbox</h3>
+            <p class="bd-feature-desc">A 6-speed return-shift gearbox for smoother riding at every speed. Find the perfect ratio for the apex, then again for the highway.</p>
+          </div>
+        </article>
+
+        <article class="bd-feature">
+          <div class="bd-feature-image">
+            <span class="bd-feature-num">06</span>
+            <img src="../assets/images/bikes/gsx-r150/features/front-suspension.webp" alt="GSX-R150 stiffer front suspension and clip-on handlebars" loading="lazy" />
+          </div>
+          <div class="bd-feature-body">
+            <h3 class="bd-feature-title">Stiffer Front Suspension</h3>
+            <p class="bd-feature-desc">Increased rigidity around the front section perfectly suits the separate clip-on handle set-up — a confident, planted feel through every corner entry.</p>
+          </div>
+        </article>
+
+        <article class="bd-feature">
+          <div class="bd-feature-image">
+            <span class="bd-feature-num">07</span>
+            <img src="../assets/images/bikes/gsx-r150/features/digital-instrument.webp" alt="GSX-R150 digital instrument cluster" loading="lazy" />
+          </div>
+          <div class="bd-feature-body">
+            <h3 class="bd-feature-title">Digital Instrument</h3>
+            <p class="bd-feature-desc">Compact full-digital cluster with speedometer, odometer, gear indicator, and clock — race-day legibility, daily-commute convenience.</p>
+          </div>
+        </article>
+
+        <article class="bd-feature">
+          <div class="bd-feature-image">
+            <span class="bd-feature-num">08</span>
+            <img src="../assets/images/bikes/gsx-r150/features/led-tail-lamp.webp" alt="GSX-R150 LED tail lamp" loading="lazy" />
+          </div>
+          <div class="bd-feature-body">
+            <h3 class="bd-feature-title">LED Tail Lamp</h3>
+            <p class="bd-feature-desc">Compact, highly illuminated LED tail unit shares its DNA with the original Gixxer — finishing the GSX-R silhouette with night-time signature lighting.</p>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       7. SPECS — accordion table grouped by section
+       ============================================================
+       7 sections, all from the suzuki.com.bd API:
+       Engine / Tyre Size / Brake / Transmission / Electrical /
+       Suspension / Dimension. First two open by default.
+       ============================================================ -->
+  <section class="bd-specs" aria-labelledby="bd-specs-title">
+    <div class="bd-specs-container">
+
+      <header class="bd-specs-heading">
+        <p class="bd-overview-eyebrow">The full sheet</p>
+        <h2 id="bd-specs-title" class="bd-overview-title">Every <em>number</em> that matters.</h2>
+      </header>
+
+      <div class="bd-specs-list">
+
+        <details class="bd-spec-group" open>
+          <summary class="bd-spec-summary">Engine</summary>
+          <table class="bd-spec-table">
+            <tbody>
+              <tr><th>Type</th><td>Liquid-Cooled, 4-stroke, 1-Cylinder</td></tr>
+              <tr><th>Displacement</th><td>149 cm³</td></tr>
+              <tr><th>Bore × Stroke</th><td>62 mm × 48.8 mm</td></tr>
+              <tr><th>Max Power</th><td>19.2 PS @ 10,500 rpm</td></tr>
+              <tr><th>Max Torque</th><td>14.0 Nm @ 9,000 rpm</td></tr>
+              <tr><th>Fuel System</th><td>Fuel Injection</td></tr>
+              <tr><th>Starter</th><td>Self Start</td></tr>
+            </tbody>
+          </table>
+        </details>
+
+        <details class="bd-spec-group" open>
+          <summary class="bd-spec-summary">Brake</summary>
+          <table class="bd-spec-table">
+            <tbody>
+              <tr><th>ABS</th><td>Dual Channel ABS</td></tr>
+              <tr><th>Front</th><td>Disc (ABS)</td></tr>
+              <tr><th>Rear</th><td>Disc (ABS)</td></tr>
+            </tbody>
+          </table>
+        </details>
+
+        <details class="bd-spec-group">
+          <summary class="bd-spec-summary">Transmission</summary>
+          <table class="bd-spec-table">
+            <tbody>
+              <tr><th>Gearbox</th><td>6-Speed, Return</td></tr>
+            </tbody>
+          </table>
+        </details>
+
+        <details class="bd-spec-group">
+          <summary class="bd-spec-summary">Suspension</summary>
+          <table class="bd-spec-table">
+            <tbody>
+              <tr><th>Front</th><td>Telescopic Type, Coil Spring, Oil Damped</td></tr>
+              <tr><th>Rear</th><td>Link Type, Coil Spring, Oil Damped</td></tr>
+            </tbody>
+          </table>
+        </details>
+
+        <details class="bd-spec-group">
+          <summary class="bd-spec-summary">Tyres</summary>
+          <table class="bd-spec-table">
+            <tbody>
+              <tr><th>Front</th><td>90/80-17 M/C Tubeless</td></tr>
+              <tr><th>Rear</th><td>130/70-17 M/C Tubeless</td></tr>
+            </tbody>
+          </table>
+        </details>
+
+        <details class="bd-spec-group">
+          <summary class="bd-spec-summary">Electrical</summary>
+          <table class="bd-spec-table">
+            <tbody>
+              <tr><th>Headlight</th><td>LED</td></tr>
+              <tr><th>Tail Light</th><td>LED</td></tr>
+              <tr><th>Battery</th><td>12 V</td></tr>
+            </tbody>
+          </table>
+        </details>
+
+        <details class="bd-spec-group">
+          <summary class="bd-spec-summary">Dimensions</summary>
+          <table class="bd-spec-table">
+            <tbody>
+              <tr><th>Overall Length</th><td>2,020 mm</td></tr>
+              <tr><th>Overall Width</th><td>700 mm</td></tr>
+              <tr><th>Overall Height</th><td>1,075 mm</td></tr>
+              <tr><th>Wheelbase</th><td>1,300 mm</td></tr>
+              <tr><th>Ground Clearance</th><td>160 mm</td></tr>
+              <tr><th>Curb Mass</th><td>131 kg</td></tr>
+              <tr><th>Fuel Tank Capacity</th><td>11 L</td></tr>
+            </tbody>
+          </table>
+        </details>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       8. COLORS — colour showcase strip
+       ============================================================ -->
+  <section class="bd-colors" aria-labelledby="bd-colors-title">
+    <div class="bd-colors-container">
+      <header class="bd-colors-heading">
+        <p class="bd-overview-eyebrow">Choose your livery</p>
+        <h2 id="bd-colors-title" class="bd-overview-title">Two colours. <em>Both</em> race-ready.</h2>
+      </header>
+
+      <div class="bd-colors-grid">
+        <div class="bd-color-card">
+          <div class="bd-color-photo">
+            <img src="../assets/images/bikes/gsx-r150/color-1.webp" alt="Suzuki GSX-R150 in Yellow / Black" loading="lazy" />
+          </div>
+          <div class="bd-color-meta">
+            <span class="bd-color-chip" style="background:#f8e71c;" aria-hidden="true"></span>
+            <span class="bd-color-name">Yellow / Black</span>
+          </div>
+        </div>
+        <div class="bd-color-card">
+          <div class="bd-color-photo">
+            <img src="../assets/images/bikes/gsx-r150/color-2.webp" alt="Suzuki GSX-R150 in Red / Black" loading="lazy" />
+          </div>
+          <div class="bd-color-meta">
+            <span class="bd-color-chip" style="background:#d0021b;" aria-hidden="true"></span>
+            <span class="bd-color-name">Red / Black</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       9. FINAL CTA — bookend banner
+       ============================================================ -->
+  <section id="test-ride" class="bd-cta" aria-label="Book a test ride">
+    <div class="bd-cta-container">
+      <p class="bd-cta-eyebrow">Closer than you think.</p>
+      <h2 class="bd-cta-title">Your <em>GSX-R150</em> is waiting.</h2>
+      <div class="bd-cta-actions">
+        <a href="../test-ride.html?bike=gsx-r150" class="bd-hero-cta bd-hero-cta--primary">Book Test Ride</a>
+        <a href="tel:16638" class="bd-hero-cta bd-hero-cta--secondary">Call Hotline 16638</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       10. RELATED BIKES — peers in the lineup
+       ============================================================ -->
+  <section class="bd-related" aria-labelledby="bd-related-title">
+    <div class="bd-related-container">
+
+      <header class="bd-related-heading">
+        <h2 id="bd-related-title" class="bd-related-title">More <em>sportbikes</em> in the lineup.</h2>
+        <a href="../bikes.html" class="bd-related-link">View all 10 models</a>
+      </header>
+
+      <div class="bd-related-grid">
+
+        <!-- Reuses .bg-card from bikes.css -->
+        <article class="bg-card">
+          <div class="bg-card-image">
+            <span class="bg-card-cat">Super Sports</span>
+            <img src="../assets/images/bikes/gixxer-sf-250.webp" alt="Suzuki Gixxer SF 250" loading="lazy" />
+          </div>
+          <div class="bg-card-body">
+            <h3 class="bg-card-name">Gixxer SF 250</h3>
+            <p class="bg-card-tagline">MotoGP-bred fully-faired flagship.</p>
+            <div class="bg-card-meta"><span>250 cc</span><span>Track-ready</span></div>
+          </div>
+          <div class="bg-card-bottom">
+            <div class="bg-card-price"><small>From</small><strong>BDT 4,29,950</strong></div>
+            <div class="bg-card-actions">
+              <a class="bg-card-btn bg-card-btn--primary" href="gixxer-sf-250.html">Specs</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="bg-card">
+          <div class="bg-card-image">
+            <span class="bg-card-cat">Sports</span>
+            <img src="../assets/images/bikes/gixxer-250.webp" alt="Suzuki Gixxer 250" loading="lazy" />
+          </div>
+          <div class="bg-card-body">
+            <h3 class="bg-card-name">Gixxer 250</h3>
+            <p class="bg-card-tagline">Naked streetfighter, 250 cc.</p>
+            <div class="bg-card-meta"><span>250 cc</span><span>Weekend cruise</span></div>
+          </div>
+          <div class="bg-card-bottom">
+            <div class="bg-card-price"><small>From</small><strong>BDT 3,79,950</strong></div>
+            <div class="bg-card-actions">
+              <a class="bg-card-btn bg-card-btn--primary" href="gixxer-250.html">Specs</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="bg-card">
+          <div class="bg-card-image">
+            <span class="bg-card-cat">Sports</span>
+            <img src="../assets/images/bikes/gixxer-sf.webp" alt="Suzuki Gixxer SF" loading="lazy" />
+          </div>
+          <div class="bg-card-body">
+            <h3 class="bg-card-name">Gixxer SF</h3>
+            <p class="bg-card-tagline">Faired sports for the everyday rider.</p>
+            <div class="bg-card-meta"><span>155 cc</span><span>Weekend cruise</span></div>
+          </div>
+          <div class="bg-card-bottom">
+            <div class="bg-card-price"><small>From</small><strong>BDT 3,29,950</strong></div>
+            <div class="bg-card-actions">
+              <a class="bg-card-btn bg-card-btn--primary" href="gixxer-sf.html">Specs</a>
+            </div>
+          </div>
+        </article>
+
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<!-- ============================================================
+     FOOTER — duplicated from index.html with ../ paths
+     ============================================================ -->
+<footer class="ft-section" role="contentinfo" data-testid="footer">
+  <div class="ft-container">
+
+    <div class="ft-top">
+      <div class="ft-brand">
+        <a class="brand-lockup" href="../index.html" aria-label="Suzuki Bangladesh — home">
+          <span class="bl-mark" aria-hidden="true"></span>
+          <span class="bl-text">
+            <span class="bl-name">SUZUKI</span>
+            <span class="bl-sub">Bangladesh</span>
+          </span>
+        </a>
+        <p class="ft-blurb">
+          Suzuki Bangladesh, operated by Rancon Motor Bikes Ltd, brings MotoGP-bred engineering and Japanese craftsmanship to riders across the country — built for the road you ride every day.
+        </p>
+      </div>
+
+      <div class="ft-aside">
+        <p class="ft-operator">Operated by <strong>Rancon Motor Bikes Ltd</strong></p>
+        <ul class="ft-socials" aria-label="Follow Suzuki Bangladesh">
+          <li><a class="ft-social" href="https://www.facebook.com/SuzukiBangladeshOfficial" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.7-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.7l-.4 2.9h-2.3v7A10 10 0 0 0 22 12z"/></svg></a></li>
+          <li><a class="ft-social" href="https://www.instagram.com/suzukibangladeshofficial" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.2c3.2 0 3.6 0 4.8.1 1.2 0 1.8.3 2.2.4.6.2 1 .5 1.4.9.4.4.7.8.9 1.4.2.4.4 1 .4 2.2 0 1.2.1 1.6.1 4.8s0 3.6-.1 4.8c0 1.2-.3 1.8-.4 2.2-.2.6-.5 1-.9 1.4-.4.4-.8.7-1.4.9-.4.2-1 .4-2.2.4-1.2 0-1.6.1-4.8.1s-3.6 0-4.8-.1c-1.2 0-1.8-.3-2.2-.4-.6-.2-1-.5-1.4-.9-.4-.4-.7-.8-.9-1.4-.2-.4-.4-1-.4-2.2 0-1.2-.1-1.6-.1-4.8s0-3.6.1-4.8c0-1.2.3-1.8.4-2.2.2-.6.5-1 .9-1.4.4-.4.8-.7 1.4-.9.4-.2 1-.4 2.2-.4C8.4 2.2 8.8 2.2 12 2.2zm0 1.8c-3.2 0-3.5 0-4.7.1-.9 0-1.4.2-1.7.3-.4.2-.7.4-1 .7-.3.3-.5.6-.7 1-.1.3-.3.8-.3 1.7C3.5 8.5 3.5 8.8 3.5 12s0 3.5.1 4.7c0 .9.2 1.4.3 1.7.2.4.4.7.7 1 .3.3.6.5 1 .7.3.1.8.3 1.7.3 1.2 0 1.5.1 4.7.1s3.5 0 4.7-.1c.9 0 1.4-.2 1.7-.3.4-.2.7-.4 1-.7.3-.3.5-.6.7-1 .1-.3.3-.8.3-1.7 0-1.2.1-1.5.1-4.7s0-3.5-.1-4.7c0-.9-.2-1.4-.3-1.7-.2-.4-.4-.7-.7-1-.3-.3-.6-.5-1-.7-.3-.1-.8-.3-1.7-.3-1.2-.1-1.5-.1-4.7-.1zm0 3.2a4.8 4.8 0 1 1 0 9.6 4.8 4.8 0 0 1 0-9.6zm0 1.8a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm5-2.1a1.1 1.1 0 1 1 0 2.2 1.1 1.1 0 0 1 0-2.2z"/></svg></a></li>
+          <li><a class="ft-social" href="https://www.youtube.com/@suzukimotorcyclebangladesh" aria-label="YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.6 3.6 12 3.6 12 3.6s-7.6 0-9.4.5A3 3 0 0 0 .5 6.2C0 8 0 12 0 12s0 4 .5 5.8a3 3 0 0 0 2.1 2.1c1.8.5 9.4.5 9.4.5s7.6 0 9.4-.5a3 3 0 0 0 2.1-2.1C24 16 24 12 24 12s0-4-.5-5.8zM9.6 15.6V8.4l6.3 3.6-6.3 3.6z"/></svg></a></li>
+          <li><a class="ft-social" href="https://www.linkedin.com/company/rancon-motor-bikes-ltd" aria-label="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 2h-17A1.5 1.5 0 0 0 2 3.5v17A1.5 1.5 0 0 0 3.5 22h17a1.5 1.5 0 0 0 1.5-1.5v-17A1.5 1.5 0 0 0 20.5 2zM8 19H5V9h3v10zM6.5 7.7a1.7 1.7 0 1 1 0-3.4 1.7 1.7 0 0 1 0 3.4zM19 19h-3v-5.5c0-1.3 0-3-1.8-3s-2.2 1.4-2.2 2.9V19h-3V9h2.9v1.4h.04c.4-.7 1.4-1.6 2.9-1.6 3.1 0 3.6 2 3.6 4.7V19z"/></svg></a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="ft-grid">
+      <div>
+        <h3 class="ft-col-title">Bikes</h3>
+        <ul class="ft-list">
+          <li><a href="../bikes.html#commuter">Commuter</a></li>
+          <li><a href="../bikes.html#sports">Sports</a></li>
+          <li><a href="../bikes.html#performance">Performance Sports</a></li>
+          <li><a href="../bikes.html#super-sports">Super Sports</a></li>
+          <li><a href="../bikes.html#scooter">Scooters</a></li>
+          <li><a href="../bikes.html">View All Bikes</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="ft-col-title">Service &amp; Support</h3>
+        <ul class="ft-list">
+          <li><a href="../service.html#regular">Regular Service</a></li>
+          <li><a href="../service.html#warranty">Warranty Care</a></li>
+          <li><a href="../service.html#parts">Genuine Parts</a></li>
+          <li><a href="../service.html#locator">Service Locator</a></li>
+          <li><a href="../service.html#manuals">Owner&apos;s Manuals</a></li>
+          <li><a href="../service.html#book">Book a Service</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="ft-col-title">Company</h3>
+        <ul class="ft-list">
+          <li><a href="../about.html">About Suzuki BD</a></li>
+          <li><a href="../about.html#heritage">MotoGP Heritage</a></li>
+          <li><a href="../news.html">News &amp; Stories</a></li>
+          <li><a href="../dealers.html">Find a Dealer</a></li>
+          <li><a href="../careers.html">Careers</a></li>
+          <li><a href="../press.html">Press &amp; Media</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="ft-col-title">Get in Touch</h3>
+        <ul class="ft-contact">
+          <li class="ft-contact-row">
+            <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            <div><strong>24/7 Hotline</strong><a class="ft-hotline" href="tel:16638">16638 <span>Toll-Free</span></a></div>
+          </li>
+          <li class="ft-contact-row">
+            <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>
+            <div><strong>Customer Care</strong><a href="mailto:info@suzuki.com.bd">info@suzuki.com.bd</a></div>
+          </li>
+          <li class="ft-contact-row">
+            <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <div><strong>Head Office</strong>Rangs Babylonia, Plot 246, Bir Uttam Mir Showkat Sarak,<br />Tejgaon I/A, Dhaka 1208, Bangladesh</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="ft-bottom">
+      <p>&copy; 2009&ndash;2026 Rancon Motor Bikes Ltd. All rights reserved.</p>
+      <ul class="ft-legal" aria-label="Legal">
+        <li><a href="../legal/privacy.html">Privacy Policy</a></li>
+        <li><a href="../legal/terms.html">Terms of Use</a></li>
+        <li><a href="../legal/cookies.html">Cookies</a></li>
+        <li><a href="../sitemap.html">Sitemap</a></li>
+      </ul>
+      <a href="#top" class="ft-totop" aria-label="Back to top">Back to Top</a>
+    </div>
+
+  </div>
+</footer>
+
+</body>
+</html>

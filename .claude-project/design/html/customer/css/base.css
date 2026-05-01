@@ -1,0 +1,125 @@
+/* ============================================================
+   Suzuki Bangladesh — Base Styles
+   ============================================================
+   Modern reset, base typography, body styles, focus styles.
+   Loaded after tokens.css and before components.css.
+   ============================================================ */
+
+/* === Modern reset (Josh Comeau-style, trimmed) === */
+*, *::before, *::after { box-sizing: border-box; }
+* { margin: 0; }
+
+html, body { height: 100%; }
+html {
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+
+body {
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+img, picture, video, canvas, svg {
+  display: block;
+  max-width: 100%;
+}
+
+input, button, textarea, select { font: inherit; color: inherit; }
+button { cursor: pointer; background: none; border: 0; padding: 0; }
+
+p, h1, h2, h3, h4, h5, h6 { overflow-wrap: break-word; }
+ul, ol { list-style: none; padding: 0; }
+
+#root, #__next { isolation: isolate; }
+
+/* === Typography defaults === */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+}
+h1 { font-size: var(--text-5xl); }
+h2 { font-size: var(--text-4xl); }
+h3 { font-size: var(--text-3xl); }
+h4 { font-size: var(--text-2xl); }
+h5 { font-size: var(--text-xl); }
+h6 { font-size: var(--text-lg); }
+
+p { color: var(--color-text-secondary); line-height: var(--leading-normal); }
+strong { color: var(--color-text-primary); font-weight: 600; }
+em { font-style: italic; }
+a { color: inherit; text-decoration: none; transition: color var(--duration-fast) var(--ease-out-cinematic); }
+
+/* === Selection === */
+::selection { background-color: var(--color-suzuki-blue); color: var(--color-text-primary); }
+::-moz-selection { background-color: var(--color-suzuki-blue); color: var(--color-text-primary); }
+
+/* === Focus styles (on-brand, not browser default) === */
+:focus { outline: none; }
+:focus-visible {
+  outline: 2px solid var(--color-suzuki-blue-light);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
+/* === Skip link === */
+.skip-link {
+  position: absolute;
+  top: -100px; left: var(--space-md);
+  padding: var(--space-sm) var(--space-md);
+  background: var(--color-suzuki-blue);
+  color: var(--color-text-primary);
+  font-weight: 600; font-size: var(--text-sm);
+  z-index: 100;
+  transition: top var(--duration-fast) var(--ease-out-cinematic);
+}
+.skip-link:focus { top: var(--space-md); }
+
+/* === Container === */
+.container {
+  width: 100%;
+  max-width: var(--content-max-width);
+  margin-inline: auto;
+  padding-inline: var(--section-padding-x);
+}
+
+/* === Section base === */
+.section {
+  padding-block: var(--section-padding-y);
+  position: relative;
+}
+
+/* === Scrollbar (subtle, dark) === */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--color-bg-primary); }
+::-webkit-scrollbar-thumb { background: var(--color-bg-tertiary); border-radius: var(--radius-pill); }
+::-webkit-scrollbar-thumb:hover { background: var(--color-border-default); }
+
+/* === Reduced motion === */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* === Lenis smooth scroll setup === */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: hidden; }
+.lenis.lenis-scrolling iframe { pointer-events: none; }

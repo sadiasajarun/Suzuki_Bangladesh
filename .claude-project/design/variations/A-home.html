@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Variation A — Premium Clean | Suzuki Bangladesh</title>
+<style>
+  :root {
+    --bg-canvas: #0A0A0A;
+    --bg-elevated: #141414;
+    --bg-soft: #1F1F1F;
+    --ink-primary: #FFFFFF;
+    --ink-secondary: #B0B0B0;
+    --ink-tertiary: #6B6B6B;
+    --accent-suzuki: #0033A0;
+    --accent-suzuki-glow: #1A4DC9;
+    --accent-warm: #FFA726;
+    --accent-cool: #00BCD4;
+    --border-hairline: rgba(255,255,255,0.08);
+    --shadow-glass: 0 0 40px rgba(0, 51, 160, 0.15);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg-canvas);
+    color: var(--ink-primary);
+    font-family: 'Söhne', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  .container { max-width: 1440px; margin: 0 auto; padding: 0 64px; }
+  @media (max-width: 768px) { .container { padding: 0 16px; } }
+
+  /* Variation badge */
+  .variation-badge {
+    position: fixed; top: 24px; left: 24px; z-index: 100;
+    padding: 8px 16px; background: var(--bg-elevated);
+    border: 1px solid var(--border-hairline);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--ink-secondary);
+  }
+  .variation-badge strong { color: var(--accent-suzuki-glow); }
+
+  /* Navbar */
+  .nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+    height: 80px; background: rgba(10,10,10,0.85);
+    backdrop-filter: blur(24px);
+    border-bottom: 1px solid var(--border-hairline);
+  }
+  .nav-inner { max-width: 1440px; margin: 0 auto; padding: 0 64px; height: 100%;
+    display: flex; align-items: center; justify-content: space-between; }
+  .nav-brand { font-family: 'Söhne', sans-serif; font-weight: 700; font-size: 18px;
+    letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink-primary); text-decoration: none; }
+  .nav-links { display: flex; gap: 32px; list-style: none; }
+  .nav-links a { font-size: 13px; font-weight: 500; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--ink-secondary); text-decoration: none;
+    transition: color 200ms cubic-bezier(0.25,0.1,0.25,1); }
+  .nav-links a:hover { color: var(--ink-primary); }
+  .nav-cta { padding: 10px 20px; background: var(--accent-suzuki); color: white;
+    font-size: 13px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+    text-decoration: none; transition: background 200ms ease-out; }
+  .nav-cta:hover { background: var(--accent-suzuki-glow); }
+  @media (max-width: 768px) {
+    .nav-inner { padding: 0 16px; } .nav-links { display: none; }
+  }
+
+  /* Hero */
+  .hero { min-height: 100vh; padding: 120px 0 80px;
+    display: flex; flex-direction: column; justify-content: center;
+    position: relative; overflow: hidden; }
+  .hero-eyebrow { font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--ink-secondary); margin-bottom: 32px; }
+  .hero-headline { font-size: clamp(48px, 6vw, 96px); font-weight: 700;
+    letter-spacing: -0.02em; line-height: 1.05; margin-bottom: 32px;
+    max-width: 14ch; }
+  .hero-headline em { font-style: normal; color: var(--accent-suzuki-glow); }
+  .hero-sub { font-size: 18px; color: var(--ink-secondary);
+    max-width: 56ch; margin-bottom: 48px; }
+  .hero-ctas { display: flex; gap: 16px; flex-wrap: wrap; }
+  .btn-primary { padding: 16px 32px; background: var(--accent-suzuki);
+    color: white; text-decoration: none; font-size: 14px; font-weight: 600;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    transition: background 200ms cubic-bezier(0.25,0.1,0.25,1); }
+  .btn-primary:hover { background: var(--accent-suzuki-glow); }
+  .btn-secondary { padding: 16px 32px; background: transparent;
+    color: var(--ink-primary); border: 1px solid var(--ink-primary);
+    text-decoration: none; font-size: 14px; font-weight: 600;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    transition: all 200ms cubic-bezier(0.25,0.1,0.25,1); }
+  .btn-secondary:hover { background: var(--ink-primary); color: var(--bg-canvas); }
+
+  /* Hero animated background — subtle moving spotlight (CSS only) */
+  .hero-spotlight { position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(circle at 75% 40%, rgba(0,51,160,0.18) 0%, transparent 60%);
+    animation: hero-drift 20s ease-in-out infinite alternate; }
+  @keyframes hero-drift {
+    0% { background-position: 25% 40%; }
+    100% { background-position: 75% 60%; }
+  }
+
+  /* Hero bike silhouette (SVG inline) */
+  .hero-bike { position: absolute; bottom: -20px; right: -80px;
+    width: 60%; opacity: 0.18; pointer-events: none; }
+  @media (max-width: 768px) { .hero-bike { display: none; } }
+
+  /* Section base */
+  .section { padding: 120px 0; }
+  .section-eyebrow { font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--accent-suzuki-glow); margin-bottom: 24px; }
+  .section-headline { font-size: clamp(36px, 4vw, 64px); font-weight: 700;
+    letter-spacing: -0.01em; line-height: 1.1; margin-bottom: 32px; }
+
+  /* Why Suzuki — 4 differentiators */
+  .why-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; }
+  .why-card { padding: 40px 24px; border-right: 1px solid var(--border-hairline);
+    border-top: 1px solid var(--border-hairline); }
+  .why-card:last-child { border-right: none; }
+  .why-card-num { font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    color: var(--ink-tertiary); letter-spacing: 0.15em; margin-bottom: 24px; }
+  .why-card-title { font-size: 24px; font-weight: 600; margin-bottom: 16px; line-height: 1.2; }
+  .why-card-body { font-size: 14px; color: var(--ink-secondary); }
+  @media (max-width: 1024px) { .why-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 600px) { .why-grid { grid-template-columns: 1fr; } }
+
+  /* Tech section — scroll-driven preview (simplified for variation preview) */
+  .tech { background: var(--bg-canvas); position: relative; overflow: hidden; }
+  .tech-stage { position: relative; min-height: 600px; padding: 64px 0;
+    display: grid; grid-template-columns: 1.2fr 1fr; gap: 48px; align-items: center; }
+  .tech-bike-wrap { position: relative; aspect-ratio: 16/10; }
+  .tech-bike-svg { width: 100%; height: 100%; display: block; }
+  .tech-bike-svg .body { fill: none; stroke: var(--ink-primary); stroke-width: 1.5; }
+  .tech-bike-svg .accent { fill: var(--accent-suzuki); opacity: 0.6;
+    animation: pulse-glow 2.4s ease-in-out infinite; }
+  @keyframes pulse-glow {
+    0%, 100% { opacity: 0.4; filter: drop-shadow(0 0 4px var(--accent-suzuki)); }
+    50% { opacity: 1; filter: drop-shadow(0 0 16px var(--accent-suzuki-glow)); }
+  }
+
+  .tech-callouts { display: flex; flex-direction: column; gap: 24px; }
+  .tech-callout { padding: 24px; background: var(--bg-elevated);
+    border: 1px solid var(--border-hairline);
+    transition: border-color 400ms cubic-bezier(0.25,0.1,0.25,1),
+                box-shadow 400ms cubic-bezier(0.25,0.1,0.25,1); }
+  .tech-callout:hover { border-color: rgba(255,255,255,0.16);
+    box-shadow: var(--shadow-glass); }
+  .tech-callout-tag { font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--accent-suzuki-glow); margin-bottom: 12px; }
+  .tech-callout-title { font-size: 22px; font-weight: 600; margin-bottom: 8px;
+    line-height: 1.25; }
+  .tech-callout-body { font-size: 14px; color: var(--ink-secondary); }
+  @media (max-width: 1024px) {
+    .tech-stage { grid-template-columns: 1fr; gap: 32px; }
+  }
+
+  /* Footer / CTA bar */
+  .cta-bar { padding: 80px 0; border-top: 1px solid var(--border-hairline); }
+  .cta-bar-inner { display: flex; justify-content: space-between; align-items: center;
+    gap: 32px; flex-wrap: wrap; }
+  .cta-bar-text { font-size: 32px; font-weight: 700; letter-spacing: -0.01em;
+    max-width: 24ch; line-height: 1.15; }
+
+  footer { padding: 48px 0; border-top: 1px solid var(--border-hairline); }
+  .footer-inner { display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 24px; }
+  .footer-text { font-size: 13px; color: var(--ink-tertiary);
+    font-family: 'JetBrains Mono', monospace; letter-spacing: 0.05em; }
+  .footer-hotline { font-size: 16px; font-weight: 700; color: var(--ink-primary); }
+  .footer-hotline span { color: var(--accent-suzuki-glow); }
+
+  /* Variation footer (selection) */
+  .variation-footer { background: var(--accent-suzuki);
+    padding: 48px 0; }
+  .variation-footer-inner { display: flex; justify-content: space-between;
+    align-items: center; flex-wrap: wrap; gap: 24px; }
+  .variation-footer-title { font-size: 20px; font-weight: 700; }
+  .variation-footer-cta { padding: 14px 28px; background: white;
+    color: var(--accent-suzuki); text-decoration: none; font-weight: 700;
+    letter-spacing: 0.06em; text-transform: uppercase; font-size: 14px;
+    transition: background 200ms; }
+  .variation-footer-cta:hover { background: var(--bg-canvas); color: white; }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="variation-badge">VARIATION <strong>A</strong> — PREMIUM CLEAN</div>
+
+<nav class="nav" data-testid="navbar">
+  <div class="nav-inner">
+    <a href="#" class="nav-brand" data-testid="nav-brand">SUZUKI</a>
+    <ul class="nav-links">
+      <li><a href="#bikes" data-testid="nav-bikes">Bikes</a></li>
+      <li><a href="#service" data-testid="nav-service">Service</a></li>
+      <li><a href="#shop" data-testid="nav-shop">Shop</a></li>
+      <li><a href="#dealers" data-testid="nav-dealers">Dealers</a></li>
+      <li><a href="#contact" data-testid="nav-contact">Contact</a></li>
+    </ul>
+    <a href="#test-ride" class="nav-cta" data-testid="nav-test-ride">Book Test Ride</a>
+  </div>
+</nav>
+
+<header class="hero container" id="home">
+  <div class="hero-spotlight"></div>
+  <svg class="hero-bike" viewBox="0 0 600 320" aria-hidden="true">
+    <g fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2">
+      <circle cx="120" cy="240" r="60" />
+      <circle cx="480" cy="240" r="60" />
+      <path d="M180 240 Q260 100, 380 130 L460 220 Z" />
+      <path d="M260 110 L300 60 L340 90" stroke-width="3" />
+      <path d="M120 240 L240 180 L380 130" />
+    </g>
+  </svg>
+  <div class="hero-eyebrow">SUZUKI BANGLADESH · SINCE 1999</div>
+  <h1 class="hero-headline">Engineering that wins <em>championships.</em><br/>Built for Bangladesh roads.</h1>
+  <p class="hero-sub">From the 2020 MotoGP World Championship to the streets of Dhaka — Suzuki engines are tuned for one thing: the rider.</p>
+  <div class="hero-ctas">
+    <a href="#test-ride" class="btn-primary" data-testid="hero-test-ride">Book a Test Ride</a>
+    <a href="#bikes" class="btn-secondary" data-testid="hero-explore">Explore the Lineup</a>
+  </div>
+</header>
+
+<section class="section" id="why-different">
+  <div class="container">
+    <div class="section-eyebrow">SUZUKI'S DIFFERENCE</div>
+    <h2 class="section-headline">Four reasons<br/>this isn't just another motorcycle.</h2>
+  </div>
+  <div class="container">
+    <div class="why-grid">
+      <article class="why-card">
+        <div class="why-card-num">01 / SOCS</div>
+        <h3 class="why-card-title">Oil-cooled, race-tested.</h3>
+        <p class="why-card-body">Pressurized oil jets cool the hottest parts of the engine — the same architecture that wins MotoGP races, refined for 38°C summers.</p>
+      </article>
+      <article class="why-card">
+        <div class="why-card-num">02 / MOTOGP DNA</div>
+        <h3 class="why-card-title">Champion's engineering.</h3>
+        <p class="why-card-body">Joan Mir's 2020 World Championship was won on a Suzuki. The same engineering principles flow through every Gixxer.</p>
+      </article>
+      <article class="why-card">
+        <div class="why-card-num">03 / MADE FOR BD</div>
+        <h3 class="why-card-title">Tuned for our roads.</h3>
+        <p class="why-card-body">Dhaka traffic. Hill Tracts climbs. Monsoon downpours. Every model is calibrated for the conditions you actually ride in.</p>
+      </article>
+      <article class="why-card">
+        <div class="why-card-num">04 / 16638</div>
+        <h3 class="why-card-title">Service you can call.</h3>
+        <p class="why-card-body">A nationwide service network and a single hotline — 16638. Not a chatbot. A person who knows your bike.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section tech" id="technology">
+  <div class="container">
+    <div class="section-eyebrow">SECTION 4 · TECHNOLOGY</div>
+    <h2 class="section-headline">Six systems.<br/>One bike.</h2>
+    <p class="hero-sub">Scroll to activate each system. The bike comes alive as you go. <em style="color:var(--accent-warm)">[Preview only — full scroll-driven 6-activation experience in production]</em></p>
+  </div>
+  <div class="container">
+    <div class="tech-stage">
+      <div class="tech-bike-wrap">
+        <svg class="tech-bike-svg" viewBox="0 0 600 380" aria-label="Suzuki Gixxer SF 250 silhouette">
+          <g class="body">
+            <circle cx="120" cy="290" r="70" />
+            <circle cx="480" cy="290" r="70" />
+            <path d="M180 290 Q280 130, 410 160 L470 270 Z" />
+            <path d="M260 130 L320 70 L380 110" stroke-width="2.5" />
+            <path d="M120 290 L240 220 L410 160" />
+            <line x1="180" y1="290" x2="380" y2="290" stroke-width="2" stroke-dasharray="4 4" />
+          </g>
+          <!-- Activation origin markers (SOCS=engine center, FI=throttle, ABS=front+rear caliper) -->
+          <circle class="accent" cx="320" cy="190" r="10" data-testid="tech-origin-socs" />
+          <circle class="accent" cx="380" cy="160" r="6" data-testid="tech-origin-fi" style="animation-delay: 0.4s" />
+          <circle class="accent" cx="120" cy="290" r="5" data-testid="tech-origin-abs-front" style="animation-delay: 0.8s" />
+          <circle class="accent" cx="480" cy="290" r="5" data-testid="tech-origin-abs-rear" style="animation-delay: 1.0s" />
+        </svg>
+      </div>
+      <div class="tech-callouts">
+        <article class="tech-callout" data-testid="tech-callout-socs">
+          <div class="tech-callout-tag">SUZUKI OIL COOLING SYSTEM</div>
+          <h3 class="tech-callout-title">Dhaka traffic doesn't scare this engine.</h3>
+          <p class="tech-callout-body">Oil sprays directly onto the cylinder head and piston underside. Heat goes from red to blue in seconds.</p>
+        </article>
+        <article class="tech-callout" data-testid="tech-callout-fi">
+          <div class="tech-callout-tag">FUEL INJECTION</div>
+          <h3 class="tech-callout-title">First crank. Every morning.</h3>
+          <p class="tech-callout-body">Sensor-controlled fuel mist. No choke. No stutter. Cold starts at 4°C, hot starts in stop-and-go.</p>
+        </article>
+        <article class="tech-callout" data-testid="tech-callout-abs">
+          <div class="tech-callout-tag">DUAL-CHANNEL ABS</div>
+          <h3 class="tech-callout-title">Monsoon roads. Confident stops.</h3>
+          <p class="tech-callout-body">Front and rear modulate independently. The bike stops upright, even when the road doesn't cooperate.</p>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-bar">
+  <div class="container">
+    <div class="cta-bar-inner">
+      <p class="cta-bar-text">Ride before you decide.</p>
+      <a href="#test-ride" class="btn-primary" data-testid="cta-bar-test-ride">Book a Test Ride</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <p class="footer-text">SUZUKI BANGLADESH · OPERATED BY RANCON MOTOR BIKES LTD.</p>
+      <p class="footer-hotline">Hotline <span>16638</span></p>
+    </div>
+  </div>
+</footer>
+
+<aside class="variation-footer">
+  <div class="container">
+    <div class="variation-footer-inner">
+      <div>
+        <p style="font-size:11px; letter-spacing:0.15em; text-transform:uppercase; opacity:0.8; margin-bottom:8px;">Variation A</p>
+        <p class="variation-footer-title">Premium Clean — Tesla-leaning. Confident minimalism.</p>
+      </div>
+      <a href="../variations/showcase-ALL.html" class="variation-footer-cta" data-testid="back-to-showcase">← Back to Showcase</a>
+    </div>
+  </div>
+</aside>
+
+</body>
+</html>
