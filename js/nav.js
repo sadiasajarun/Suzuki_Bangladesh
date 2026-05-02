@@ -34,8 +34,21 @@
   let megaOpen = false;
   let megaHoverTimer = null;
 
+  // Defer-loaded mega-menu thumbnails: <img data-src="..."> → <img src="...">
+  // on first open. Saves ~3.5 MB on the homepage's first paint.
+  let megaImagesHydrated = false;
+  const hydrateMegaImages = () => {
+    if (megaImagesHydrated || !mega) return;
+    megaImagesHydrated = true;
+    mega.querySelectorAll('img[data-src]').forEach((img) => {
+      img.src = img.dataset.src;
+      img.removeAttribute('data-src');
+    });
+  };
+
   const openMega = () => {
     if (megaOpen) return;
+    hydrateMegaImages();
     nav.classList.add('has-mega-open');
     megaTrigger?.setAttribute('aria-expanded', 'true');
     megaOpen = true;

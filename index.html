@@ -10,6 +10,37 @@
     } catch (_) { /* localStorage blocked — default dark */ }
   })();
 </script>
+<!-- ============================================================
+     PAGE LOADER (inlined; appears before any external asset loads)
+     Solid backdrop + Suzuki S mark with a soft pulse. Hides as
+     soon as window.load fires; minimum 400 ms so it never flickers.
+     ============================================================ -->
+<style id="sz-loader-style">
+  .sz-loader {
+    position: fixed; inset: 0; z-index: 99999;
+    background: #0A0A0A;
+    display: grid; place-items: center;
+    transition: opacity 600ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  :root[data-theme="light"] .sz-loader { background: #FAFAFA; }
+  .sz-loader.is-hidden { opacity: 0; pointer-events: none; }
+  .sz-loader-mark {
+    width: 96px; height: 96px;
+    background-image: url('assets/images/logo/suzuki-s.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    animation: sz-loader-pulse 1.4s ease-in-out infinite;
+    filter: drop-shadow(0 0 24px rgba(228, 5, 33, 0.45));
+  }
+  @keyframes sz-loader-pulse {
+    0%, 100% { transform: scale(1);    opacity: 0.85; }
+    50%      { transform: scale(1.08); opacity: 1;    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .sz-loader-mark { animation: none; }
+  }
+</style>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <meta name="theme-color" content="#0A0A0A" />
@@ -30,15 +61,14 @@
 <!-- ===== Favicon (placeholder) ===== -->
 <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg" />
 
+<!-- ===== Critical resource preloads (start fetching before CSS parses) ===== -->
+<link rel="preload" as="image" href="assets/images/logo/suzuki-s.png" fetchpriority="high" />
+<link rel="preload" as="image" href="assets/images/bikes/gixxer-sf-250.webp" fetchpriority="high" />
+
 <!-- ===== Font preconnect ===== -->
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet" />
-
-<!-- ===== Tailwind CDN (Play CDN — dev only) ===== -->
-<script src="https://cdn.tailwindcss.com"></script>
-
-<!-- ===== Stylesheets (token order matters: tokens → base → components → sections) ===== -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet" /><!-- ===== Stylesheets (token order matters: tokens → base → components → sections) ===== -->
 <link rel="stylesheet" href="css/tokens.css" />
 <link rel="stylesheet" href="css/base.css" />
 <link rel="stylesheet" href="css/components.css" />
@@ -58,16 +88,14 @@
 <link rel="stylesheet" href="css/sections/footer.css" />
 <link rel="stylesheet" href="css/widgets.css" />
 <link rel="stylesheet" href="css/theme-light.css" />
+<link rel="stylesheet" href="css/responsive.css" />
 
 <!-- ===== Animation libs (CDN, deferred) ===== -->
 <!-- GSAP 3 + ScrollTrigger -->
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <!-- Lenis smooth scroll -->
-<script defer src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
-<!-- Three.js — used in Section 4 + 5 (Phase 6 + 7). Loaded but not yet referenced. -->
-<script defer src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.1/three.min.js"></script>
-<!-- Lucide icons -->
+<script defer src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script><!-- Lucide icons -->
 <script defer src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 
 <!-- ===== App scripts (in order) ===== -->
@@ -91,6 +119,11 @@
 
 </head>
 <body data-page="home" id="top">
+
+<!-- ===== Page loader (Suzuki S, fades when window.load fires) ===== -->
+<div class="sz-loader" id="sz-loader" role="status" aria-label="Loading Suzuki Bangladesh">
+  <div class="sz-loader-mark" aria-hidden="true"></div>
+</div>
 
 <!-- ===== Skip link (a11y) ===== -->
 <a class="skip-link" href="#main">Skip to main content</a>
@@ -193,55 +226,55 @@
           <div class="nav__mega-card-price">From BDT 429,950</div>
         </a>
         <a href="bikes/gsx-r150.html" class="nav__mega-card" data-testid="mega-bike-gsx-r150" data-category="performance-sports">
-          <div class="nav__mega-card-image" aria-hidden="true"><img src="assets/images/bikes/gsx-r150.webp" alt="Suzuki GSX-R150" loading="lazy" decoding="async" /></div>
+          <div class="nav__mega-card-image" aria-hidden="true"><img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="assets/images/bikes/gsx-r150.webp" alt="Suzuki GSX-R150" loading="lazy" decoding="async" /></div>
           <span class="nav__mega-card-cat">Performance Sports</span>
           <div class="nav__mega-card-name">GSX-R150</div>
           <div class="nav__mega-card-price">From BDT 524,950</div>
         </a>
         <a href="bikes/gixxer-250.html" class="nav__mega-card" data-testid="mega-bike-gixxer-250" data-category="sports">
-          <div class="nav__mega-card-image" aria-hidden="true"><img src="assets/images/bikes/gixxer-250.webp" alt="Suzuki Gixxer 250" loading="lazy" decoding="async" /></div>
+          <div class="nav__mega-card-image" aria-hidden="true"><img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="assets/images/bikes/gixxer-250.webp" alt="Suzuki Gixxer 250" loading="lazy" decoding="async" /></div>
           <span class="nav__mega-card-cat">Sports</span>
           <div class="nav__mega-card-name">Gixxer 250</div>
           <div class="nav__mega-card-price">From BDT 379,950</div>
         </a>
         <a href="bikes/gixxer-sf.html" class="nav__mega-card" data-testid="mega-bike-gixxer-sf" data-category="sports">
-          <div class="nav__mega-card-image" aria-hidden="true"><img src="assets/images/bikes/gixxer-sf.webp" alt="Suzuki Gixxer SF" loading="lazy" decoding="async" /></div>
+          <div class="nav__mega-card-image" aria-hidden="true"><img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="assets/images/bikes/gixxer-sf.webp" alt="Suzuki Gixxer SF" loading="lazy" decoding="async" /></div>
           <span class="nav__mega-card-cat">Sports</span>
           <div class="nav__mega-card-name">Gixxer SF</div>
           <div class="nav__mega-card-price">From BDT 329,950</div>
         </a>
         <a href="bikes/gixxer.html" class="nav__mega-card" data-testid="mega-bike-gixxer" data-category="commuter">
-          <div class="nav__mega-card-image" aria-hidden="true"><img src="assets/images/bikes/gixxer.webp" alt="Suzuki Gixxer" loading="lazy" decoding="async" /></div>
+          <div class="nav__mega-card-image" aria-hidden="true"><img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="assets/images/bikes/gixxer.webp" alt="Suzuki Gixxer" loading="lazy" decoding="async" /></div>
           <span class="nav__mega-card-cat">Commuter</span>
           <div class="nav__mega-card-name">Gixxer</div>
           <div class="nav__mega-card-price">From BDT 229,950</div>
         </a>
         <a href="bikes/gixxer-classic-matt.html" class="nav__mega-card" data-testid="mega-bike-gixxer-classic-matt" data-category="commuter">
-          <div class="nav__mega-card-image" aria-hidden="true"><img src="assets/images/bikes/gixxer-classic-matt.webp" alt="Suzuki Gixxer Classic Matt" loading="lazy" decoding="async" /></div>
+          <div class="nav__mega-card-image" aria-hidden="true"><img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="assets/images/bikes/gixxer-classic-matt.webp" alt="Suzuki Gixxer Classic Matt" loading="lazy" decoding="async" /></div>
           <span class="nav__mega-card-cat">Commuter</span>
           <div class="nav__mega-card-name">Gixxer Classic Matt</div>
           <div class="nav__mega-card-price">From BDT 202,950</div>
         </a>
         <a href="bikes/gixxer-monotone.html" class="nav__mega-card" data-testid="mega-bike-gixxer-monotone" data-category="commuter">
-          <div class="nav__mega-card-image" aria-hidden="true"><img src="assets/images/bikes/gixxer-monotone.webp" alt="Suzuki Gixxer Monotone" loading="lazy" decoding="async" /></div>
+          <div class="nav__mega-card-image" aria-hidden="true"><img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="assets/images/bikes/gixxer-monotone.webp" alt="Suzuki Gixxer Monotone" loading="lazy" decoding="async" /></div>
           <span class="nav__mega-card-cat">Commuter</span>
           <div class="nav__mega-card-name">Gixxer Monotone</div>
           <div class="nav__mega-card-price">From BDT 199,950</div>
         </a>
         <a href="bikes/access-125.html" class="nav__mega-card" data-testid="mega-bike-access-125" data-category="scooter">
-          <div class="nav__mega-card-image" aria-hidden="true"><img src="assets/images/bikes/access-125.webp" alt="Suzuki Access 125" loading="lazy" decoding="async" /></div>
+          <div class="nav__mega-card-image" aria-hidden="true"><img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="assets/images/bikes/access-125.webp" alt="Suzuki Access 125" loading="lazy" decoding="async" /></div>
           <span class="nav__mega-card-cat">Scooter</span>
           <div class="nav__mega-card-name">Access 125</div>
           <div class="nav__mega-card-price">From BDT 215,000</div>
         </a>
         <a href="bikes/gsx-125.html" class="nav__mega-card" data-testid="mega-bike-gsx-125" data-category="commuter">
-          <div class="nav__mega-card-image" aria-hidden="true"><img src="assets/images/bikes/gsx-125.webp" alt="Suzuki GSX 125" loading="lazy" decoding="async" /></div>
+          <div class="nav__mega-card-image" aria-hidden="true"><img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="assets/images/bikes/gsx-125.webp" alt="Suzuki GSX 125" loading="lazy" decoding="async" /></div>
           <span class="nav__mega-card-cat">Commuter</span>
           <div class="nav__mega-card-name">GSX 125</div>
           <div class="nav__mega-card-price">From BDT 141,950</div>
         </a>
         <a href="bikes/hayate-ep.html" class="nav__mega-card" data-testid="mega-bike-hayate-ep" data-category="commuter">
-          <div class="nav__mega-card-image" aria-hidden="true"><img src="assets/images/bikes/hayate-ep.webp" alt="Suzuki Hayate EP" loading="lazy" decoding="async" /></div>
+          <div class="nav__mega-card-image" aria-hidden="true"><img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="assets/images/bikes/hayate-ep.webp" alt="Suzuki Hayate EP" loading="lazy" decoding="async" /></div>
           <span class="nav__mega-card-cat">Commuter</span>
           <div class="nav__mega-card-name">Hayate EP</div>
           <div class="nav__mega-card-price">From BDT 118,000</div>
@@ -588,7 +621,7 @@
 
         <!-- 1 · COMMUTER -->
         <a href="bikes.html" class="fb-card" data-category="commuter" data-testid="fb-card-commuter" aria-label="Browse Commuter category">
-          <div class="fb-card-img" style="background-image: url('assets/images/bikes/gixxer.webp');" aria-hidden="true"></div>
+          <div class="fb-card-img" data-bg="assets/images/bikes/gixxer.webp" aria-hidden="true"></div>
           <div class="fb-card-content">
             <div class="fb-card-top">
               <span class="fb-card-tag">Category 01</span>
@@ -606,7 +639,7 @@
 
         <!-- 2 · SPORTS -->
         <a href="bikes.html" class="fb-card" data-category="sports" data-testid="fb-card-sports" aria-label="Browse Sports category">
-          <div class="fb-card-img" style="background-image: url('assets/images/bikes/gixxer-250.webp');" aria-hidden="true"></div>
+          <div class="fb-card-img" data-bg="assets/images/bikes/gixxer-250.webp" aria-hidden="true"></div>
           <div class="fb-card-content">
             <div class="fb-card-top">
               <span class="fb-card-tag">Category 02</span>
@@ -624,7 +657,7 @@
 
         <!-- 3 · PERFORMANCE SPORTS -->
         <a href="bikes.html" class="fb-card" data-category="performance" data-testid="fb-card-performance" aria-label="Browse Performance Sports category">
-          <div class="fb-card-img" style="background-image: url('assets/images/bikes/gsx-r150.webp');" aria-hidden="true"></div>
+          <div class="fb-card-img" data-bg="assets/images/bikes/gsx-r150.webp" aria-hidden="true"></div>
           <div class="fb-card-content">
             <div class="fb-card-top">
               <span class="fb-card-tag">Category 03</span>
@@ -642,7 +675,7 @@
 
         <!-- 4 · SUPER SPORTS -->
         <a href="bikes.html" class="fb-card" data-category="super-sports" data-testid="fb-card-super-sports" aria-label="Browse Super Sports category">
-          <div class="fb-card-img" style="background-image: url('assets/images/bikes/gixxer-sf-250.webp');" aria-hidden="true"></div>
+          <div class="fb-card-img" data-bg="assets/images/bikes/gixxer-sf-250.webp" aria-hidden="true"></div>
           <div class="fb-card-content">
             <div class="fb-card-top">
               <span class="fb-card-tag">Category 04</span>
@@ -660,7 +693,7 @@
 
         <!-- 5 · SCOOTER -->
         <a href="bikes.html" class="fb-card" data-category="scooter" data-testid="fb-card-scooter" aria-label="Browse Scooter category">
-          <div class="fb-card-img" style="background-image: url('assets/images/bikes/access-125.webp');" aria-hidden="true"></div>
+          <div class="fb-card-img" data-bg="assets/images/bikes/access-125.webp" aria-hidden="true"></div>
           <div class="fb-card-content">
             <div class="fb-card-top">
               <span class="fb-card-tag">Category 05</span>
@@ -680,7 +713,7 @@
         <!-- aria-hidden + tabindex=-1 so AT and keyboard skip these copies -->
 
         <a href="bikes.html" class="fb-card" data-category="commuter" aria-hidden="true" tabindex="-1">
-          <div class="fb-card-img" style="background-image: url('assets/images/bikes/gixxer.webp');" aria-hidden="true"></div>
+          <div class="fb-card-img" data-bg="assets/images/bikes/gixxer.webp" aria-hidden="true"></div>
           <div class="fb-card-content">
             <div class="fb-card-top"><span class="fb-card-tag">Category 01</span></div>
             <div class="fb-card-bottom">
@@ -691,7 +724,7 @@
           </div>
         </a>
         <a href="bikes.html" class="fb-card" data-category="sports" aria-hidden="true" tabindex="-1">
-          <div class="fb-card-img" style="background-image: url('assets/images/bikes/gixxer-250.webp');" aria-hidden="true"></div>
+          <div class="fb-card-img" data-bg="assets/images/bikes/gixxer-250.webp" aria-hidden="true"></div>
           <div class="fb-card-content">
             <div class="fb-card-top"><span class="fb-card-tag">Category 02</span></div>
             <div class="fb-card-bottom">
@@ -702,7 +735,7 @@
           </div>
         </a>
         <a href="bikes.html" class="fb-card" data-category="performance" aria-hidden="true" tabindex="-1">
-          <div class="fb-card-img" style="background-image: url('assets/images/bikes/gsx-r150.webp');" aria-hidden="true"></div>
+          <div class="fb-card-img" data-bg="assets/images/bikes/gsx-r150.webp" aria-hidden="true"></div>
           <div class="fb-card-content">
             <div class="fb-card-top"><span class="fb-card-tag">Category 03</span></div>
             <div class="fb-card-bottom">
@@ -713,7 +746,7 @@
           </div>
         </a>
         <a href="bikes.html" class="fb-card" data-category="super-sports" aria-hidden="true" tabindex="-1">
-          <div class="fb-card-img" style="background-image: url('assets/images/bikes/gixxer-sf-250.webp');" aria-hidden="true"></div>
+          <div class="fb-card-img" data-bg="assets/images/bikes/gixxer-sf-250.webp" aria-hidden="true"></div>
           <div class="fb-card-content">
             <div class="fb-card-top"><span class="fb-card-tag">Category 04</span></div>
             <div class="fb-card-bottom">
@@ -724,7 +757,7 @@
           </div>
         </a>
         <a href="bikes.html" class="fb-card" data-category="scooter" aria-hidden="true" tabindex="-1">
-          <div class="fb-card-img" style="background-image: url('assets/images/bikes/access-125.webp');" aria-hidden="true"></div>
+          <div class="fb-card-img" data-bg="assets/images/bikes/access-125.webp" aria-hidden="true"></div>
           <div class="fb-card-content">
             <div class="fb-card-top"><span class="fb-card-tag">Category 05</span></div>
             <div class="fb-card-bottom">
@@ -1549,6 +1582,29 @@
 </footer>
 
 <!-- Phase status banner removed at Phase 14 — homepage complete. -->
+
+<!-- ===== Page loader hide-script (inline; runs as soon as it parses) ===== -->
+<script>
+  (function () {
+    var el = document.getElementById('sz-loader');
+    if (!el) return;
+    var startedAt = window.__sz_loader_t || (window.__sz_loader_t = Date.now());
+    var MIN_DISPLAY_MS = 400;
+    function hide() {
+      var elapsed = Date.now() - startedAt;
+      var wait = Math.max(0, MIN_DISPLAY_MS - elapsed);
+      setTimeout(function () {
+        el.classList.add('is-hidden');
+        // Remove from DOM after the fade so it can't trap focus
+        setTimeout(function () {
+          if (el && el.parentNode) el.parentNode.removeChild(el);
+        }, 800);
+      }, wait);
+    }
+    if (document.readyState === 'complete') hide();
+    else window.addEventListener('load', hide, { once: true });
+  })();
+</script>
 
 </body>
 </html>

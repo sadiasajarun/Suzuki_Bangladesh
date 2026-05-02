@@ -17,6 +17,9 @@ desktop.ini
 .tmp-*
 node_modules/
 
+# Local dev-server config (only used by `npx serve`, not the live site)
+serve.json
+
 # Anything that creeps in from the working tree
 _backups/
 _prompts/

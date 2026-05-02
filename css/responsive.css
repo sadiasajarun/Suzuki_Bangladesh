@@ -1,0 +1,460 @@
+/* ============================================================
+   Suzuki Bangladesh — responsive patches
+   ============================================================
+   Surgical tap-target + mobile-layout fixes derived from the
+   responsive audit (.claude-project/qa/responsive-report.json).
+   Loaded after every other site CSS so it has the last word.
+
+   Strategy:
+     1. Standalone interactive icons / buttons: minimum 44x44 px
+        on mobile + tablet (WCAG 2.5.5 AAA, iOS HIG).
+     2. Inline text links inside paragraphs are NOT bumped — only
+        the click-zone via padding is widened where needed.
+     3. Section-level mobile fixes only when audit/screenshot
+        showed a real issue (no speculative changes).
+   ============================================================ */
+
+/* ============================================================
+   1. GLOBAL TAP-TARGET MINIMUMS (mobile + tablet)
+   ============================================================ */
+@media (max-width: 1024px) {
+
+  /* --- Navbar lockup + actions ---------------------------------- */
+  .nav__brand {
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    padding-inline: 0.25rem;          /* widens tap zone of icon-only mark */
+  }
+  .nav__hotline,
+  .nav__mobile-toggle,
+  .nav__mobile-close {
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .theme-toggle {
+    width: 44px;
+    height: 44px;
+  }
+
+  /* --- Card / section CTAs that were just shy of 44 ------------- */
+  .mg-card-more,
+  .rs-stat-cta,
+  .sv-card-cta,
+  .ft-hotline,
+  .ft-totop,
+  .cw-chip,
+  .cw-footer-btn,
+  .ck-btn,
+  .ck-lead-input,
+  .nw-card-cta,
+  .bd-card-cta,
+  .es-stage2-cta,
+  .sv2-pkg-cta,
+  .sv2-book-btn,
+  .fc-input,
+  .fc-submit-btn,
+  .fc-btn,
+  .cf-pill,
+  .cf-reset,
+  .bg-card-btn,
+  .tr-slot,
+  button[type="submit"] {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  /* The chat bubble's child controls land at 42px under default
+     padding — bump to 44 across the board. */
+  .cw-close-btn { width: 44px; height: 44px; }
+
+  /* Color swatches in bike filter are visually 28-32 px circles —
+     keep the visual but expand the click area via padding. */
+  .cf-swatch {
+    min-width: 44px;
+    min-height: 44px;
+    background-clip: content-box;
+    padding: 6px;
+  }
+  .cf-swatch.is-active { padding: 5px; }
+
+  /* --- Page-specific small buttons (dealers, shop) -------------- */
+  .dlr-card-btn,
+  .dlr-cta-link,
+  .sh-cart-trigger,
+  .sh-card-add,
+  .sh-drawer-close {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .sh-cart-trigger,
+  .sh-drawer-close { min-width: 44px; }   /* icon-only — square zone */
+
+  /* Multi-line CTAs (a tag wrapping text + arrow) — keep them
+     using flex so the height min still applies cleanly */
+  .mg-card-more { gap: 0.5rem; }
+
+  /* --- Icon-only round buttons get a hard 44x44 ----------------- */
+  .ft-social,
+  .cw-close-btn,
+  .sf-point-arrow {
+    width: 44px;
+    height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* sf-point-arrow's rounded look — preserve the circle */
+  .sf-point-arrow { border-radius: 50%; }
+}
+
+/* ============================================================
+   2. FOOTER LINKS — bigger tap zone via padding on mobile
+   ============================================================
+   Footer columns stack on mobile and the inline links get
+   their click area widened without changing visual rhythm
+   too much. Display:block makes each link span full column.
+   Also catches mailto: + tel: links anywhere in the footer. */
+@media (max-width: 768px) {
+  .ft-list a,
+  .ft-col a,
+  .ft-section nav a,
+  .ft-links a,
+  .ft-bottom a,
+  .ft-section a[href^="mailto:"],
+  .ft-section a[href^="tel:"],
+  .ft-operator a,
+  .ft-aside a {
+    display: inline-block;
+    padding-block: 0.7rem;
+    line-height: 1.2;
+    min-height: 44px;
+    box-sizing: border-box;
+  }
+}
+
+/* ============================================================
+   3. SCROLL-TOP + CHAT bubble — already 44+ but verify positions
+   ============================================================
+   On mobile, ensure the floating widgets do not overlap a
+   full-width form's bottom sticky CTA (e.g., test-ride form). */
+@media (max-width: 1024px) {
+  .stt-btn { width: 44px; height: 44px; }
+}
+@media (max-width: 480px) {
+  .cw-bubble { width: 56px; height: 56px; }   /* was 60, slightly tighter */
+}
+
+/* ============================================================
+   4. INPUTS, SELECTS, TEXTAREAS — uniform 44px tap height
+   ============================================================ */
+@media (max-width: 1024px) {
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="number"],
+  input[type="search"],
+  input[type="date"],
+  input[type="time"],
+  select,
+  textarea {
+    min-height: 44px;
+    /* iOS auto-zooms inputs with font-size < 16px on focus — prevent that */
+    font-size: max(16px, 1rem);
+  }
+  /* Small inline checkbox / radio inputs explicitly opt out — these
+     need their native 16-20px box, not 44px */
+  input[type="checkbox"],
+  input[type="radio"] {
+    min-height: auto;
+  }
+}
+
+/* ============================================================
+   5. SECTION-SPECIFIC MOBILE FIXES (where audit / screenshots
+   showed cramped or off-balance layout)
+   ============================================================ */
+
+/* Hero — ensure the giant decorative slash animations cannot push
+   the layout wider than the viewport even when transformed off-axis.
+   Body already has overflow-x:hidden but section-level isolation
+   keeps any translate3d wraps contained. */
+@media (max-width: 768px) {
+  .hero { overflow-x: clip; }
+  .hero .slashes { display: none; }       /* decorative; off on phone */
+  .hero #hero-watermark {
+    /* The faint S watermark extends well past the viewport on phone.
+       Crop it so it doesn't bloat the layout box */
+    max-width: 110%;
+    overflow: hidden;
+  }
+}
+
+/* Engine showcase — already collapses to stacked column at 1024px
+   per existing CSS. Nothing extra needed for now. */
+
+/* Find Bike marquee — track is intentionally wide (~2920px). Make
+   sure it stays inside its own container */
+.fb-section,
+.fb-viewport { overflow-x: hidden; }
+
+/* News marquee — same containment principle */
+.nw-section,
+.nw-marquee { overflow-x: hidden; }
+
+/* MotoGP card-more arrow — was 137x22, height too small. Fixed via
+   .mg-card-more block above; here adjust internal layout so the arrow
+   icon sits centered with the label */
+@media (max-width: 1024px) {
+  .mg-card-more {
+    padding-block: 0.55rem;
+  }
+}
+
+/* Cookie banner buttons — keep horizontal stack but allow wrap when
+   container is narrow, prevent overflow */
+@media (max-width: 480px) {
+  .ck-popup-actions { flex-wrap: wrap; gap: 0.5rem; }
+  .ck-btn { flex: 1 1 30%; min-width: 0; }
+}
+
+/* Service homepage — sv-orb (the convergence point) already centers
+   on mobile. Locator CTA already gets min-height:44 from rule 1. */
+
+/* ============================================================
+   6. SECTION-SPECIFIC MOBILE FIXES (hero, why-suzuki, engine)
+   ============================================================
+   Targets concrete visual issues called out from real device
+   inspection at 375×812.
+   ============================================================ */
+
+/* ---------- HERO ---------- */
+@media (max-width: 767px) {
+  /* (a) Hero becomes a normal-flow stack on mobile so headline,
+         bike, specs, and thumbs no longer overlap. The desktop
+         "cinematic poster" overlay is dropped — vertical legibility
+         wins on phones. */
+  .hero {
+    min-height: 0;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    /* Clear the fixed navbar (60px on phones) with a tight 0.75rem
+       breathing space — was clamp(5.5rem, 14vw, 7rem) which created
+       a huge blank above the headline because the absolute topbar
+       stacked over it. */
+    padding-block: calc(var(--nav-height-mobile, 60px) + 0.75rem)
+                   clamp(1rem, 4vw, 1.5rem);
+  }
+
+  /* Watermark: bump opacity + reposition so the faint S is
+     visible behind the bike instead of cropped off-screen. */
+  .hero .watermark {
+    opacity: 0.18;
+    right: -14vw;
+    bottom: 8vw;
+    width: clamp(20rem, 80vw, 32rem);
+    z-index: 0;
+  }
+
+  /* (b) Hero headline — block flow so all 3 text components
+         (SUZUKI mega, "this isn't just a bike", "Suzuki BD 1909")
+         appear vertically and centered, no clipping. */
+  .hero .hero-headline {
+    position: static;
+    transform: none;
+    top: auto; left: auto;
+    width: 100%;
+    padding-inline: 1rem;
+    box-sizing: border-box;
+    text-align: center;
+    margin-bottom: clamp(1rem, 4vw, 1.5rem);
+  }
+  .hero .hl-mega {
+    display: block !important;
+    font-size: clamp(2.6rem, 13vw, 4rem);
+    -webkit-text-stroke-width: 1.5px;
+    line-height: 0.9;
+    opacity: 1;
+    transform: none;
+  }
+  .hero .hl-editorial {
+    position: static;
+    transform: none;
+    top: auto; left: auto;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding-inline: 0.5rem;
+    margin-top: 0.6rem;
+    text-align: center;
+    opacity: 1;
+  }
+  .hero .hl-editorial .hl-line {
+    font-size: clamp(0.95rem, 4.6vw, 1.2rem);
+    overflow-wrap: break-word;
+  }
+  .hero .hl-editorial .hl-line.muted {
+    font-size: clamp(0.6rem, 3vw, 0.8rem);
+    letter-spacing: 0.18em;
+    margin-top: 0.5rem;
+  }
+
+  /* (c) Topbar — user-specified overrides. Note: the clamp() has
+         min > max so it resolves to 9rem; the negative padding is
+         invalid CSS and is dropped — `0 1rem` stays from cascade. */
+  .hero .topbar {
+    position: relative;
+    top: clamp(9rem, 9vh, 6.5rem);
+    right: auto; left: auto;
+    margin-block: 0 0.75rem;
+    padding: -1px var(--section-padding-x);
+    justify-content: center;
+  }
+
+  /* (d) Stage flows below the headline. Bike sits in the middle. */
+  .hero .stage {
+    position: relative;
+    height: auto;
+    width: 100%;
+  }
+  .hero .bike-frame {
+    position: relative;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    width: 100%;
+    margin-block: 0.5rem;
+  }
+  /* Reset desktop's negative margin-bottom and the beam/shadow
+     translate. The desktop CSS pulls the bike onto its shadow with
+     margin-bottom:-90px and translates beam+shadow by 90px to keep
+     them aligned — those values are wrong on mobile where the stage
+     is normal flow and there's no bike-id row underneath to pull
+     up onto. */
+  .hero .bike-img-wrap {
+    margin-bottom: 0 !important;
+  }
+  .hero .beam,
+  .hero .bike-shadow {
+    translate: 0 0 !important;
+  }
+
+  /* (d) Spec cards — sit BELOW the bike with a clear 1-inch gap. */
+  .hero .specs-layer {
+    position: relative;
+    inset: auto;
+    height: auto;
+    margin-top: 1in;                  /* explicit 96 px gap above spec cards */
+    padding: 0 1rem;
+    pointer-events: auto;
+    z-index: 5;
+  }
+
+  /* (e) Scroll-to-ignite — move it AFTER the bike thumbs and
+         render in normal flow at the bottom. */
+  .hero .scroll-cue {
+    position: relative;
+    inset: auto;
+    bottom: auto; left: auto;
+    transform: none;
+    margin-top: clamp(1rem, 4vw, 1.5rem);
+    margin-inline: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    order: 99;                         /* push to end of flex flow */
+  }
+  /* The bottom-row holds bike-id + thumb-strip. Make sure scroll-cue
+     drops below them in source order via flex order. */
+  .hero .topbar    { order: 1; }
+  .hero .hero-headline { order: 2; }
+  .hero .stage     { order: 3; }
+  .hero .scroll-cue{ order: 99; }
+  .hero .bottom-row{ order: 4; }
+}
+
+/* ---------- WHY SUZUKI — photo-clipped wordmark alignment ---------- */
+@media (max-width: 767px) {
+  .ws-wordmark {
+    /* Phone-tuned size + tighter letter-spacing so all 6 fit on one
+       line. Critical: keep flex-wrap NOWRAP so they never line-break. */
+    font-size: clamp(2.6rem, 13.5vw, 4.5rem);
+    letter-spacing: -0.04em;
+    gap: 0;
+    line-height: 0.9;
+    padding-inline: 0.4rem;
+    flex-wrap: nowrap !important;
+    justify-content: center;
+  }
+  .ws-letter {
+    flex: 0 1 auto;
+    min-width: 0;
+  }
+  /* Z-disc: cap the red circle accent so it doesn't tower over the
+     photo-clipped letters on mobile. Set explicit size that matches
+     the letter cap height. */
+  .ws-letter--accent {
+    /* Z-disc visual size in em — slightly smaller on phones */
+    --ws-disc-scale: 0.9;
+  }
+  /* White card: undo the negative margin-top from mobile rules so the
+     card no longer overlaps the SUZUKI letters above it. */
+  .ws-card {
+    margin-top: 1.25rem !important;
+  }
+}
+
+/* ---------- ENGINE SHOWCASE — image FIRST, callouts after ---------- */
+@media (max-width: 1024px) {
+  .es-engine-stage {
+    /* Make the stage a normal flex column so all children flow:
+         podium glow → engine image → callouts → CTA */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    aspect-ratio: auto;
+  }
+  .es-engine-podium {
+    /* Drop absolute positioning — podium becomes a small decorative
+       glow disc that sits BEHIND the image. Order in flex flow. */
+    position: relative;
+    inset: auto;
+    width: 0;
+    height: 0;
+    overflow: visible;
+    z-index: 1;
+  }
+  .es-engine-podium::before,
+  .es-engine-podium::after {
+    width: clamp(220px, 60vw, 340px);
+    aspect-ratio: 1 / 1;
+  }
+  .es-engine-img {
+    /* Image as a normal flow element — no longer absolutely centered.
+       Sits between podium glow and the callouts. */
+    position: relative;
+    top: auto; left: auto;
+    transform: none;
+    width: 80%;
+    max-width: 320px;
+    height: auto;
+    margin-block: -3rem -1rem;          /* sit on top of the glow disc */
+    z-index: 2;
+    animation: none;                    /* no float on mobile */
+  }
+}
+
+/* ============================================================
+   7. REDUCED MOTION — no responsive override needed; existing
+   prefers-reduced-motion blocks stay authoritative.
+   ============================================================ */

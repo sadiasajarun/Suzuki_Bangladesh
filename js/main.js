@@ -17,6 +17,35 @@ document.addEventListener('DOMContentLoaded', () => {
     lucide.createIcons();
   }
 
+  // ---------------------------------------------------------------
+  // Lazy-load background images. Any element with `data-bg` has
+  // its CSS background-image set to that URL once it's within
+  // 400 px of the viewport. Saves 1–2 MB on first paint for the
+  // homepage's photo-clipped letters + find-bike category covers.
+  // ---------------------------------------------------------------
+  const bgEls = document.querySelectorAll('[data-bg]');
+  if (bgEls.length) {
+    const hydrate = (el) => {
+      const src = el.dataset.bg;
+      if (!src) return;
+      el.style.backgroundImage = "url('" + src + "')";
+      el.removeAttribute('data-bg');
+    };
+    if (!('IntersectionObserver' in window)) {
+      bgEls.forEach(hydrate);
+    } else {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            hydrate(entry.target);
+            io.unobserve(entry.target);
+          }
+        });
+      }, { rootMargin: '400px 0px' });
+      bgEls.forEach((el) => io.observe(el));
+    }
+  }
+
   // Mark body as ready (CSS can fade in)
   document.body.classList.add('is-ready');
 
